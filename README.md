@@ -1,5 +1,5 @@
 # docker.esp8266
-Dockerfile to create image with git, python, lua, esptool, luatool for esp8266 programming
+Dockerfile to create image with git, python, lua, luarocks, moonscript, minicom, esptool, luatool for esp8266 programming
 
 ## start container
 ```
