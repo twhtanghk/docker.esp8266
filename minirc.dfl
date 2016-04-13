@@ -1,0 +1,2 @@
+pu port             /dev/ttyUSB0
+pu baudrate         9600
