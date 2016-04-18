@@ -12,4 +12,4 @@ RUN curl -sL https://deb.nodesource.com/setup_4.x | bash - && \
 	pip install pyserial && \
 	git clone https://github.com/themadinventor/esptool && \
 	git clone https://github.com/4refr0nt/luatool.git
-ENTRYPOINT /bin/bash
+ENTRYPOINT /usr/bin/top -b -d 100
