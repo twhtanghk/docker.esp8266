@@ -8,12 +8,12 @@ docker run -it --device /dev/ttyUSB0 twhtanghk/docker.esp8266
 
 ## flash firmware
 ```
-/root/esptool/esptool.py ...
+~/esptool/esptool.py write_flash 0x00000 nodemcu-xxxx.bin
 ```
 
 ## compile, mkfs, or upload
 ```
-cd /root/src
+cd ~/src
 moonc *.moon
 nodemcu-tool mkfs
 nodemcu-tool upload *.lua
