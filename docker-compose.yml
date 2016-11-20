@@ -1,0 +1,8 @@
+version: '2'
+services:
+  mcu:
+    image: twhtanghk/docker.esp8266
+    devices:
+      - /dev/ttyUSB0
+    volumes:
+      - ${COMPOSEROOT}/mcu/src:/root/src
