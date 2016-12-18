@@ -11,8 +11,8 @@ RUN curl -sL https://deb.nodesource.com/setup_4.x | bash - && \
     apt-get -y install git lua5.1 luarocks minicom nodejs && \
     apt-get -y autoremove && \
     apt-get clean && \
-    git clone ${REPO} ${APP} && \
-    mv ${APP}/.git* ${APP}/* /root && \
+    git clone -b $VER $REPO $APP && \
+    mv $APP/.git* $APP/* /root && \
     luarocks install moonscript && \
     npm install coffee-script nodemcu-tool -g && \
     pip install pyserial && \
