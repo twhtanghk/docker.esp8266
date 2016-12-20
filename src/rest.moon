@@ -1,3 +1,4 @@
+reload = require "reload"
 Req = require "req"
 Res = require "res"
 log = require "log"
@@ -21,6 +22,26 @@ with net.createServer net.TCP
         log.debug "heap: #{node.heap()}"
 
       switch true
+
+        when route\find("GET /wlancfg") != nil
+          ret = reload "wlancfg"
+          res\send ret, ->
+            verbose 'get wlancfg'
+            clean()
+
+        when route\find("PUT /wlancfg/%a+/%a+/%a+") != nil
+          name, ssid, pwd = route\match "PUT /wlancfg/(%a+)/(%a+)/(%a+)"
+          ret = {
+            name: name
+            ssid: ssid
+            pwd: pwd
+          }
+          fd = file.open 'wlancfg.lua', 'w'
+          fd\write "return #{ret}"
+          fd\close()
+          res\send ret, ->
+            verbose 'pout wlancfg'
+            clean()
 
         when route\find("GET /status") != nil
           ret = {}
