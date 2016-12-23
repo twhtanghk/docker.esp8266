@@ -8,7 +8,7 @@ sh = require 'shelljs'
 
 gulp.task 'default', ->
   gulp
-    .src ['wlan.coffee', 'save.coffee']
+    .src ['wlan.coffee']
     .pipe coffee bare: true
     .on('error', gutil.log)
     .pipe concat 'index.js'

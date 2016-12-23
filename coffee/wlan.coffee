@@ -1,10 +1,8 @@
-Wifi.scan (res) ->
-  console.log (res)
+wifi = require 'Wifi'
 
-Wifi.on 'connected', (details) ->
-  console.log details
-
-Wifi.connect SSID, 
-  password: PWD,
-  (err) -> 
-    console.log err
+wifi.getAPIP (cfg) ->
+  ssid = "TT#{cfg.mac.split(':').join('')}"
+  pwd = "12345678"
+  wifi.startAP ssid, password: pwd, ->
+    wifi.getAPDetails (cfg) ->
+      console.log JSON.stringify cfg
