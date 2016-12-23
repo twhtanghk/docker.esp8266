@@ -8,12 +8,12 @@ sh = require 'shelljs'
 
 gulp.task 'default', ->
   gulp
-    .src ['wlan.coffee']
+    .src ['rest.coffee']
     .pipe coffee bare: true
     .on('error', gutil.log)
     .pipe concat 'index.js'
     .pipe gulp.dest './dest'
-    .pipe uglify()
+    .pipe uglify compress: false
     .pipe rename extname: '.min.js'
     .pipe gulp.dest './dest'
 
