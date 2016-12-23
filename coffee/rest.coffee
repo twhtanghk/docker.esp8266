@@ -1,8 +1,10 @@
 http = require 'http'
+wifi = require 'Wifi'
 
 class Ctrl
-  headers:
-    'Content-Type': 'application/json'
+  constructor: (opts) ->
+    @headers = 'Content-Type': 'application/json'
+    @url = opts.url
 
   matchUrl: (req) ->
     req.url == @url
@@ -27,9 +29,6 @@ class Ctrl
         if @matchUrl req
           @destroy req, res
 
-  constructor: (opts) ->
-    @url = opts.url
-
   create: (req, res) ->
     notFound res
 
@@ -45,25 +44,34 @@ class Ctrl
   destroy: (req, res) ->
     notFound res
 
-class APCtrl extends Ctrl
-  find: (req, res) ->
-    wifi.getAPDetails (cfg) ->
-      res.writeHead 200, @headers
-      res.end JSON.stringify cfg
+ap = new Ctrl url: '/ap'
+ap.findOne = (req, res) ->
+  wifi.getAPDetails (cfg) ->
+    res.writeHead 200, ap.headers
+    res.end JSON.stringify cfg
 
-ctrls = [
-  new APCtrl url: '/ap'
-]
+sta = new Ctrl url: '/sta'
+sta.findOne = (req, res) ->
+  wifi.getDetails (cfg) ->
+    res.writeHead 200, sta.headers
+    res.end JSON.stringify cfg
+
+ctrls = [ap, sta]
 
 app = (req, res) ->
   writeHead = res.writeHead
   res.writeHead = (statusCode, headers) ->
-    writeHead statusCode, headers
+    writeHead.call res, statusCode, headers
     res.headersSent = true
 
   write = res.write
   res.write = (data) ->
-    write = data
+    write.call res, data
+    res.headersSent = true
+
+  end = res.end
+  res.end = (data) ->
+    end.call res, data
     res.headersSent = true
 
   for ctrl in ctrls
@@ -71,6 +79,10 @@ app = (req, res) ->
     if res.headersSent
       return
 
-server = http
-  .createServer app
-  .listen 80
+wifi.getAPIP (cfg) ->
+  ssid = "TT#{cfg.mac.split(':').join('')}"
+  pwd = "12345678"
+  wifi.startAP ssid, password: pwd, ->
+    http
+      .createServer app
+      .listen 80
