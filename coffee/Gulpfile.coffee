@@ -16,6 +16,8 @@ gulp.task 'default', ->
     .pipe uglify compress: false
     .pipe rename extname: '.min.js'
     .pipe gulp.dest './dest'
+    .on 'finish', ->
+      sh.exec 'echo "E.setBootCode(\'"$(cat dest/index.min.js)"\', true);" > dest/boot.js'
 
 gulp.task 'clean', ->
   sh.exec "rm -rf dest"

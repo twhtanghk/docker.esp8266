@@ -79,10 +79,23 @@ app = (req, res) ->
     if res.headersSent
       return
 
-wifi.getAPIP (cfg) ->
-  ssid = "TT#{cfg.mac.split(':').join('')}"
-  pwd = "12345678"
-  wifi.startAP ssid, password: pwd, ->
+mac = ->
+  new Promise (resolve, reject) ->
+    wifi.getAPIP (cfg) ->
+      resolve cfg.mac
+
+startAP = (opts)->
+  new Promise (resolve, reject) ->
+    wifi.startAP opts.ssid, password: opts.pwd, resolve
+
+mac()
+  .then (mac) ->
+    "TT#{mac.split(':').join('')}"
+  .then (ssid) ->
+    startAP 
+       ssid: ssid
+       pwd: "12345678"
+  .then ->
     http
       .createServer app
       .listen 80
