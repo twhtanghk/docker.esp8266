@@ -1,62 +1,88 @@
 http = require 'http'
 wifi = require 'Wifi'
 
-class Ctrl
-  constructor: (opts) ->
-    @headers = 'Content-Type': 'application/json'
-    @url = opts.url
+class Router
+  constructor: ->
+    @routes =
+      POST: {}
+      GET: {}
+      PUT: {}
+      DELETE: {}
 
-  matchUrl: (req) ->
-    req.url == @url
+  # opts = ctrl: ctrl, method: method
+  METHOD: (method, url, opts) ->
+    @routes[method][url] = opts
 
-  notFound: (res) ->
-    res.writeHead 404, @headers
-    res.end()
+  post: (url, opts) ->
+    @METHOD('POST', url, opts)
+
+  get: (url, opts) ->
+    @METHOD('GET', url, opts)
+
+  put: (url, opts) ->
+    @METHOD('PUT', url, opts)
+
+  'delete': (url, opts) ->
+    @METHOD('DELETE', url, opts)
 
   process: (req, res) ->
-    switch req.method
-      when 'POST'
-        if @matchUrl req
-          @create req, res
-      when 'GET'
-        if @matchUrl req
-          func = if req.url == @url then @findOne else @find
-          func req, res
-      when 'PUT'
-        if @matchUrl req
-          @update req, res
-      when 'DELETE'
-        if @matchUrl req
-          @destroy req, res
+    for url, opts of @routes[req.method]
+      if url == req.url
+        ctrl = opts.ctrl
+        return ctrl[opts.method].call ctrl, req, res
+    Ctrl.notFound res
+  
+class Ctrl
+  @headers:
+    'Content-Type': 'application/json'
+
+  @notFound: (res) ->
+    res.writeHead 404, Ctrl.headers
+    res.end()
 
   create: (req, res) ->
-    notFound res
+    Ctrl.notFound res
 
   find: (req, res) ->
-    notFound res
+    Ctrl.notFound res
 
   findOne: (req, res) ->
-    notFound res
+    Ctrl.notFound res
 
   update: (req, res) ->
-    notFound res
+    Ctrl.notFound res
 
   destroy: (req, res) ->
-    notFound res
+    Ctrl.notFound res
 
-ap = new Ctrl url: '/ap'
+ap = new Ctrl()
 ap.findOne = (req, res) ->
   wifi.getAPDetails (cfg) ->
     res.writeHead 200, ap.headers
     res.end JSON.stringify cfg
 
 sta = new Ctrl url: '/sta'
+# get current station config details
 sta.findOne = (req, res) ->
   wifi.getDetails (cfg) ->
     res.writeHead 200, sta.headers
     res.end JSON.stringify cfg
+# scan and list available ap to be connected
+sta.find = (req, res) ->
+  wifi.scan (aplist) ->
+    res.writeHead 200, sta.headers
+    res.end JSON.stringify aplist
 
-ctrls = [ap, sta]
+router = new Router()
+router.get '/ap', 
+  ctrl: ap
+  method: 'findOne'
+router.get '/sta',
+  ctrl: sta
+  method: 'findOne'
+router.get '/sta/aplist', 
+  ctrl: sta
+  method: 'find'
 
 app = (req, res) ->
   writeHead = res.writeHead
@@ -74,10 +100,7 @@ app = (req, res) ->
     end.call res, data
     res.headersSent = true
 
-  for ctrl in ctrls
-    ctrl.process req, res
-    if res.headersSent
-      return
+  router.process req, res
 
 mac = ->
   new Promise (resolve, reject) ->
