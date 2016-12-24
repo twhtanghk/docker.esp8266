@@ -8,7 +8,7 @@ sh = require 'shelljs'
 
 gulp.task 'default', ->
   gulp
-    .src ['rest.coffee']
+    .src ['controller.coffee', 'router.coffee', 'app.coffee']
     .pipe coffee bare: true
     .on('error', gutil.log)
     .pipe concat 'index.js'
