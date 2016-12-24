@@ -4,3 +4,6 @@ services:
     image: twhtanghk/docker.esp8266
     devices:
       - /dev/ttyUSB0
+    env_files:
+      - ./.env
+      - ../.env
