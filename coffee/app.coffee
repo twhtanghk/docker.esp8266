@@ -2,21 +2,6 @@ http = require 'http'
 wifi = require 'Wifi'
 
 app = (req, res) ->
-  writeHead = res.writeHead
-  res.writeHead = (statusCode, headers) ->
-    writeHead.call res, statusCode, headers
-    res.headersSent = true
-
-  write = res.write
-  res.write = (data) ->
-    write.call res, data
-    res.headersSent = true
-
-  end = res.end
-  res.end = (data) ->
-    end.call res, data
-    res.headersSent = true
-
   router.process req, res
 
 mac = ->

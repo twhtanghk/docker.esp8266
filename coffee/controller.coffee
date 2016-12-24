@@ -4,7 +4,7 @@ class Ctrl
 
   @notFound: (res) ->
     res.writeHead 404, Ctrl.headers
-    res.end()
+    res.end "404: Not Found"
 
   create: (req, res) ->
     Ctrl.notFound res
@@ -21,6 +21,18 @@ class Ctrl
   destroy: (req, res) ->
     Ctrl.notFound res
 
+sys = new Ctrl()
+sys.dumpReq = (req, res) ->
+  req.on 'end', (data) ->
+    console.log JSON.stringify req
+
+sys.bodyParser = (req, res) ->
+  body = ''
+  req.on 'data', (data) ->
+    body += data
+  req.on 'end', ->
+    req.body = JSON.parse body
+
 ap = new Ctrl()
 ap.findOne = (req, res) ->
   wifi.getAPDetails (cfg) ->
@@ -33,6 +45,7 @@ sta.findOne = (req, res) ->
   wifi.getDetails (cfg) ->
     res.writeHead 200, Ctrl.headers
     res.end JSON.stringify cfg
+
 # scan and list available ap to be connected
 sta.find = (req, res) ->
   wifi.scan (aplist) ->
