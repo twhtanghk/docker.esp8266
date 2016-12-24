@@ -39,7 +39,7 @@ ap.findOne = (req, res) ->
     res.writeHead 200, Ctrl.headers
     res.end JSON.stringify cfg
 
-sta = new Ctrl url: '/sta'
+sta = new Ctrl()
 # get current station config details
 sta.findOne = (req, res) ->
   wifi.getDetails (cfg) ->
