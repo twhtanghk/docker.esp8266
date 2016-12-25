@@ -33,11 +33,27 @@ sys.bodyParser = (req, res) ->
   req.on 'end', ->
     req.body = JSON.parse body
 
+sys.templates = (req, res) ->
+  path = req.url.split('.')
+  switch path[path.length - 1]
+    when 'js'
+      res.writeHead 200, 'Content-Type': 'application/javscript' 
+    when 'html'
+      res.writeHead 200, 'Content-Type': 'text/html'
+  res.end templates[req.url]
+
+sys.reset = (req, res) ->
+  reset()
+
 ap = new Ctrl()
 ap.findOne = (req, res) ->
   wifi.getAPDetails (cfg) ->
     res.writeHead 200, Ctrl.headers
     res.end JSON.stringify cfg
+ap.update = (req, res) ->
+  wifi
+    .startAP _.pick(req.body, 'ssid'), _.pick(req.body, 'authMode', 'password', 'channel'), ->
+    wifi.save()
 
 sta = new Ctrl()
 # get current station config details

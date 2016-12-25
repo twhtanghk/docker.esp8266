@@ -45,20 +45,37 @@ class Router
     if not processed
       Ctrl.notFound res
   
+routes =
+  'all *':
+    ctrl: ctrls.sys
+    method: 'bodyParser'
+  'all *':
+    ctrl: ctrls.sys
+    method: 'dumpReq'
+  'get /index.html':
+    ctrl: ctrls.sys
+    method: 'templates'
+  'get /index.js':
+    ctrl: ctrls.sys
+    method: 'templates'
+  'put /sys/reset':
+    ctrl: ctrls.sys
+    method: 'reset'
+  'get /ap':
+    ctrl: ctrls.ap
+    method: 'findOne'
+  'put /ap':
+    ctrl: ctrls.ap
+    method: 'update'
+  'get /sta':
+    ctrl: ctrls.sta
+    method: 'findOne'
+  'get /sta/aplist':
+    ctrl: ctrls.sta
+    method: 'find'
+
 router = new Router()
 
-router.all '*',
-  ctrl: ctrls.sys
-  method: 'bodyParser'
-router.all '*',
-  ctrl: ctrls.sys
-  method: 'dumpReq'
-router.get '/ap', 
-  ctrl: ctrls.ap
-  method: 'findOne'
-router.get '/sta',
-  ctrl: ctrls.sta
-  method: 'findOne'
-router.get '/sta/aplist', 
-  ctrl: ctrls.sta
-  method: 'find'
+for route, opts of routes
+  [method, url] = route.split(' ')
+  router[method](url, opts)
