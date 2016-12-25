@@ -48,17 +48,17 @@ class Router
 router = new Router()
 
 router.all '*',
-  ctrl: sys
+  ctrl: ctrls.sys
   method: 'bodyParser'
 router.all '*',
-  ctrl: sys
+  ctrl: ctrls.sys
   method: 'dumpReq'
 router.get '/ap', 
-  ctrl: ap
+  ctrl: ctrls.ap
   method: 'findOne'
 router.get '/sta',
-  ctrl: sta
+  ctrl: ctrls.sta
   method: 'findOne'
 router.get '/sta/aplist', 
-  ctrl: sta
+  ctrl: ctrls.sta
   method: 'find'

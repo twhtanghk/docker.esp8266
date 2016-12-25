@@ -51,3 +51,8 @@ sta.find = (req, res) ->
   wifi.scan (aplist) ->
     res.writeHead 200, Ctrl.headers
     res.end JSON.stringify aplist
+
+ctrls =
+  sys: sys
+  ap: ap
+  sta: sta
