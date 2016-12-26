@@ -4,16 +4,23 @@
   "description": "",
   "main": "index.js",
   "dependencies": {
+    "angular-activerecord": "^0.3.0",
     "bluebird": "^3.4.7",
+    "browserify": "^13.1.1",
     "coffee-script": "^1.12.2",
+    "coffeeify": "^2.1.0",
     "gulp": "^3.9.1",
+    "gulp-angular-templatecache": "^2.0.0",
     "gulp-coffee": "^2.3.3",
     "gulp-concat": "^2.6.1",
     "gulp-htmlmin": "^3.0.0",
     "gulp-rename": "^1.2.2",
+    "gulp-streamify": "^1.0.2",
     "gulp-uglify": "^2.0.0",
     "gulp-util": "^3.0.7",
-    "shelljs": "^0.7.5"
+    "shelljs": "^0.7.5",
+    "vinyl-buffer": "^1.0.0",
+    "vinyl-source-stream": "^1.1.0"
   },
   "devDependencies": {},
   "scripts": {

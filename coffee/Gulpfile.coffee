@@ -10,8 +10,12 @@ path = require 'path'
 htmlmin = require 'gulp-htmlmin'
 Promise = require 'bluebird'
 fs = require 'fs'
+browserify = require 'browserify'
+templateCache = require 'gulp-angular-templatecache'
+source = require 'vinyl-source-stream'
+streamify = require 'gulp-streamify'
 
-gulp.task 'default', ['templates'], ->
+gulp.task 'default', ->
   gulp
     .src [
       'templates.js'
@@ -30,18 +34,7 @@ gulp.task 'default', ['templates'], ->
     .on 'finish', ->
       sh.exec 'echo "E.setBootCode(\'"$(cat dest/index.min.js)"\', true);" > dest/boot.js'
 
-gulp.task 'coffee', ->
-  gulp
-    .src 'www/*.coffee'
-    .pipe coffee bare: true
-    .on 'error', gutil.log
-    .pipe rename 'index.js'
-    .pipe gulp.dest './www'
-    .pipe uglify compress: false
-    .pipe rename extname: '.min.js'
-    .pipe gulp.dest './www'
-   
-gulp.task 'templates', ['coffee'], ->
+gulp.task 'templates', ['client.coffee'], ->
   class Template extends stream.Transform
     constructor: (opts = objectMode: true) ->
       super opts
@@ -73,5 +66,22 @@ gulp.task 'templates', ['coffee'], ->
         .createWriteStream 'templates.js'
         .end "templates={#{templates.join(',')}};"
 
+gulp.task 'client.templates', ->
+  gulp
+    .src 'www/templates/*.html'
+    .pipe templateCache(root: 'templates', standalone: true)
+    .pipe gulp.dest 'www/'
+
+
+gulp.task 'client.coffee', ['client.templates'], ->
+  browserify entries: 'www/index.coffee'
+    .transform 'coffeeify'
+    .bundle()
+    .pipe source 'index.js'
+    .pipe gulp.dest 'www/'
+    .pipe streamify uglify compress: false
+    .pipe rename extname: '.min.js'
+    .pipe gulp.dest 'www/'
+
 gulp.task 'clean', ->
-  sh.exec "rm -rf dest templates.js www/index.js www/index.min.js"
+  sh.exec "rm -rf dest templates.js www/index.js www/index.min.js www/templates.js"

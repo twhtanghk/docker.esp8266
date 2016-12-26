@@ -58,19 +58,22 @@ routes =
   'get /index.js':
     ctrl: ctrls.sys
     method: 'templates'
+  'get /sys/status':
+    ctrl: ctrls.sys
+    method: 'status'
   'put /sys/reset':
     ctrl: ctrls.sys
     method: 'reset'
-  'get /ap':
+  'get /sys/ap':
     ctrl: ctrls.ap
     method: 'findOne'
-  'put /ap':
+  'put /sys/ap':
     ctrl: ctrls.ap
     method: 'update'
-  'get /sta':
+  'get /sys/sta':
     ctrl: ctrls.sta
     method: 'findOne'
-  'get /sta/aplist':
+  'get /sys/sta/aplist':
     ctrl: ctrls.sta
     method: 'find'
 

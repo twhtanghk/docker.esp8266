@@ -1,6 +1,7 @@
 class Ctrl
   @headers:
     'Content-Type': 'application/json'
+    'Access-Control-Allow-Origin': '*'
 
   @notFound: (res) ->
     res.writeHead 404, Ctrl.headers
@@ -42,7 +43,14 @@ sys.templates = (req, res) ->
       res.writeHead 200, 'Content-Type': 'text/html'
   res.end templates[req.url]
 
+sys.status = (req, res) ->
+  res.writeHead 200, Ctrl.headers
+  res.end JSON.stringify 
+    name: wifi.getHostname()
+
 sys.reset = (req, res) ->
+  res.writeHead 200, Ctrl.headers
+  res.end()
   reset()
 
 ap = new Ctrl()
