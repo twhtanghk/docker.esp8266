@@ -3,6 +3,8 @@
     System
   </div>
   <li class='item'>
-    {{model.name}}
+    <a href='#' editable-text="model.name" onbeforesave="model.$save({name: $data})">
+      {{model.name}}
+    </a>
   </li>
 </ng-controller>

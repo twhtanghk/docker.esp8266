@@ -1,13 +1,17 @@
 require './templates'
 require './model.coffee'
+require 'angular-xeditable'
 
 angular
 
-  .module 'app', ['ionic', 'model']
+  .module 'app', ['ionic', 'model', 'xeditable']
+
+  .run (editableOptions) ->
+    editableOptions.theme = 'bs3'
 
   .controller 'statusCtrl', ($scope, $log, resource) ->
     resource.Sys
-      .fetchOne 'status'
+      .fetchOne 'info'
       .then (model) ->
         $scope.model = model
       .catch $log.error

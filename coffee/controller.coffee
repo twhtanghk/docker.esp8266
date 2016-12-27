@@ -28,12 +28,17 @@ sys.dumpReq = (req, res) ->
     console.log JSON.stringify req
 
 sys.bodyParser = (req, res) ->
-  body = ''
   req.on 'data', (data) ->
-    body += data
-  req.on 'end', ->
-    req.body = JSON.parse body
+    req.body = JSON.parse data
 
+sys.cors = (req, res) ->
+  res.writeHead 200, 
+    'Access-Control-Allow-Origin': '*'
+    'Access-Control-Allow-Methods': 'OPTIONS, POST, GET, PUT, DELETE'
+    'Access-Control-Allow-Headers': 'Content-Type'
+    'Access-Control-Max-Age': 86400
+  res.end()
+  
 sys.templates = (req, res) ->
   path = req.url.split('.')
   switch path[path.length - 1]
@@ -41,12 +46,17 @@ sys.templates = (req, res) ->
       res.writeHead 200, 'Content-Type': 'application/javscript' 
     when 'html'
       res.writeHead 200, 'Content-Type': 'text/html'
-  res.end templates[req.url]
+  res.end atob templates[req.url]
 
-sys.status = (req, res) ->
-  res.writeHead 200, Ctrl.headers
-  res.end JSON.stringify 
-    name: wifi.getHostname()
+sys.info = new Ctrl()
+_.extend sys.info,
+    findOne: (req, res) ->
+      res.writeHead 200, Ctrl.headers
+      res.end JSON.stringify 
+        name: wifi.getHostname()
+    update: (req, res) ->
+      wifi.setHostname req.body.name
+      sys.info.findOne req, res
 
 sys.reset = (req, res) ->
   res.writeHead 200, Ctrl.headers

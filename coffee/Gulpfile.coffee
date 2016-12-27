@@ -14,11 +14,12 @@ browserify = require 'browserify'
 templateCache = require 'gulp-angular-templatecache'
 source = require 'vinyl-source-stream'
 streamify = require 'gulp-streamify'
+less = require 'gulp-less'
+cleanCSS = require 'gulp-clean-css'
 
-gulp.task 'default', ->
+gulp.task 'default', ['templates'], ->
   gulp
     .src [
-      'templates.js'
       'lodash.coffee'
       'controller.coffee'
       'router.coffee'
@@ -39,7 +40,7 @@ gulp.task 'templates', ['client.coffee'], ->
     constructor: (opts = objectMode: true) ->
       super opts
     _transform: (data, encoding, cb) ->
-      @push "\"/#{path.basename data.path}\": \"#{data.contents.toString().replace(/"/g, '\\"')}\""
+      @push "\"/#{path.basename data.path}\": \"#{data.contents.toString('base64')}\""
       cb()
       
   streamStr = (readable) ->
@@ -66,6 +67,8 @@ gulp.task 'templates', ['client.coffee'], ->
         .createWriteStream 'templates.js'
         .end "templates={#{templates.join(',')}};"
 
+gulp.task 'client', ['client.coffee', 'client.css']
+
 gulp.task 'client.templates', ->
   gulp
     .src 'www/templates/*.html'
@@ -76,6 +79,7 @@ gulp.task 'client.templates', ->
 gulp.task 'client.coffee', ['client.templates'], ->
   browserify entries: 'www/index.coffee'
     .transform 'coffeeify'
+    .transform 'debowerify'
     .bundle()
     .pipe source 'index.js'
     .pipe gulp.dest 'www/'
@@ -83,5 +87,14 @@ gulp.task 'client.coffee', ['client.templates'], ->
     .pipe rename extname: '.min.js'
     .pipe gulp.dest 'www/'
 
+gulp.task 'client.css', ->
+  gulp.src 'www/css/bootstrap.less'
+    .pipe less()
+    .pipe concat 'index.css'
+    .pipe gulp.dest 'www/css/'
+    .pipe cleanCSS()
+    .pipe rename extname: '.min.css'
+    .pipe gulp.dest 'www/css/'
+
 gulp.task 'clean', ->
-  sh.exec "rm -rf dest templates.js www/index.js www/index.min.js www/templates.js"
+  sh.exec "rm -rf dest node_modules www/lib templates.js www/index.js www/index.min.js www/css/index.css www/css/index.min.css www/templates.js"

@@ -1,6 +1,8 @@
 class Router
   constructor: ->
+    @middlewares = []
     @routes =
+      OPTIONS: []
       POST: []
       GET: []
       PUT: []
@@ -12,11 +14,17 @@ class Router
     ret[url] = opts
     @routes[method].push ret
 
+  use: (middleware) ->
+    @middlewares.push middleware
+    
   all: (url, opts) ->
     @post url, opts
     @get url, opts
     @put url, opts
     @delete url, opts
+
+  options: (url, opts) ->
+    @METHOD('OPTIONS', url, opts)
 
   post: (url, opts) ->
     @METHOD('POST', url, opts)
@@ -31,36 +39,35 @@ class Router
     @METHOD('DELETE', url, opts)
 
   process: (req, res) ->
-    processed = false
     for handler in @routes[req.method]
       for url, opts of handler
         func = ->
           ctrl = opts.ctrl
           ctrl[opts.method].call ctrl, req, res
-        if url == '*'
-          func()
-        if url == req.url
           func()
           processed = true
     if not processed
       Ctrl.notFound res
   
 routes =
+  'options *':
+    ctrl: ctrls.sys
+    method: 'cors'
   'all *':
     ctrl: ctrls.sys
     method: 'bodyParser'
-  'all *':
-    ctrl: ctrls.sys
-    method: 'dumpReq'
   'get /index.html':
     ctrl: ctrls.sys
     method: 'templates'
   'get /index.js':
     ctrl: ctrls.sys
     method: 'templates'
-  'get /sys/status':
-    ctrl: ctrls.sys
-    method: 'status'
+  'get /sys/info':
+    ctrl: ctrls.sys.info
+    method: 'findOne'
+  'put /sys/info':
+    ctrl: ctrls.sys.info
+    method: 'update'
   'put /sys/reset':
     ctrl: ctrls.sys
     method: 'reset'
