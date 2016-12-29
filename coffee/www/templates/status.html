@@ -1,8 +1,10 @@
 <ng-controller ng-controller='statusCtrl'>
-  <ion-list-header>
+  <div class='item item-divider'>
     System
-  </ion-list-header>
-  <ion-item>
-    {{model.name}}
-  </ion-item>
+  </div>
+  <li class='item'>
+    <a href='#' editable-text="model.name" onbeforesave="model.$save({name: $data})">
+      {{model.name}}
+    </a>
+  </li>
 </ng-controller>

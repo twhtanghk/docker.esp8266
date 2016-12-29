@@ -1,14 +1,11 @@
 <ng-controller ng-controller='apCtrl'>
-  <ion-list-header>
+  <div class='item item-divider'>
     AP
-  </ion-list-header>
-  <ion-item>
-    {{model.ssid}}
-  </ion-item>
-  <ion-item>
-    {{model.authMode}}
-  </ion-item>
-  <ion-item ng-repeat="conn in model.stations">
+  </div>
+  <li class='item'>
+    {{model.ssid}} {{model.authMode}}
+  </li>
+  <li class='item' ng-repeat="conn in model.stations">
     {{conn.ip}} {{conn.mac}}
-  </ion-item>
+  </li>
 </ng-controller>

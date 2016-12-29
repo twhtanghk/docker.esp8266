@@ -1,0 +1,19 @@
+{
+  "name": "espruino",
+  "description": "",
+  "main": "index.js",
+  "license": "MIT",
+  "homepage": "https://github.com/twhtanghk/docker.esp8266",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "www/lib",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "bootstrap": "^3.3.7",
+    "angular-xeditable": "^0.5.0"
+  }
+}
