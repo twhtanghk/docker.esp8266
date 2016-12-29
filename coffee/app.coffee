@@ -1,5 +1,6 @@
 http = require 'http'
 wifi = require 'Wifi'
+router = require './router.coffee'
 
 app = (req, res) ->
   router.process req, res

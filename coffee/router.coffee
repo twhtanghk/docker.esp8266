@@ -1,3 +1,5 @@
+ctrls = require './controller.coffee'
+
 class Router
   constructor: ->
     @routes =
@@ -82,3 +84,5 @@ router = new Router()
 for route, opts of routes
   [method, url] = route.split(' ')
   router[method](url, opts)
+
+module.exports = router

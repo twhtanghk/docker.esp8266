@@ -76,7 +76,7 @@ sta.find = (req, res) ->
     res.writeHead 200, Ctrl.headers
     res.end JSON.stringify aplist
 
-ctrls =
+module.exports =
   sys: sys
   ap: ap
   sta: sta
