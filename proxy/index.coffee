@@ -1,7 +1,6 @@
 http = global.require 'http'
 wifi = global.require 'Wifi'
 app = require './app.coffee'
-middleware = require './middleware.coffee'
 
 mac = ->
   new Promise (resolve, reject) ->
@@ -20,11 +19,6 @@ mac()
        ssid: ssid
        pwd: "12345678"
   .then ->
-    app
-      .use middleware.bodyParser
-      .use middleware.reqLogger
-      .use middleware.cors
-      .use middleware.static
     http
       .createServer (req, res) ->
         app.process req, res

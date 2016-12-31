@@ -1,6 +1,5 @@
 class Router
   constructor: ->
-    @middlewares = []
     @routes =
       OPTIONS: []
       POST: []
@@ -14,10 +13,6 @@ class Router
     ret[url] = opts
     @routes[method].push ret
 
-  use: (middleware) ->
-    @middlewares.push middleware
-    @
-    
   all: (url, opts) ->
     @post url, opts
     @get url, opts
@@ -46,17 +41,9 @@ class Router
     @
 
   process: (req, res) ->
-    for mw in @middlewares
-      mw req, res
-    for handler in @routes[req.method]
-      for url, opts of handler
-        func = ->
-          ctrl = opts.ctrl
-          ctrl[opts.method].call ctrl, req, res
-          func()
-          processed = true
-    if not processed
-      Ctrl.notFound res
-    @
-  
+    res = require('./res.coffee')(res)
+    middleware = require './middleware.coffee'
+    for name in middleware.order
+      middleware[name](req, res)
+
 module.exports = new Router()

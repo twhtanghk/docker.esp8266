@@ -13,7 +13,8 @@ module.exports =
       'Access-Control-Allow-Methods': 'OPTIONS, POST, GET, PUT, DELETE'
       'Access-Control-Allow-Headers': 'Content-Type'
       'Access-Control-Max-Age': 86400
-    res.end()
+    if req.method == 'OPTIONS'
+      res.end()
 
   static: (req, res) ->
     files = require './static.coffee'
@@ -27,4 +28,23 @@ module.exports =
         res.writeHead 200, 'Content-Type': 'text/html'
       when 'js'
         res.writeHead 200, 'Content-Type': 'application/javascript'
-    res.end atob require('./static.coffee')[req.url]
+    res.end atob files[req.url]
+
+  '404': (req, res) ->
+    res.notFound()
+
+  '500': (req, res) ->
+    res.serverError()
+
+  '$custom': (req, res) ->
+    return
+
+  order: [
+    'reqLogger'
+    'bodyParser'
+    'cors'
+    '$custom'
+    'static'
+    '404'
+    '500'
+  ]
