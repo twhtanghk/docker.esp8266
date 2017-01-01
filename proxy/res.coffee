@@ -1,5 +1,3 @@
-_ = require './lodash.coffee'
-
 module.exports = (res) ->
   res.headers =
     'Content-Type': 'application/json'
@@ -30,6 +28,8 @@ module.exports = (res) ->
     res
 
   res.set = (headers) ->
-    _.extend res.headers, headers
+    for k, v of headers
+      res.headers[k] = v
+    res.headers
 
   return res

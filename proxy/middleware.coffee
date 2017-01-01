@@ -33,6 +33,7 @@ module.exports =
       when 'js'
         res.writeHead 200, 'Content-Type': 'application/javascript'
     res.end atob files[req.url]
+    next()
 
   '404': (req, res, next) ->
     if res.headersSent
@@ -40,6 +41,8 @@ module.exports =
     res.notFound()
 
   '500': (req, res, next) ->
+    if res.headersSent
+      next()
     res.serverError()
 
   '$custom': (req, res, next) ->
