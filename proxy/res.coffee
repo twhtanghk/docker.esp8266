@@ -1,7 +1,8 @@
+_ = require './lodash.coffee'
+
 module.exports = (res) ->
-  defaultHeaders =
+  res.headers =
     'Content-Type': 'application/json'
-    'Access-Control-Allow-Origin': '*'
 
   orgWriteHead = res.writeHead
 
@@ -13,7 +14,7 @@ module.exports = (res) ->
     res
 
   res.status = (code) ->
-    res.writeHead code, defaultHeaders
+    res.writeHead code, res.headers
     res
 
   res.notFound = (data = 'Not Found') ->
@@ -27,5 +28,8 @@ module.exports = (res) ->
       .status 500
       .end()
     res
+
+  res.set = (headers) ->
+    _.extend res.headers, headers
 
   return res

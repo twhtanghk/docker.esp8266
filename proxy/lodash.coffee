@@ -15,3 +15,8 @@ module.exports =
     for i in paths
       ret[i] = object[i]
     return ret
+  map: (collection, iteratee = _.identity) ->
+    ret = []
+    for i in collection
+      ret.push iteratee i
+    return ret

@@ -7,6 +7,16 @@ class Router
       PUT: []
       DELETE: []
 
+  @order: [
+    'reqLogger'
+    'bodyParser'
+    'cors'
+    '$custom'
+    'static'
+    '404'
+    '500'
+  ]
+
   # opts = ctrl: ctrl, method: method
   METHOD: (method, url, opts) ->
     ret = {}
@@ -43,7 +53,16 @@ class Router
   process: (req, res) ->
     res = require('./res.coffee')(res)
     middleware = require './middleware.coffee'
-    for name in middleware.order
-      middleware[name](req, res)
+    handle = (array) ->
+      if array == null
+        return
+      if array instanceof Array and array.length == 0
+        return
+      [first, next...] = array
+      console.log first
+      mw = middleware[first]
+      mw req, res, ->
+        handle next 
+    handle Router.order
 
 module.exports = new Router()
