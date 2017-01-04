@@ -8,7 +8,7 @@ module.exports = (res) ->
 
   res.writeHead = (statusCode, headers) ->
     orgWriteHead.call res, statusCode, headers
-    headerSent = true
+    res.headersSent = true
     res
 
   res.status = (code) ->
