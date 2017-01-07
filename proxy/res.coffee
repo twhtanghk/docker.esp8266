@@ -21,12 +21,6 @@ module.exports = (res) ->
       .end()
     res
 
-  res.serverError = (data = 'Internal Server Error') ->
-    res
-      .status 500
-      .end()
-    res
-
   res.set = (headers) ->
     for k, v of headers
       res.headers[k] = v
