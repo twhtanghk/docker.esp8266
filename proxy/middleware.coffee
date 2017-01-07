@@ -1,7 +1,10 @@
 module.exports =
   reqLogger: (req, res, next) ->
+    start = new Date()
     res.on 'end', ->
-      console.log JSON.stringify req
+      end = new Date()
+      elapsed = (end - start).toFixed 2
+      console.log "#{start.toString()} #{elapsed}ms #{req.method} #{req.url}"
     next()
 
   bodyParser: (req, res, next) ->
