@@ -9,12 +9,9 @@ class Router
 
   @order: [
     'reqLogger'
-    'bodyParser'
-    'cors'
     '$custom'
     'static'
     '404'
-    '500'
   ]
 
   # opts = ctrl: ctrl, method: method
