@@ -1,3 +1,5 @@
+log = require './log.coffee'
+
 class Router
   constructor: ->
     @routes =
@@ -10,7 +12,6 @@ class Router
   @order: [
     'reqLogger'
     '$custom'
-    'static'
     '404'
   ]
 
@@ -56,7 +57,7 @@ class Router
       if array instanceof Array and array.length == 0
         return
       [first, next...] = array
-      console.log first
+      log.debug first
       mw = middleware[first]
       mw req, res, ->
         handle next 
