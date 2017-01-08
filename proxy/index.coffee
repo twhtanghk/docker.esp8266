@@ -1,6 +1,6 @@
 http = global.require 'http'
 wifi = global.require 'Wifi'
-app = require './app.coffee'
+log = require './log.coffee'
 
 mac = ->
   new Promise (resolve, reject) ->
@@ -9,7 +9,11 @@ mac = ->
 
 startAP = (opts)->
   new Promise (resolve, reject) ->
-    wifi.startAP opts.ssid, password: opts.pwd, resolve
+    wifi.startAP opts.ssid, {authMode: 'wpa2', password: opts.pwd}, (err) ->
+      if err?
+        reject err
+      else
+        resolve()
 
 mac()
   .then (mac) ->
@@ -21,5 +25,7 @@ mac()
   .then ->
     http
       .createServer (req, res) ->
-        app.process req, res
+        require './app.coffee'
+          .process req, res
       .listen 80
+  .catch log.error
