@@ -1,55 +1,14 @@
 log = require './log.coffee'
+Router = require './router.coffee'
 
-class Router
-  constructor: ->
-    @routes =
-      OPTIONS: []
-      POST: []
-      GET: []
-      PUT: []
-      DELETE: []
-
+class App extends Router
   @order: [
     'reqLogger'
     '$custom'
     '404'
   ]
 
-  # opts = ctrl: ctrl, method: method
-  METHOD: (method, url, opts) ->
-    ret = {}
-    ret[url] = opts
-    @routes[method].push ret
-
-  all: (url, opts) ->
-    @post url, opts
-    @get url, opts
-    @put url, opts
-    @delete url, opts
-    @
-
-  options: (url, opts) ->
-    @METHOD('OPTIONS', url, opts)
-    @
-
-  post: (url, opts) ->
-    @METHOD('POST', url, opts)
-    @
-
-  get: (url, opts) ->
-    @METHOD('GET', url, opts)
-    @
-
-  put: (url, opts) ->
-    @METHOD('PUT', url, opts)
-    @
-
-  'delete': (url, opts) ->
-    @METHOD('DELETE', url, opts)
-    @
-
-  process: (req, res) ->
-    res = require('./res.coffee')(res)
+  _process: (req, res) ->
     middleware = require './middleware.coffee'
     handle = (array) ->
       if array == null
@@ -58,9 +17,8 @@ class Router
         return
       [first, next...] = array
       log.debug first
-      mw = middleware[first]
-      mw req, res, ->
-        handle next 
-    handle Router.order
+      middleware[first] req, res, ->
+        handle next
+    handle App.order
 
-module.exports = new Router()
+module.exports = new App()
