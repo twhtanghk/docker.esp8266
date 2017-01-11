@@ -9,7 +9,7 @@ docker run -it --device /dev/ttyUSB0 twhtanghk/docker.esp8266
 ## nodemcu
 ### flash firmware
 browse https://nodemcu-build.com/index.php
-enable required modules (e.g. adc, cjson, end user setup, file, gpio, net, node, timer, wifi)
+enable required modules (e.g. adc, cjson, file, gpio, net, node, pwm, rtctime, tmr, wifi)
 ```
 ${ESPTOOL} write_flash 0x00000 nodemcu-xxxx.bin
 ```
