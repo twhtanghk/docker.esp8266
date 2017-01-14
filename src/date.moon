@@ -10,11 +10,10 @@ class Date
     log.debug cjson.encode ret
     sntp.sync "stdtime.gov.hk", =>
       ret.sec, ret.usec = rtctime.get()
-      log.debug cjson.encode ret
-      log.debug ret.toString()
+      log.debug ret
     return ret
 
-  toString: =>
+  __tostring: =>
     log.debug @sec
     tm = rtctime.epoch2cal @sec
     return "#{tm['year']}.#{tm['mon']}.#{tm['day']} #{tm['hour']}:#{tm['min']}:#{tm['sec']}"
