@@ -1,4 +1,4 @@
-log = require "log"
+log = require 'log'
 
 class Date
   new: =>
@@ -7,14 +7,15 @@ class Date
 
   @now: =>
     ret = Date()
-    log.debug cjson.encode ret
     sntp.sync "stdtime.gov.hk", =>
       ret.sec, ret.usec = rtctime.get()
-      log.debug ret
     return ret
 
+  -- retrun milli seconds for current date - adate
+  __sub: (adate) =>
+    return (@sec - adate.sec) * 1000  + (@usec - adate.usec) / 1000
+
   __tostring: =>
-    log.debug @sec
     tm = rtctime.epoch2cal @sec
     return "#{tm['year']}.#{tm['mon']}.#{tm['day']} #{tm['hour']}:#{tm['min']}:#{tm['sec']}"
 

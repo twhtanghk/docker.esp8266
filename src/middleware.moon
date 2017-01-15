@@ -1,5 +1,6 @@
 log = require "log"
 Router = require "router"
+Date = require 'date'
 
 customRouter = Router
   'GET /sys/info':
@@ -8,10 +9,10 @@ customRouter = Router
   
 return {
   reqLogger: (req, res, next) ->
-    start = new Date()
+    start = tmr.now()
     res.on 'end', ->
-      end = new Date()
-      elapsed = (end - start).toFixed 2
+      end = tmr.now()
+      elapsed = (end - start) / 1000
       log.info "#{start.toString()} #{elapsed}ms #{req.method} #{req.url}"
     next()
 
