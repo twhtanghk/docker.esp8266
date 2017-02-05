@@ -1,5 +1,10 @@
+log = require 'log'
+
 class SysCtrl
   info: (req, res) ->
-    res.end cjson.encode name: wifi.sta.gethostname()
+    log.debug res.statusCode
+    res\send cjson.encode name: wifi.sta.gethostname()
 
-return SysCtrl()
+return {
+  SysCtrl: SysCtrl()
+}

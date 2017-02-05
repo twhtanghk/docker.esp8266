@@ -5,7 +5,7 @@ Date = require 'date'
 customRouter = Router
   'GET /sys/info':
     controller: 'SysCtrl'
-    method: 'info'
+    action: 'info'
   
 return {
   reqLogger: (req, res, next) ->
@@ -22,7 +22,7 @@ return {
     res\notFound()
 
   '$custom': (req, res, next) ->
-    customRouter.process req, res
+    customRouter\process req, res
     if not res.headersSent
       return next()
 }

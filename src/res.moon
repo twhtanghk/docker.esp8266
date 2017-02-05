@@ -1,6 +1,6 @@
-class Res
-  statusCode: 200
+log = require 'log'
 
+class Res
   @statusMessage = {
     [100]: "Continue"
     [101]: "Switching"
@@ -46,6 +46,7 @@ class Res
 
   new: (client) =>
     @client = client
+    @statusCode = 200
 
   status: (code) =>
     @statusCode = code

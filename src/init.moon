@@ -20,4 +20,3 @@ with net.createServer net.TCP
         data = nil
         client = nil
         collectgarbage()
-      log.debug route

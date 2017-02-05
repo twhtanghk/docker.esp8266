@@ -5,11 +5,10 @@ class Router
     return
 
   _process: (req, res) =>
-    matched = @router["#{req.method} #{req.url}"] != nil
+    matched = @routes["#{req.method} #{req.url}"]
     if matched != nil
-      log.debug matched
       ctls = require "controller"
-      ctls[matched.controller][matched.method](req, res)
+      ctls[matched.controller][matched.action](req, res)
 
   process: (req, res) =>
     @_process req, res
