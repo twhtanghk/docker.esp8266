@@ -7,7 +7,7 @@ dflLevel = 'debug'
 
 log = (level, msg) ->
   if LEVEL[level] >= LEVEL[dflLevel]
-    print msg
+    print "#{level}: #{msg}"
 
 return { 
   debug: (msg) ->

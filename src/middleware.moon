@@ -11,15 +11,15 @@ return {
   reqLogger: (req, res, next) ->
     start = tmr.now()
     res.on 'end', ->
-      end = tmr.now()
-      elapsed = (end - start) / 1000
+      curr = tmr.now()
+      elapsed = (curr - start) / 1000
       log.info "#{start.toString()} #{elapsed}ms #{req.method} #{req.url}"
     next()
 
   '404': (req, res, next) ->
-    if res.headersSent
+    if res\headersSent
       return next()
-    res.notFound()
+    res\notFound()
 
   '$custom': (req, res, next) ->
     customRouter.process req, res

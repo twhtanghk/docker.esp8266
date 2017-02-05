@@ -22,9 +22,9 @@ class Res
     [401]: "Unauthorized"
     [402]: "Payment"
     [403]: "Forbidden"
-    [404]: "Not"
+    [404]: "Not Found"
     [405]: "Method"
-    [406]: "Not"
+    [406]: "Not Acceptable"
     [407]: "Proxy"
     [408]: "Request"
     [409]: "Conflict"
@@ -55,5 +55,9 @@ class Res
     body = "HTTP/1.1 #{@statusCode} #{@@statusMessage[@statusCode]}\nContent-Type: application/json\n\n#{cjson.encode(body)}"
     @client\send body, cb
     return @
+
+  notFound: =>
+    @status 404
+    @send()
     
 return Res

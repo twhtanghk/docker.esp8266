@@ -13,9 +13,11 @@ class App extends Router
     handle = (array) ->
       if array == nil or #array == 0
         return
-      first = array\remove 1
+      log.debug cjson.encode array
+      first = table.remove array
       log.debug first
       middleware[first] req, res, ->
+        log.debug array
         handle array
     handle @@order
 
