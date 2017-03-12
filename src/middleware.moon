@@ -6,12 +6,17 @@ customRouter = Router
   'GET /sys/info':
     controller: 'SysCtrl'
     action: 'info'
+
+  'GET /reset':
+    controller: 'SysCtrl'
+    action: 'reset'
   
 reqLogger = (req, res, next) ->
   start = tmr.now()
-  res.client\on 'sent', ->
+  res.client\on 'disconnection', ->
     curr = tmr.now()
     elapsed = (curr - start) / 1000
+    log.debug "heap: #{node.heap()}"
     log.info "#{elapsed}ms #{req.method} #{req.url}"
   next()
 

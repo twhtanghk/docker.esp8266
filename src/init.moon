@@ -1,6 +1,4 @@
-require "wlan"
-require "app"
-
+Wlan = require "wlan"
 Req = require "req"
 Res = require "res"
 log = require "log"
@@ -11,12 +9,11 @@ with net.createServer net.TCP
     conn\on "receive", (client, data) ->
       req = Req client, data
       res = Res client
-      route = "#{req.method} #{req.url}"      
-      app\process req, res
-      clean = ->
-        client\close()
+      client\on 'disconnection', ->
+        log.debug 'clean'
         req = nil
         res = nil
         data = nil
         client = nil
         collectgarbage()
+      app\process req, res
