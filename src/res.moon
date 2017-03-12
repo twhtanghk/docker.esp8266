@@ -52,13 +52,13 @@ class Res
     @statusCode = code
     return @
 
-  send: (body="", cb) =>
+  send: (body="") =>
     body = "HTTP/1.1 #{@statusCode} #{@@statusMessage[@statusCode]}\nContent-Type: application/json\n\n#{cjson.encode(body)}"
-    @client\send body, cb
+    @client\send body, @client\close
     return @
 
   notFound: =>
     @status 404
-    @send()
+    @send ""
     
 return Res

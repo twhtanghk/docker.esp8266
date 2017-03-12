@@ -11,8 +11,7 @@ with net.createServer net.TCP
       route = "#{req.method} #{req.url}"      
       verbose = (msg) ->
         log.info "#{route}: #{msg}"
-      clean = ->
-        client\close()
+      client\on 'sent', ->
         req = nil
         res = nil
         data = nil
@@ -27,47 +26,47 @@ with net.createServer net.TCP
           for name, device in pairs ctrl
             ret[name] = device\value()
           ret['heap'] = node.heap()
-          res\send ret, ->
+          client\on 'sent', ->
             verbose 'get status'
-            clean()
+          res\send ret
 
         when route\find("PUT /motor/%a+/%d+") != nil
           device, val = route\match "PUT /motor/(%a+)/(%d+)"
           val = tonumber val
           ctrl[device]\speed val
-          res\send "", ->
+          client\on 'sent', ->
             verbose "#{device} speed #{val}"
-            clean()
+          res\send ""
 
         when route\find("PUT /sw/%a+/toggle") != nil
           name = route\match "PUT /sw/(%a+)/toggle"
           ctrl[name]\toggle()          
-          res\send "", ->
+          client\on 'sent', ->
             verbose "toggle sw #{name}"
-            clean()
+          res\send ""
 
         when route\find("PUT /sw/%a+/on") != nil
           name = route\match "PUT /sw/(%a+)/toggle"
           ctrl[name]\on()          
-          res\send "", ->
+          client\on 'sent', ->
             verbose "on sw #{name}"
-            clean()
+          res\send ""
 
         when route\find("PUT /sw/%a+/off") != nil
           name = route\match "PUT /sw/(%a+)/toggle"
           ctrl[name]\off()          
-          res\send "", ->
+          client\on 'sent', ->
             verbose "off sw #{name}"
-            clean()
+          res\send ""
 
 	when route\find("GET /reset") != nil
-          res\send "", ->
+          client\on 'sent', ->
             verbose "reset"
-            clean()
+          res\send "", ->
             node.restart()
 
         else
           res\status 404
-          res\send "", ->
+          client\on 'sent', ->
             verbose "not found"
-            clean()
+          res\send ""

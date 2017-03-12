@@ -7,22 +7,20 @@ customRouter = Router
     controller: 'SysCtrl'
     action: 'info'
   
-return {
-  reqLogger: (req, res, next) ->
-    start = tmr.now()
-    res.on 'end', ->
-      curr = tmr.now()
-      elapsed = (curr - start) / 1000
-      log.info "#{start.toString()} #{elapsed}ms #{req.method} #{req.url}"
-    next()
+reqLogger = (req, res, next) ->
+  start = tmr.now()
+  res.client\on 'sent', ->
+    curr = tmr.now()
+    elapsed = (curr - start) / 1000
+    log.info "#{elapsed}ms #{req.method} #{req.url}"
+  next()
 
-  '404': (req, res, next) ->
-    if res\headersSent
-      return next()
-    res\notFound()
+notFound = (req, res, next) ->
+  res\notFound()
+  next()
 
-  '$custom': (req, res, next) ->
-    customRouter\process req, res
-    if not res.headersSent
-      return next()
-}
+custom = (req, res, next) ->
+  customRouter\process req, res
+  next()
+
+{ :reqLogger, :notFound, :custom }
