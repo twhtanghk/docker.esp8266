@@ -16,4 +16,5 @@ with net.createServer net.TCP
         data = nil
         client = nil
         collectgarbage()
+        log.debug "heap: #{node.heap()}"
       app\process req, res
