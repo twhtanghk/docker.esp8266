@@ -16,15 +16,15 @@ class Wlan
     
     wifi.sta.sethostname name
     wifi.sta.config
-      ssid: 'SSID'
-      pwd: '12345678'
+      ssid: 'Tomhome'
+      pwd: 'tom21300'
       auto: true
       save: true
     wifi.sta.connect()
 
-    log.debug cjson.encode @@apCfg()
+    log.debug "ap: {mac: #{@@apCfg().mac}, ip: #{@@apCfg().ip}}"
     @@staCfg (cfg) ->
-      log.debug cjson.encode cfg
+      log.debug "station: {mac: #{cfg.mac}, ip: #{cfg.ip}}"
 
   @staCfg: (cb) ->
     wifi.sta.getap cb

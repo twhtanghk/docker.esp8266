@@ -53,8 +53,8 @@ class Res
     return @
 
   send: (body="") =>
-    body = "HTTP/1.1 #{@statusCode} #{@@statusMessage[@statusCode]}\nContent-Type: application/json\n\n#{cjson.encode(body)}"
-    @client\send body, @client\close
+    body = "HTTP/1.1 #{@statusCode} #{@@statusMessage[@statusCode]}\nContent-Type: application/json\n\n#{body}"
+    @client\send body
     return @
 
   notFound: =>

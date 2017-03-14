@@ -17,6 +17,7 @@ reqLogger = (req, res, next) ->
     curr = tmr.now()
     elapsed = (curr - start) / 1000
     log.info "#{elapsed}ms #{req.method} #{req.url}"
+    res.client\close()
   next()
 
 notFound = (req, res, next) ->
