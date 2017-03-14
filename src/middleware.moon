@@ -1,6 +1,5 @@
 log = require "log"
 Router = require "router"
-Date = require 'date'
 
 customRouter = Router
   'GET /sys/info':
