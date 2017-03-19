@@ -46,6 +46,7 @@ class Res
 
   new: (client) =>
     @client = client
+    @headersSent = false
     @statusCode = 200
 
   status: (code) =>
@@ -55,10 +56,12 @@ class Res
   send: (body="") =>
     body = "HTTP/1.1 #{@statusCode} #{@@statusMessage[@statusCode]}\nContent-Type: application/json\n\n#{body}"
     @client\send body
+    @headersSent = true
     return @
 
   notFound: =>
-    @status 404
-    @send ""
+    if not @headersSent
+      @status 404
+      @send ""
     
 return Res
