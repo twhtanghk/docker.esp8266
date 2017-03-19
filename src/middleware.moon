@@ -6,9 +6,13 @@ customRouter = Router
     controller: 'SysCtrl'
     action: 'info'
 
-  'GET /reset':
+  'GET /sys/reset':
     controller: 'SysCtrl'
     action: 'reset'
+
+  'GET /sys/heap':
+    controller: 'SysCtrl'
+    action: 'heap'
   
 reqLogger = (req, res, next) ->
   start = tmr.now()
