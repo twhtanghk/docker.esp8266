@@ -15,7 +15,7 @@ reqLogger = (req, res, next) ->
   res.client\on 'sent', ->
     curr = tmr.now()
     elapsed = (curr - start) / 1000
-    log.info "#{elapsed}ms #{req.method} #{req.url}"
+    log.info "#{res.statusCode} #{elapsed}ms #{req.method} #{req.url}"
     res.client\close()
   next()
 
