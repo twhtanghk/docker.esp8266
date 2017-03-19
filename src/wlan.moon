@@ -16,8 +16,8 @@ class Wlan
     
     wifi.sta.sethostname name
     wifi.sta.config
-      ssid: 'Tomhome'
-      pwd: 'tom21300'
+      ssid: 'SSID'
+      pwd: '12345678'
       auto: true
       save: true
     wifi.sta.connect()
