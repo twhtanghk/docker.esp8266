@@ -1,4 +1,5 @@
 log = require "log"
+ctls = require "controller"
 
 class Router
   new: (@routes = {}) =>
@@ -7,7 +8,6 @@ class Router
   _process: (req, res) =>
     matched = @routes["#{req.method} #{req.url}"]
     if matched != nil
-      ctls = require "controller"
       ctls[matched.controller][matched.action](req, res)
 
   process: (req, res) =>
