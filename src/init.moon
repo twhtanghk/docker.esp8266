@@ -7,6 +7,7 @@ app = require "app"
 with net.createServer net.TCP
   \listen 80, (conn) ->
     conn\on "receive", (client, data) ->
+      log.debug "heap: #{node.heap()}"
       req = Req client, data
       res = Res client
       client\on 'disconnection', ->
