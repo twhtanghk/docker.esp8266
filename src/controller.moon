@@ -8,6 +8,9 @@ class SysCtrl
     res.client\on 'disconnection', node.restart
     res\send ""
 
+  heap: (req, res) ->
+    res\send "{heap: #{node.heap()}}"
+
 return {
   SysCtrl: SysCtrl()
 }
