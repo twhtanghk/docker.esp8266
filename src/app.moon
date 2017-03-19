@@ -1,5 +1,6 @@
 log = require "log"
 Router = require "router"
+middleware = require "middleware"
 
 cdr = (array) ->
   ret = {}
@@ -18,7 +19,6 @@ class App extends Router
     handle = (array) ->
       if array == nil or #array == 0
         return
-      middleware = require "middleware"
       middleware[array[1]] req, res, ->
         handle cdr array
     handle @@order
