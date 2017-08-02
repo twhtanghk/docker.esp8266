@@ -22,18 +22,14 @@ class Wlan
       save: true
     wifi.sta.connect()
 
-    log.debug "ap: {mac: #{@@apCfg().mac}, ip: #{@@apCfg().ip}}"
-    @@staCfg (cfg) ->
-      log.debug "station: {mac: #{cfg.mac}, ip: #{cfg.ip}}"
+    log.debug "AP: #{sjson.encode @@apCfg()}"
+    log.debug "STA: #{sjson.encode @@staCfg()}"
 
-  @staCfg: (cb) ->
-    wifi.sta.getap cb
+  @staCfg: ->
+    ssid: wifi.sta.getconfig(true).ssid
 
   @apCfg: ->
-    return {
-      mac: wifi.ap.getmac()
-      ip: wifi.ap.getip()
-    }
+    ip: wifi.ap.getip()
 
 Wlan.config()
 
