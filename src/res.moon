@@ -54,8 +54,7 @@ class Res
 
   send: (body="") =>
     body = "HTTP/1.1 #{@statusCode} #{@@statusMessage[@statusCode]}\nContent-Type: application/json\n\n#{body}"
-    @client\send body, ->
-      @client\close()
+    @client\send body
     return @
 
   notFound: =>

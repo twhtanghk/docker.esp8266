@@ -11,7 +11,9 @@ class Http
         conn\on "receive", (client, data) ->
           req = Req client, data
           res = Res client
-          client\on 'disconnection', ->
+          client\on 'sent', ->
+            log.debug 'sent'
+            client\close()
             req.client = nil
             req = nil
             res.client = nil
