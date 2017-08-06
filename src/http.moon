@@ -12,7 +12,6 @@ class Http
           req = Req client, data
           res = Res client
           client\on 'sent', ->
-            log.debug 'sent'
             client\close()
             req.client = nil
             req = nil
