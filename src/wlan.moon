@@ -13,6 +13,7 @@ class Wlan
       ip: "192.168.4.1"
       netmask: "255.255.255.0"
       gateway: "192.168.4.1"
+    log.debug "AP: #{sjson.encode @@apCfg()}"
     
     wifi.sta.sethostname name
     wifi.sta.config
@@ -20,13 +21,15 @@ class Wlan
       pwd: '12345678'
       auto: true
       save: true
+    wifi.eventmon.register wifi.eventmon.STA_GOT_IP, ->
+      log.debug "STA: #{sjson.encode @@staCfg()}"
     wifi.sta.connect()
 
-    log.debug "AP: #{sjson.encode @@apCfg()}"
-    log.debug "STA: #{sjson.encode @@staCfg()}"
-
   @staCfg: ->
-    ssid: wifi.sta.getconfig(true).ssid
+    {
+      ssid: wifi.sta.getconfig(true).ssid
+      ip: wifi.sta.getip()
+    }
 
   @apCfg: ->
     ip: wifi.ap.getip()
