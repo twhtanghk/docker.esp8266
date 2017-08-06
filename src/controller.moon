@@ -4,9 +4,7 @@ Wlan = require 'wlan'
 class SysCtrl
   wifi: (req, res) ->
     Wlan.staCfg (aplist) ->
-      body = cjson.encode aplist
-      log.debug body
-      res\send body
+      res\send cjson.encode aplist
 
   info: (req, res) ->
     res\send "{name: #{wifi.sta.gethostname()}}"
