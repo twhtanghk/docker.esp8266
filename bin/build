@@ -1,0 +1,3 @@
+#!/bin/sh
+
+../bin/amalg.lua -o init.lua -s index.lua telnet log wlan http app middleware router req res events
