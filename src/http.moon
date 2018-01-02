@@ -1,14 +1,14 @@
 Wlan = require "wlan"
-Req = require "req"
-Res = require "res"
 log = require "log"
-app = require "app"
 
 class Http
   @config: (opts = {}) ->
     with net.createServer net.TCP
       \listen 80, (conn) ->
         conn\on "receive", (client, data) ->
+          Req = require "req"
+          Res = require "res"
+
           req = Req client, data
           res = Res client
           client\on 'sent', ->
@@ -21,6 +21,8 @@ class Http
             client = nil
             conn = nil
             collectgarbage()
+
+          app = require "app"
           app\process req, res
 
 Http.config()

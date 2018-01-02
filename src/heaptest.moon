@@ -1,7 +1,7 @@
 log = require "log"
 
 msg = (body) ->
-  "HTTP/1.1 200 OK\nContent-Type: application/json\n\n#{cjson.encode(body)}"
+  "HTTP/1.1 200 OK\nContent-Type: application/json\n\n#{sjson.encode(body)}"
 
 with net.createServer net.TCP
   \listen 80, (conn) ->
