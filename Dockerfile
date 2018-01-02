@@ -1,30 +1,18 @@
-FROM python:2
+FROM node
 
-ENV VER=${VER:-master} \
-    REPO=https://github.com/twhtanghk/docker.esp8266 \
-    APP=/usr/src/app \
-    NPM_CONFIG_LOGLEVEL=info \
-    NODE_VERSION=7.3.0
+ENV APP=/home/user
 
-RUN useradd -ms /bin/bash -G dialout user && \
-    pip install pyserial && \
-    apt-get update && \
-    apt-get install -y git lua5.1 luarocks autoconf gperf flex bison texinfo gawk help2man wget libtool-bin ncurses-dev unzip vim && \
+RUN apt-get update && \
+    apt-get install -y python-pip git lua5.1 luarocks autoconf gperf flex bison texinfo gawk help2man wget libtool-bin ncurses-dev unzip vim && \
+    useradd -ms /bin/bash -G dialout user && \
+    chown user.user $APP && \
+    pip install pyserial esptool && \
     apt-get autoremove && \
     apt-get clean && \
     luarocks install moonscript && \
-    curl -SLO "https://nodejs.org/dist/v$NODE_VERSION/node-v$NODE_VERSION-linux-x64.tar.xz" && \
-    tar -xJf "node-v$NODE_VERSION-linux-x64.tar.xz" -C /usr/local --strip-components=1 && \
-    ln -s /usr/local/bin/node /usr/local/bin/nodejs && \
-    npm install coffee-script nodemcu-tool -g
+    yarn global add nodemcu-tool
 
+WORKDIR $APP
 USER user
-WORKDIR /home/user
 
-RUN git clone ${REPO} && \
-    git clone https://github.com/espruino/Espruino && \
-    git clone --recursive https://github.com/pfalcon/esp-open-sdk.git && \
-    git clone https://github.com/4refr0nt/luatool.git && \
-    (cd esp-open-sdk; make)
-
-ENTRYPOINT top -b -d 100
+ADD . $APP/docker.esp8266
