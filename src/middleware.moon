@@ -23,12 +23,10 @@ reqLogger = (req, res, next) ->
     res.client\close()
   next()
 
-notFound = (req, res, next) ->
+notFound = (req, res) ->
   res\notFound()
-  next()
 
 custom = (req, res, next) ->
-  customRouter\process req, res
-  next()
+  customRouter\process req, res, next
 
 { :reqLogger, :notFound, :custom }
