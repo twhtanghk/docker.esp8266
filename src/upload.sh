@@ -1,7 +1,7 @@
 #!/bin/sh
 
 nodemcu-tool mkfs
-prog="init wlan telnet app req res log router middleware controller str"
+prog="init config wlan telnet http app req res log router middleware controller str"
 moon=""
 lua=""
 lc=""
@@ -12,4 +12,4 @@ for i in ${prog}; do
   moonc $i.moon
   luac -o $i.lc $i.lua
 done
-nodemcu-tool upload ${lua}
+nodemcu-tool upload ${lua} data.json

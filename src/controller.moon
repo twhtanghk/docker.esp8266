@@ -1,15 +1,15 @@
 log = require 'log'
-Wlan = require 'wlan'
+{:AP, :STA} = require 'wlan'
 
 class SysCtrl
   wifi: (req, res) ->
-    res\send sjson.encode Wlan.staCfg()
-
-  info: (req, res) ->
-    res\send "{name: #{wifi.sta.gethostname()}}"
+    res\send sjson.encode 
+      ap: AP.get()
+      sta: STA.get()
 
   reset: (req, res) ->
-    res.client\on 'disconnection', node.restart
+    res.client\on 'sent', ->
+      node.restart()
     res\send ""
 
   heap: (req, res) ->

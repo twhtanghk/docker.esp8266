@@ -1,4 +1,3 @@
-Wlan = require "wlan"
 log = require "log"
 
 class Http

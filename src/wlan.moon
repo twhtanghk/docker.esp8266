@@ -1,39 +1,62 @@
 log = require "log"
 
-class Wlan
-  @config: (opts = {}) ->
-    name = "TT#{wifi.ap.getmac()\gsub(":", "")}"
-
-    wifi.setmode wifi.STATIONAP, true
-
-    wifi.ap.config
-      ssid: name
-      pwd: "12345678"
-    wifi.ap.setip
-      ip: "192.168.4.1"
-      netmask: "255.255.255.0"
-      gateway: "192.168.4.1"
-    log.debug "AP: #{sjson.encode @@apCfg()}"
-    
-    wifi.sta.sethostname name
+class STA
+  @config: ->
+    Config = require 'config'
+    cfg = Config.get().sta
+    wifi.sta.sethostname cfg.name
     wifi.sta.config
-      ssid: 'SSID'
-      pwd: '12345678'
+      ssid: cfg.ssid
+      pwd: cfg.pwd
       auto: true
       save: true
-    wifi.eventmon.register wifi.eventmon.STA_GOT_IP, ->
-      log.debug "STA: #{sjson.encode @@staCfg()}"
-    wifi.sta.connect()
 
-  @staCfg: ->
-    {
-      ssid: wifi.sta.getconfig(true).ssid
-      ip: wifi.sta.getip()
+  @get: ->
+    {:ssid} = wifi.sta.getconfig true
+    ssid: ssid
+
+  @set: (cfg) ->
+    wifi.sta.config cfg
+    Config = require 'config'
+    ret = Config.get()
+    ret.sta = cfg
+    Config.set ret
+
+class AP
+  @config: ->
+    Config = require 'config'
+    cfg = Config.get().ap
+    wifi.ap.config cfg
+    wifi.ap.setip cfg
+    log.debug sjson.encode ap: AP.get()
+
+  @get: ->
+    {:ssid} = wifi.ap.getconfig true
+    ip, nm, gw = wifi.ap.getip()
+    return {
+      ssid: ssid
+      ip: ip
+      nm: nm
+      gw: gw
     }
 
-  @apCfg: ->
-    ip: wifi.ap.getip()
+  @set: (cfg) ->
+    wifi.ap.config cfg
+    Config = require 'config'
+    ret = Config.get()
+    ret.ap = cfg
+    Config.set ret
 
-Wlan.config()
+wifi.setmode wifi.STATIONAP, true
+wifi.eventmon.register wifi.eventmon.STA_GOT_IP, ->
+  log.debug "STA: #{sjson.encode STA.get()}"
+wifi.eventmon.register wifi.eventmon.AP_STACONNECTED, (opts) ->
+  log.debug "AP: #{opts.MAC} connected"
 
-return Wlan
+STA.config()
+AP.config()
+
+return {
+  STA: STA
+  AP: AP
+}

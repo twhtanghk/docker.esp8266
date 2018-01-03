@@ -2,13 +2,9 @@ log = require "log"
 Router = require "router"
 
 customRouter = Router
-  'GET /wifi/ap':
+  'GET /sys/wifi':
     controller: 'SysCtrl'
     action: 'wifi'
-
-  'GET /sys/info':
-    controller: 'SysCtrl'
-    action: 'info'
 
   'GET /sys/reset':
     controller: 'SysCtrl'
