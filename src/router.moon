@@ -7,11 +7,11 @@ class Router
       @routes[k] = ctls[v.controller][v.action]
 
   process: (req, res, next) =>
-    if @routes["#{req.method} #{req.url}"] != nil
-      @routes["#{req.method} #{req.url}"](req, res)
-    else
-      if next != nil
-        next()
+    for pattern, func in pairs @routes
+      if "#{req.method} #{req.url}"\find(pattern) != nil
+        return func req, res
+    if next != nil
+      next()
 
   METHOD: (method, path, mw) =>
     table.insert @routes, "#{method} #{path}": mw
