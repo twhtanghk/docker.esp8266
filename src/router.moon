@@ -1,23 +1,27 @@
 class Router
-  routes: {}
-
   new: (ctrls = {}) =>
+    @routes = {}
     table.foreach ctrls, (k, v) ->
       ctls = require "controller"
-      @routes[k] = ctls[v.controller][v.action]
+      table.insert @routes, 
+        pattern: k
+        action: ctls[v.controller][v.action]
 
   process: (req, res, next) =>
-    for pattern, func in pairs @routes
+    for i, route in ipairs @routes
+      {:pattern, :action} = route
       if "#{req.method} #{req.url}"\find(pattern) != nil
-        return func req, res
+        return action req, res
     if next != nil
       next()
 
   METHOD: (method, path, mw) =>
-    table.insert @routes, "#{method} #{path}": mw
+    table.insert @routes, 
+      pattern: "#{method} #{path}"
+      action: mw
 
   use: (path, mw) =>
-    @METHOD 'GET', path, mw
+    @METHOD '%a+', path, mw
 
   get: (path, mw) =>
     @METHOD 'GET', path, mw
