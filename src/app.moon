@@ -8,6 +8,7 @@ class App extends Router
   }
 
   new: =>
+    super()
     table.foreach @order, (k, v) ->
       middleware = require "middleware"
       @use '/', middleware[v]
