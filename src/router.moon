@@ -8,12 +8,27 @@ class Router
         action: ctls[v.controller][v.action]
 
   process: (req, res, next) =>
-    for i, route in ipairs @routes
-      {:pattern, :action} = route
-      if "#{req.method} #{req.url}"\find(pattern) != nil
-        return action req, res
-    if next != nil
-      next()
+    nextRoute = @iter()
+    cb = ->
+      route = nextRoute()
+      if route == nil
+        if next != nil
+          next()
+      else
+        {:pattern, :action} = route
+        if "#{req.method} #{req.url}"\find(pattern) != nil
+          action req, res, cb
+        else
+          cb()
+    cb()
+
+  iter: =>
+    index = 0
+    count = #@routes
+    return ->
+      index = index + 1
+      if index <= count
+        @routes[index]
 
   METHOD: (method, path, mw) =>
     table.insert @routes, 

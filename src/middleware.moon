@@ -15,12 +15,7 @@ customRouter = Router
     action: 'heap'
   
 reqLogger = (req, res, next) ->
-  start = tmr.now()
-  res.client\on 'sent', ->
-    curr = tmr.now()
-    elapsed = (curr - start) / 1000
-    log.info "#{res.statusCode} #{elapsed}ms #{req.method} #{req.url}"
-    res.client\close()
+  log.info "#{req.method} #{req.url}"
   next()
 
 notFound = (req, res) ->

@@ -3,6 +3,7 @@ Router = require "router"
 
 class App extends Router
   order: {
+    'reqLogger'
     'custom'
     'notFound'
   }
