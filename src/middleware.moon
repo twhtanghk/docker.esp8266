@@ -1,18 +1,24 @@
 log = require "log"
 Router = require "router"
 
-customRouter = Router
-  'GET /sys/wifi':
-    controller: 'SysCtrl'
-    action: 'wifi'
+custom = (req, res, next) ->
+  customRouter = Router
+    'GET /sys/wifi':
+      controller: 'SysCtrl'
+      action: 'wifi'
 
-  'GET /sys/reset':
-    controller: 'SysCtrl'
-    action: 'reset'
+    'GET /sys/reset':
+      controller: 'SysCtrl'
+      action: 'reset'
 
-  'GET /sys/heap':
-    controller: 'SysCtrl'
-    action: 'heap'
+    'GET /sys/heap':
+      controller: 'SysCtrl'
+      action: 'heap'
+
+    'PUT /motor/%a+/%d':
+      controller: 'MotorCtrl'
+      action: 'speed'
+  customRouter\process req, res, next
   
 reqLogger = (req, res, next) ->
   log.info "#{req.method} #{req.url}"
@@ -20,8 +26,5 @@ reqLogger = (req, res, next) ->
 
 notFound = (req, res) ->
   res\notFound()
-
-custom = (req, res, next) ->
-  customRouter\process req, res, next
 
 { :reqLogger, :notFound, :custom }

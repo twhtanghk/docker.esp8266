@@ -1,7 +1,7 @@
 #!/bin/sh
 
 nodemcu-tool mkfs
-prog="init config wlan telnet http app req res log router middleware controller str"
+prog="init config wlan telnet http app req res log router middleware controller str motor"
 moon=""
 lua=""
 lc=""
