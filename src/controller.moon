@@ -17,12 +17,11 @@ SysCtrl =
 MotorCtrl =
   speed: (req, res) ->
     name, val = req.url\match '/motor/(%a+)/(%d+)'
-    Motor = require 'motor'
-    motor = Motor name: name
     try = require 'error'
     try
       do: ->
-        motor\speed val
+        Motor = require 'motor'
+        Motor.speed name, val
         res\send ""
       catch: (err) ->
         res\notFound err

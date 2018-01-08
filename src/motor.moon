@@ -1,36 +1,26 @@
+Config = require 'config'
+cfg = Config.get().motor
+
 class Motor
-  @cfg: ->
-    Config = require 'config'
-    Config.get().motor
+  @config: (name, opts) ->
+    {:pin, :speed} = opts
+    pwm.setup pin, 1000, speed
+    pwm.start pin
 
-  -- get motor[name] config from data.json
   @params: (name) ->
-    cfg = @cfg()
-    if cfg[name] == nil
-      error "motor[#{name}] not found"
-    else
-      cfg[name]
+    cfg[name] or error "motor[#{name}] not found"
 
-  @config: ->
-    for name, params in pairs @cfg()
-      {:pin, :speed} = params
-      pwm.setup pin, 1000, speed
-      pwm.start pin
-    
-  -- name: motor logical name
-  new: (opts) =>
-    @name = opts.name
-
-  speed: (val = 0) =>
-    motor = Motor.params @name
-    pwm.setduty motor.pin, val
-
-  stop: =>
-    pwm.stop Motor.params(@name).pin
-
-  value: =>
-    pwm.getduty Motor.params(@name).pin
+  @speed: (name, val) ->
+    pwm.setduty Motor.params(name).pin, val
    
-Motor.config()
+  @stop: (name) ->
+    pwm.stop Motor.params(name).pin
+
+  @value: (name) ->
+    pwm.getduty Motor.params(name).pin
+
+-- init all motors defined in data.json
+for name, opts in pairs cfg
+  Motor.config name, opts
 
 return Motor
