@@ -1,1 +1,1 @@
-{"sta":{"name":"TT","ssid":"SSID","pwd":"12345678"},"ap":{"ssid":"TT","pwd":"12345678","ip":"192.168.4.1","netmask":"255.255.255.0","gateway":"192.168.4.1"},"motor":{"evap":{"pin":5,"speed":600}}}
+{"sta":{"name":"TT","ssid":"SSID","pwd":"12345678"},"ap":{"ssid":"TT","pwd":"12345678","ip":"192.168.4.1","netmask":"255.255.255.0","gateway":"192.168.4.1"},"motor":{"evap":{"pin":5,"speed":600}},"rs485":{"baud":4800}}
