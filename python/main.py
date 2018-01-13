@@ -1,9 +1,11 @@
-import picoweb
+import logging
+logging.basicConfig(level=logging.INFO)
 
-def index(req, res):
-  yield from picoweb.jsonify(res, {'loaded': True})
+import picoweb
+import wlan.sta
 
 app = picoweb.WebApp(__name__)
-app.route('/')(index)
+
+app.mount('/wlan', wlan.sta.app)
 
 app.run(host="0.0.0.0", port=80)
