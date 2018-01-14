@@ -1,3 +1,4 @@
+import ujson
 import network
 import picoweb
 import logging
@@ -12,7 +13,7 @@ class STA:
     return self.interface.ifconfig()
 
   def set(self, opts):
-    self.interface.connect(opts.ssid, opts.passwd)
+    self.interface.connect(opts.ssid[0], opts.passwd[0])
 
   def scan(self):
     wlan = network.WLAN(mode=network.WLAN.STA)
@@ -26,9 +27,8 @@ def get(req, res):
   yield from picoweb.jsonify(res, sta.get())
 
 def set(req, res):
-  data = req.read_form_data()
-  logging.info(data)
-  sta.set(data)
+  yield from req.read_form_data()
+  sta.set(req.form)
   yield from get(req, res)
 
 def notFound(req, res):
