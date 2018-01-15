@@ -13,11 +13,15 @@ class STA:
     return self.interface.ifconfig()
 
   def set(self, opts):
-    self.interface.connect(opts.ssid[0], opts.passwd[0])
+    ssid = opts.get('ssid', [''])[0]
+    passwd = opts.get('passwd', [''])[0]
+    self.interface.active(True)
+    self.interface.connect(ssid, passwd)
 
   def scan(self):
-    wlan = network.WLAN(mode=network.WLAN.STA)
-    nets = wlan.scan()
+    nets = []
+    for net in self.interface.scan():
+      nets.append(net[0])
     return nets
 
 sta = STA()
@@ -31,6 +35,10 @@ def set(req, res):
   sta.set(req.form)
   yield from get(req, res)
 
+def scan(req, res):
+  nets = sta.scan()
+  yield from picoweb.jsonify(res, nets)
+  
 def notFound(req, res):
   yield from picoweb.start_response(res, status='404')
   yield from res.awrite('404\r\n')
@@ -44,3 +52,4 @@ def method(req, res):
   yield from ret.get(req.method, notFound)(req, res)
 
 app.route('/sta')(method)
+app.route('/sta/scan')(scan)
