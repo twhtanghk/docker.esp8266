@@ -1,0 +1,11 @@
+{
+  "wlan": {
+    "sta": {
+      "dhcp_hostname": "ESP"
+    },
+    "ap": {
+      "essid": "MicroPython",
+      "password":"micropythoN"
+    }
+  }
+}

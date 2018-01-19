@@ -1,0 +1,3 @@
+ujson
+picoweb
+micropython-logging
