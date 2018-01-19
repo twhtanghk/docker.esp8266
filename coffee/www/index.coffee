@@ -1,32 +1,24 @@
-require './templates'
-require './model.coffee'
-require 'angular-xeditable'
+require './index.scss'
+React = require 'react'
+E = require 'react-script'
+ReactDOM = require 'react-dom'
+MuiThemeProvider = require('material-ui/styles/MuiThemeProvider').default
+AppBar = require('./appbar.coffee').component
+{compose, createStore, combineReducers, applyMiddleware} = require 'redux'
+{Provider, connect} = require 'react-redux'
+Toastr = require 'react-redux-toastr'
 
-angular
+reducer = combineReducers
+  toastr: Toastr.reducer
 
-  .module 'app', ['ionic', 'model', 'xeditable']
+composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose
+store = createStore reducer, {}, composeEnhancers()
 
-  .run (editableOptions) ->
-    editableOptions.theme = 'bs3'
+elem =
+  E Provider, store: store,
+    E MuiThemeProvider,
+      E 'div',
+        E Toastr.default
+        E AppBar
 
-  .controller 'statusCtrl', ($scope, $log, resource) ->
-    resource.Sys
-      .fetchOne 'info'
-      .then (model) ->
-        $scope.model = model
-      .catch $log.error
-
-  .controller 'apCtrl', ($scope, $log, resource) ->
-    resource.Sys
-      .fetchOne 'ap'
-      .then (model) ->
-        $scope.model = model
-      .catch $log.error
-
-  .controller 'staCtrl', ($scope, $log, resource) ->
-    resource.Sys
-      .fetchOne 'sta'
-      .then (model) ->
-        $scope.model = model
-      .catch $log.error
-
+ReactDOM.render elem, document.getElementById 'root'
