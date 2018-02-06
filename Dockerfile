@@ -1,11 +1,11 @@
-FROM python:2
+FROM python:3
 
 ENV APP=/root \
     NVM_DIR=/usr/local/nvm
 
 RUN apt-get update \
-&&  apt-get install -y python-pip git lua5.1 luarocks autoconf gperf flex bison texinfo gawk help2man wget libtool-bin ncurses-dev unzip vim \
-&&  pip install pyserial esptool \
+&&  apt-get install -y python-pip git lua5.1 luarocks autoconf gperf flex bison texinfo gawk help2man wget libtool-bin ncurses-dev unzip vim picocom minicom \
+&&  pip install pyserial esptool rshell \
 &&  apt-get autoremove \
 &&  apt-get clean \
 &&  luarocks install moonscript \
