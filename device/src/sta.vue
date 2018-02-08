@@ -1,45 +1,70 @@
 <template>
-  <div class='panel-body'>
-    <vue-form-generator :schema='schema' :model='model' :options='opts'>
-    </vue-form-generator>
+  <div id='sta'>
+    <b-form-group label='host'>
+      <b-input-group>
+        <b-form-input v-model='host' type='text' />
+        <b-input-group-append>
+          <b-btn variant='primary'>Update</b-btn>
+        </b-input-group-append>
+      </b-input-group>
+    </b-form-group>
+    <hr>
+    <b-form>
+      <b-form-group label='essid'>
+        <b-form-select v-model='essid' :options='list' />
+      </b-form-group>
+      <b-form-group>
+      <label :for='password'>password</label>
+      <b-form-input id='password' v-model='password' type='password' />
+      </b-form-group>
+      <div class='action'>
+        <b-button type="submit" variant="primary">Connect</b-button>
+        <b-button @click='getList()' variant="secnodary">Scan</b-button>
+      </div>
+    </b-form>
   </div>
 </template>
 
 <script lang='coffee'>
+url =
+  host: '/wlan/sta'
+  essid: '/wlan/sta/scan'
+
 module.exports =
   data: ->
-    essidList: []
-    model:
-      host: ''
-      essid: ''
-      password: ''
-    schema:
-      fields: [
-        { type: 'input', inputType: 'text', label: 'host', model: 'host' }
-        { type: 'select', label: 'essid', model: 'essid', values: [] }
-        { type: 'input', inputType: 'password', label: 'password', model: 'password' }
-      ]
-    opts:
-      validateAfterLoad: true
-      validateAfterChanged: true
-  beforeCreate: ->
-    url =
-      host: 'http://192.168.4.1/wlan/sta'
-      essid: 'http://192.168.4.1/wlan/sta/scan'
-    fetch url.host
-      .then (res) =>
-        @model.host = res.body
-      .catch (err) =>
-        @model.host = err
-    fetch url.essid
-      .then (res) =>
-        @essidList = res.body
-      .catch console.error
+    host: ''
+    essid: ''
+    list: []
+    password: ''
+  methods:
+    getHost: ->
+      fetch url.host
+        .then (res) ->
+          res.json()
+        .then (res) =>
+          @host = res.dhcp_hostname
+        .catch console.error   
+    getList: ->
+      fetch url.essid
+        .then (res) ->
+          res.json()
+        .then (res) =>
+          @list = []
+          for i in res
+            @list.push
+              value: i
+              text: i
+      .catch console.error   
+  created: ->
+    @getHost()
+    @getList()
 </script>
 
 <style lang='scss' scoped>
-  div.panel-body {
-    margin-top: 1em;
-    margin-bottom: 1em;
-  }
+#sta {
+  margin: 10px 10px 0 0;
+}
+div.action {
+  text-align: right;
+}
 </style>

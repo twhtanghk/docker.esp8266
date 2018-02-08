@@ -3,13 +3,8 @@
 import Vue from 'vue'
 import App from './App'
 import BootstrapVue from 'bootstrap-vue'
-import VueResource from 'vue-resource'
-import VueFormGenerator from 'vue-form-generator'
-import 'vue-form-generator/dist/vfg.css'
 
 Vue.use(BootstrapVue)
-Vue.use(VueResource)
-Vue.use(VueFormGenerator)
 Vue.config.productionTip = false
 
 /* eslint-disable no-new */
