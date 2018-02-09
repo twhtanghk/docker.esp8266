@@ -10,6 +10,9 @@
 </template>
 
 <script lang='coffee'>
+Vue = require('vue').default
+console.error = (msg) ->
+  Vue.toasted.error msg, duration: 5000
 pwm = require('./pwm').default
 net = require('./net').default
 
@@ -21,4 +24,5 @@ module.exports =
 
 <style lang='scss'>
 @import '~bootstrap/scss/bootstrap.scss';
+@import 'vue-toasted/dist/vue-toasted.min.css';
 </style>

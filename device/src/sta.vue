@@ -43,18 +43,18 @@ module.exports =
           res.json()
         .then (res) =>
           @host = res.dhcp_hostname
-        .catch console.error   
+        .catch console.error
     getList: ->
       fetch url.essid
         .then (res) ->
           res.json()
         .then (res) =>
           @list = []
-          for i in res
+          for i in res.sort()
             @list.push
               value: i
               text: i
-      .catch console.error   
+      .catch console.error
   created: ->
     @getHost()
     @getList()

@@ -3,8 +3,10 @@
 import Vue from 'vue'
 import App from './App'
 import BootstrapVue from 'bootstrap-vue'
+import Toasted from 'vue-toasted'
 
 Vue.use(BootstrapVue)
+Vue.use(Toasted)
 Vue.config.productionTip = false
 
 /* eslint-disable no-new */
