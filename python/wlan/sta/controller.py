@@ -8,7 +8,7 @@ def get(req, res):
 def set(req, res):
   yield from req.read_form_data()
   model.set(req.form)
-  yield from get(req, res)
+  yield from picoweb.jsonify(res, {})
 
 def scan(req, res):
   nets = model.scan()
