@@ -32,6 +32,7 @@ def set(opts):
     interface.connect(ssid, passwd)
     cfg['wlan']['sta']['ssid'] = ssid
     cfg['wlan']['sta']['passwd'] = passwd
+  model.save(cfg)
 
 def scan():
   nets = []

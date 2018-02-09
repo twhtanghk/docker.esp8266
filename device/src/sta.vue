@@ -4,7 +4,7 @@
       <b-input-group>
         <b-form-input v-model='host' type='text' />
         <b-input-group-append>
-          <b-btn variant='primary'>Update</b-btn>
+          <b-btn variant='primary' @click='setHost(host)'>Update</b-btn>
         </b-input-group-append>
       </b-input-group>
     </b-form-group>
@@ -40,13 +40,30 @@ module.exports =
     getHost: ->
       fetch url.host
         .then (res) ->
+          if res.status != 200
+            throw new Error res.statusText
           res.json()
         .then (res) =>
           @host = res.dhcp_hostname
         .catch console.error
+    setHost: (val) ->
+      data = new URLSearchParams()
+      data.set 'name', val
+      opts =
+        method: 'PUT'
+        body: data
+        headers:
+          'Content-Type': 'application/x-www-form-urlencoded'
+      fetch url.host, opts
+        .then (res) ->
+          if res.status != 200
+            throw new Error res.statusText
+        .catch console.error
     getList: ->
       fetch url.essid
         .then (res) ->
+          if res.status != 200
+            throw new Error res.statusText
           res.json()
         .then (res) =>
           @list = []
