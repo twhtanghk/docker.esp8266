@@ -9,19 +9,17 @@
       </b-input-group>
     </b-form-group>
     <hr>
-    <b-form>
-      <b-form-group label='essid'>
-        <b-form-select v-model='essid' :options='list' />
-      </b-form-group>
-      <b-form-group>
-      <label :for='password'>password</label>
-      <b-form-input id='password' v-model='password' type='password' />
-      </b-form-group>
-      <div class='action'>
-        <b-button type="submit" variant="primary">Connect</b-button>
-        <b-button @click='getList()' variant="secnodary">Scan</b-button>
-      </div>
-    </b-form>
+    <b-form-group label='essid'>
+      <b-form-select v-model='essid' :options='list' />
+    </b-form-group>
+    <b-form-group>
+    <label :for='password'>password</label>
+    <b-form-input id='password' v-model='password' type='password' />
+    </b-form-group>
+    <div class='action'>
+      <b-button variant="primary" @click='connect(essid, password)'>Connect</b-button>
+      <b-button variant="secondary" @click='getList()'>Scan</b-button>
+    </div>
   </div>
 </template>
 
@@ -37,6 +35,14 @@ module.exports =
     list: []
     password: ''
   methods:
+    opts: (method, params) ->
+      data = new URLSearchParams()
+      for k, v of params
+        data.set k, v
+      method: method
+      body: data
+      headers:
+        'Content-Type': 'application/x-www-form-urlencoded'
     getHost: ->
       fetch url.host
         .then (res) ->
@@ -47,14 +53,13 @@ module.exports =
           @host = res.dhcp_hostname
         .catch console.error
     setHost: (val) ->
-      data = new URLSearchParams()
-      data.set 'name', val
-      opts =
-        method: 'PUT'
-        body: data
-        headers:
-          'Content-Type': 'application/x-www-form-urlencoded'
-      fetch url.host, opts
+      fetch url.host, @opts('PUT', name: val)
+        .then (res) ->
+          if res.status != 200
+            throw new Error res.statusText
+        .catch console.error
+    connect: (essid, passwd) ->
+      fetch url.host, @opts('PUT', {ssid: essid, passwd: passwd})
         .then (res) ->
           if res.status != 200
             throw new Error res.statusText
