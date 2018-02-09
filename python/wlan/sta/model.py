@@ -36,5 +36,6 @@ def set(opts):
 def scan():
   nets = []
   for net in interface.scan():
-    nets.append(net[0])
+    if net[0] not in nets:
+      nets.append(net[0])
   return nets
