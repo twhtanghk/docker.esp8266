@@ -10,13 +10,14 @@ def boot():
   opts = cfg['wlan']['sta']
   interface.config(dhcp_hostname=opts['dhcp_hostname'])
   if 'ssid' in opts:
-    interface.connect(opts.ssid, opts.passwd)
+    interface.connect(opts['ssid'], opts['passwd'])
 
 def get():
   ret = {}
   for prop in ['mac', 'dhcp_hostname']:
     ret[prop] = interface.config(prop)
   ret['mac'] = ubinascii.hexlify(ret['mac']).decode('utf-8')
+  ret['isconnected'] = interface.isconnected()
   ret['curr'] = interface.ifconfig()
   return ret
 
