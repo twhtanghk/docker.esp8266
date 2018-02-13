@@ -1,6 +1,9 @@
 import ubinascii
+import ujson
 import network
 from config import model
+import logging
+logger = logging.getLogger(__name__)
 
 interface = network.WLAN(network.STA_IF)
 interface.active(True)
@@ -11,6 +14,7 @@ def boot():
   interface.config(dhcp_hostname=opts['dhcp_hostname'])
   if 'ssid' in opts:
     interface.connect(opts['ssid'], opts['passwd'])
+  logger.info(ujson.dumps(get()))
 
 def get():
   ret = {}
@@ -23,13 +27,13 @@ def get():
 
 def set(opts):
   cfg = model.load()
-  name = opts.get('name', [''])[0]
-  if name is not None:
+  if 'name' in opts:
+    name = opts['name'][0]
     interface.config(dhcp_hostname=name)
     cfg['wlan']['sta']['dhcp_hostname'] = name
-  ssid = opts.get('ssid', [''])[0]
-  passwd = opts.get('passwd', [''])[0]
-  if ssid is not None:
+  if 'ssid' in opts and 'passwd' in opts:
+    ssid = opts['ssid'][0]
+    passwd = opts['passwd'][0]
     interface.connect(ssid, passwd)
     cfg['wlan']['sta']['ssid'] = ssid
     cfg['wlan']['sta']['passwd'] = passwd

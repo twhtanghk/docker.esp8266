@@ -21,7 +21,6 @@ def method(req, res):
   }
   yield from ret.get(req.method, notFound)(req, res)
 
-model.boot()
 app = picoweb.WebApp(__name__)
 app.route('/')(method)
 app.route('/scan')(scan)
