@@ -1,0 +1,18 @@
+$margin: 10px;
+$padding: 10px;
+
+@import '~bootstrap/scss/bootstrap.scss';
+
+#sta, #ap, #pwm {
+  > div {
+    @extend .border;
+    @extend .border-dark;
+    @extend .rounded;
+    margin-top: $margin;
+    padding: $padding;
+
+    div.action {
+      text-align: right;
+    }
+  }
+}
