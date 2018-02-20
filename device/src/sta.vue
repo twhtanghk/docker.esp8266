@@ -1,5 +1,5 @@
 <template>
-  <div id='sta'>
+  <b-container fluid id='sta'>
     <b-container fluid>
       <b-row>
         <div class='col-lg'>
@@ -29,19 +29,20 @@
       <b-form-group label='essid'>
         <b-form-select v-model='essid' :options='list' />
       </b-form-group>
-      <b-form-group>
-        <label :for='password'>password</label>
-        <b-form-input id='password' v-model='password' type='password' />
+      <b-form-group label='password'>
+        <b-form-input v-model='password' type='password' />
       </b-form-group>
       <div class='action'>
         <b-button variant="primary" @click='connect(essid, password)'>Connect</b-button>
         <b-button variant="secondary" @click='getList()'>Scan</b-button>
       </div>
     </div>
-  </div>
+  </b-container>
 </template>
 
 <script lang='coffee'>
+model = require './model'
+
 url =
   host: '/wlan/sta'
   essid: '/wlan/sta/scan'
@@ -53,19 +54,9 @@ module.exports =
     list: []
     password: ''
   methods:
-    opts: (method, params) ->
-      data = new URLSearchParams()
-      for k, v of params
-        data.set k, v
-      method: method
-      body: data
-      headers:
-        'Content-Type': 'application/x-www-form-urlencoded'
     getStatus: ->
-      fetch url.host
+      model.get url.host
         .then (res) ->
-          if res.status != 200
-            throw new Error res.statusText
           res.json()
         .then (res) =>
           @isconnected = res.isconnected
@@ -73,22 +64,19 @@ module.exports =
           @host = res.dhcp_hostname
         .catch console.error
     setHost: (val) ->
-      fetch url.host, @opts('PUT', name: val)
+      model.put url.host, name: val
         .then (res) ->
-          if res.status != 200
-            throw new Error res.statusText
+          console.info 'updated successfully'
         .catch console.error
     connect: (essid, passwd) ->
-      fetch url.host, @opts('PUT', {ssid: essid, passwd: passwd})
-        .then (res) ->
-          if res.status != 200
-            throw new Error res.statusText
+      model
+        .put url.host, {ssid: essid, passwd: passwd}
+        .then ->
+          console.info 'connecting to specified essid'
         .catch console.error
     getList: ->
       fetch url.essid
         .then (res) ->
-          if res.status != 200
-            throw new Error res.statusText
           res.json()
         .then (res) =>
           @list = []
@@ -103,18 +91,4 @@ module.exports =
 </script>
 
 <style lang='scss'>
-@import '~bootstrap/scss/bootstrap.scss';
-
-#sta {
-  > div {
-    @extend .border;
-    @extend .border-dark;
-    @extend .rounded;
-    margin-top: 10px;
-    padding: 5px;
-  }
-}
-div.action {
-  text-align: right;
-}
 </style>

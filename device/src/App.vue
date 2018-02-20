@@ -1,9 +1,12 @@
 <template>
   <b-tabs>
-    <b-tab title='net' active>
-      <net/>
+    <b-tab title='AP' active>
+      <ap/>
     </b-tab>
-    <b-tab title='pwm'>
+    <b-tab title='STA'>
+      <sta/>
+    </b-tab>
+    <b-tab title='PWM'>
       <pwm/>     
     </b-tab>
   </b-tabs>
@@ -13,16 +16,20 @@
 Vue = require('vue').default
 console.error = (msg) ->
   Vue.toasted.error msg, duration: 5000
+console.info = (msg) ->
+  Vue.toasted.info msg, duration: 5000
 pwm = require('./pwm').default
-net = require('./net').default
+ap = require('./ap').default
+sta = require('./sta').default
 
 module.exports =
   components:
-    net: net
+    ap: ap
+    sta: sta
     pwm: pwm
 </script>
 
 <style lang='scss'>
-@import '~bootstrap/scss/bootstrap.scss';
+@import 'app.scss';
 @import 'vue-toasted/dist/vue-toasted.min.css';
 </style>
