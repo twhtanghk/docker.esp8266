@@ -1,6 +1,6 @@
 import picoweb
 from wlan.ap import model
-from util import notFound
+from util import notFound, error
 
 def get(req, res):
   yield from picoweb.jsonify(res, model.get())
@@ -11,6 +11,12 @@ def set(req, res):
     'essid': req.form.get('essid', [''])[0],
     'password': req.form.get('password', [''])[0]
   }
+  if not opts['essid']:
+    yield from error(req, res, 'empty essid')
+    return
+  if len(opts['password']) < 8:
+    yield from error('"password min length 8"')
+    return
   model.set(opts)
   yield from get(req, res)
 
