@@ -15,6 +15,14 @@ def set(req, res):
   model.save(cfg)
   yield from get(req, res)
 
+def reset(req, res):
+  yield from picoweb.jsonify(res, {})
+  model.reset()
+
+def factory(req, res):
+  model.factory()
+  yield from picoweb.jsonify(res, {})
+
 def method(req, res):
   ret = {
     'GET': get,
@@ -25,3 +33,5 @@ def method(req, res):
 
 app = picoweb.WebApp(__name__)
 app.route('/')(method)
+app.route('/reset')(reset)
+app.route('/factory')(factory)
