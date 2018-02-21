@@ -60,8 +60,11 @@ module.exports =
     factory: ->
       model
         .get url.factory
-        .then ->
-          console.info 'restored successfully'
+        .then (res) ->
+          res.json()
+        .then (res) =>
+          @essid = res.essid
+          @authmode = res.authmode
         .catch console.error
   created: ->
     @getStatus()
