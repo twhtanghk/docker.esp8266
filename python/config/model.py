@@ -2,6 +2,13 @@ import ujson
 
 name = 'config.json'
 
+def boot():
+  try:
+    import os
+    os.stat(name)
+  except OSError:
+    factory()
+
 def load():
   f = open(name)
   data = ujson.loads(f.read())
@@ -13,14 +20,24 @@ def save(data):
   f.write(ujson.dumps(data))
   f.close()
 
-def test():
+def reset():
+  import machine
+  machine.reset()
+
+def factory():
   from wlan.ap import model
-  from wlan.sta import model
-  curr = {
-    'ap': model.get(),
-    'sta': model.get()
+  mac = model.get()['mac'][6:]
+  essid = "MicroPython-{}".format(mac)
+  name = "ESP-{}".format(mac)
+  cfg = {
+   'wlan': {
+     'sta': {
+       'dhcp_hostname': name
+     },
+     'ap': {
+       'essid': essid,
+       'password': 'micropythoN'
+     }
+   }
   }
-  cfg = load()
-  cfg['wlan']['ap']['essid'] = "MicroPython-{}".format(curr['ap']['mac'][6:])
-  cfg['wlan']['sta']['dhcp_hostname'] = "ESP-{}".format(curr['sta']['mac'][6:])
   save(cfg)
