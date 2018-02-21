@@ -34,7 +34,6 @@ def set(opts):
   cfg = model.load()
   essid = opts['essid']
   password = opts['password']
-  interface.config(essid=essid, password=password)
   cfg['wlan']['ap']['essid'] = opts['essid']
   cfg['wlan']['ap']['password'] = opts['password']
   logger.info(ujson.dumps(cfg))
