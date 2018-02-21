@@ -15,7 +15,7 @@ def set(req, res):
     yield from error(req, res, 'empty essid')
     return
   if len(opts['password']) < 8:
-    yield from error('"password min length 8"')
+    yield from error(req, res, 'password min length 8')
     return
   model.set(opts)
   yield from get(req, res)
