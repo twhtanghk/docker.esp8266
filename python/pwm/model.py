@@ -18,7 +18,7 @@ def boot():
   logger.info(ujson.dumps(cfg))
 
 def get():
-  cfg = cfg()
+  cfg = config()
   for device in cfg:
     pin = cfg[device]['pin']
     dev = machine.PWM(machine.Pin(pin))
@@ -26,7 +26,7 @@ def get():
   return cfg
 
 def set(opts):
-  cfg = cfg()
+  cfg = config()
   device = opts['device']
   pin = cfg[device].pin
   value = opts['value']

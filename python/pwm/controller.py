@@ -1,5 +1,7 @@
 import picoweb
 from pwm import model
+import logging
+logger = logging.getLogger(__name__)
 from util import error, notFound
 
 def get(req, res):
