@@ -25,19 +25,5 @@ def reset():
   machine.reset()
 
 def factory():
-  from wlan.ap import model
-  mac = model.get()['mac'][6:]
-  essid = "MicroPython-{}".format(mac)
-  name = "ESP-{}".format(mac)
-  cfg = {
-   'wlan': {
-     'sta': {
-       'dhcp_hostname': name
-     },
-     'ap': {
-       'essid': essid,
-       'password': 'micropythoN'
-     }
-   }
-  }
-  save(cfg)
+  from config.factory import cfg
+  save(cfg())

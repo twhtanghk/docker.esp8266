@@ -9,5 +9,7 @@ from wlan.ap import model as ap
 ap.boot()
 from wlan.sta import model as sta
 sta.boot()
+from pwm import model as pwm
+pwm.boot()
 import gc
 gc.collect()
