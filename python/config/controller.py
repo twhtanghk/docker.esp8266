@@ -21,7 +21,8 @@ def reset(req, res):
 
 def factory(req, res):
   model.factory()
-  yield from picoweb.jsonify(res, {})
+  from wlan.ap import controller
+  yield from controller.get(req, res)
 
 def method(req, res):
   ret = {
