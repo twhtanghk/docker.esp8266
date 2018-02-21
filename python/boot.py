@@ -3,6 +3,8 @@
 #esp.osdebug(None)
 #import webrepl
 #webrepl.start()
+from config import model as cfg
+cfg.boot()
 from wlan.ap import model as ap
 ap.boot()
 from wlan.sta import model as sta
