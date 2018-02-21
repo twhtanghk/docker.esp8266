@@ -28,7 +28,7 @@ model = require './model'
 url = 
   ap: '/wlan/ap'
   reset: '/cfg/reset'
-  reset: '/cfg/factory'
+  factory: '/cfg/factory'
 
 module.exports =
   data: ->
