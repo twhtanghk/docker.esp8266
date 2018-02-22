@@ -14,7 +14,7 @@
         <b-button variant="primary" @click='save(essid, password)'>Save</b-button>
       </div>
     </b-container>
-    <b-container>
+    <b-container fluid>
       <div class='action'>
         <b-button variant="primary" @click='reset()'>Restart</b-button>
         <b-button variant="primary" @click='factory()'>Factory Config</b-button>
