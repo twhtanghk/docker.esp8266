@@ -2,14 +2,13 @@
   <b-container fluid id='pwm'>
     <div>
       <b-row>
-        <b-col>
-          <b-form-group label='fan'>
-            <b-form-input type='number' v-bind='attrs' v-model='value' @change='setValue($event)' />
-          </b-form-group>
+        <b-col cols='8'>
+          <b-input-group prepend='fan'>
+            <b-form-input type='range' v-bind='attrs' v-model='value' @change='setValue($event)' />
+          </b-input-group>
         </b-col>
-        <b-col>
-          <b-form-input type='range' v-bind='attrs' v-model='value' @change='setValue($event)'>
-          </b-form-input>
+        <b-col cols='4'>
+          <b-form-input type='number' v-bind='attrs' v-model='value' @change='setValue($event)' />
         </b-col>
       </b-row>
     </div>
@@ -44,7 +43,7 @@ module.exports =
         .get url
         .then (res) ->
           res.json()
-        .then (res) ->
+        .then (res) =>
           @value = res.fan.value
         .catch console.error
   created: ->
