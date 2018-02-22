@@ -87,7 +87,8 @@ module.exports =
       .catch console.error
   created: ->
     @getStatus()
-    @getList()
+      .then =>
+        @getList()
 </script>
 
 <style lang='scss'>
