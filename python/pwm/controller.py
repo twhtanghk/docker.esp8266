@@ -9,12 +9,15 @@ def get(req, res):
 
 def set(req, res):
   yield from req.read_form_data()
-  device = req.form['device']
-  cfg = model.cfg()
-  if device not in cfg:
-    error(req, res, "{} not found".format(device))
-  model.set(req.form)
-  model.get(req, res)
+  opts = {
+    'device': req.form['device'][0],
+    'value': int(req.form['value'][0])
+  }
+  try:
+    model.set(opts)
+    yield from picoweb.jsonify(res, {})
+  except:
+    error(req, res, "{} not found".format(opts['device']))
 
 def method(req, res):
   ret = {
@@ -23,6 +26,8 @@ def method(req, res):
   }
   logger.info('{} {}'.format(req.method, req.path))
   yield from ret.get(req.method, notFound)(req, res)
+  import gc
+  gc.collect()
 
 app = picoweb.WebApp(__name__)
 app.route('/')(method)

@@ -4,31 +4,34 @@ import machine
 import logging
 logger = logging.getLogger(__name__)
 
+def device(pin):
+  return machine.PWM(machine.Pin(pin))
+
 def config():
   return model.load()['pwm']
 
 def boot():
   cfg = config()
-  for device in cfg:
-    pin = cfg[device]['pin']
-    default = cfg[device]['default']
-    dev = machine.PWM(machine.Pin(pin))
+  for name in cfg:
+    pin = cfg[name]['pin']
+    default = cfg[name]['default']
+    dev = device(pin)
     dev.freq(1024)
     dev.duty(default)
   logger.info(ujson.dumps(cfg))
 
 def get():
   cfg = config()
-  for device in cfg:
-    pin = cfg[device]['pin']
-    dev = machine.PWM(machine.Pin(pin))
-    cfg[device]['value'] = dev.duty()
+  for name in cfg:
+    pin = cfg[name]['pin']
+    dev = device(pin)
+    cfg[name]['value'] = dev.duty()
   return cfg
 
 def set(opts):
   cfg = config()
-  device = opts['device']
-  pin = cfg[device].pin
+  name = opts['device']
+  pin = cfg[name]['pin']
   value = opts['value']
-  machine.Pin(pin).duty(value)
+  device(pin).duty(value)
   logger.info("set {} pin {} value {}".format(device, pin, value))

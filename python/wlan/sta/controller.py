@@ -1,3 +1,4 @@
+import gc
 import picoweb
 from wlan.sta import model
 from util import notFound
@@ -13,6 +14,7 @@ def set(req, res):
 def scan(req, res):
   nets = model.scan()
   yield from picoweb.jsonify(res, nets)
+  gc.collect()
 
 def method(req, res):
   ret = {
@@ -20,6 +22,7 @@ def method(req, res):
     'PUT': set
   }
   yield from ret.get(req.method, notFound)(req, res)
+  gc.collect()
 
 app = picoweb.WebApp(__name__)
 app.route('/')(method)

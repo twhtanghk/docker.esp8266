@@ -26,6 +26,8 @@ def method(req, res):
     'PUT': set
   }
   yield from ret.get(req.method, notFound)(req, res)
+  import gc
+  gc.collect()
 
 app = picoweb.WebApp(__name__)
 app.route('/')(method)
