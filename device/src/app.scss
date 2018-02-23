@@ -3,16 +3,14 @@ $padding: 10px;
 
 @import '~bootstrap/scss/bootstrap.scss';
 
-#sta, #ap, #pwm {
-  > div {
-    @extend .border;
-    @extend .border-dark;
-    @extend .rounded;
-    margin-top: $margin;
-    padding: $padding;
+#ap, #sta, #pwm {
+  margin: $margin;
+}
 
-    div.action {
-      text-align: right;
-    }
-  }
+div.action {
+  text-align: right;
+}
+
+.card + .card {
+  margin-top: $margin;
 }

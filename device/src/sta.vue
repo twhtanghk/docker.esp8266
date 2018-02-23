@@ -1,6 +1,6 @@
 <template>
-  <b-container fluid id='sta'>
-    <b-container fluid>
+  <div id='sta'>
+    <card header='Status'>
       <b-row>
         <div class='col-lg'>
           <label>isconnected: {{isconnected}}</label>
@@ -12,32 +12,38 @@
       <div class='action'>
         <b-button variant="primary" @click='getStatus()'>Refresh</b-button>
       </div>
-    </b-container>
+    </card>
 
-    <div>
-      <b-form-group label='host'>
-        <b-input-group>
-          <b-form-input v-model='host' type='text' />
-          <b-input-group-append>
-            <b-btn variant='primary' @click='setHost(host)'>Update</b-btn>
-          </b-input-group-append>
-        </b-input-group>
-      </b-form-group>
-    </div>
+    <card header='Host'>
+      <form-col>
+        <div slot='fields'>
+          <field name='name'>
+            <b-form-input v-model='host' type='text' />
+          </field>
+        </div>
+        <div slot='buttons' class='action'>
+          <b-button variant='primary' @click='setHost(host)'>Save</b-button>
+        </div>
+      </form-col>
+    </card>
 
-    <div>
-      <b-form-group label='essid'>
-        <b-form-select v-model='essid' :options='list' />
-      </b-form-group>
-      <b-form-group label='password'>
-        <b-form-input v-model='password' type='password' />
-      </b-form-group>
-      <div class='action'>
-        <b-button variant="primary" @click='connect(essid, password)'>Connect</b-button>
-        <b-button variant="secondary" @click='getList()'>Scan</b-button>
-      </div>
-    </div>
-  </b-container>
+    <card header='Settings'>
+      <form-col>
+        <div slot='fields'>
+          <field name='essid'>
+            <b-form-select v-model='essid' :options='list' />
+          </field>
+          <field name='password'>
+            <b-form-input v-model='password' type='password' />
+          </field>
+        </div>
+        <div slot='buttons' class='action'>
+          <b-button variant="primary" @click='connect(essid, password)'>Connect</b-button>
+          <b-button variant="secondary" @click='getList()'>Scan</b-button>
+        </div>
+      </form-col>
+    </card>
+  </div>
 </template>
 
 <script lang='coffee'>
@@ -48,7 +54,13 @@ url =
   essid: '/wlan/sta/scan'
 
 module.exports =
+  components:
+    card: require('./card').default
+    formCol: require('./form').default
+    field: require('./field').default
   data: ->
+    isconnected: false
+    config: {}
     host: ''
     essid: ''
     list: []
@@ -90,6 +102,3 @@ module.exports =
       .then =>
         @getList()
 </script>
-
-<style lang='scss'>
-</style>

@@ -1,26 +1,30 @@
 <template>
-  <b-container fluid id='ap'>
-    <b-container fluid>
-      <b-form-group label='essid'>
-        <b-form-input v-model='essid' type='text' required />
-      </b-form-group>
-      <b-form-group label='password'>
-        <b-form-input v-model='password' type='password' data-minlength='8' required />
-      </b-form-group>
-      <b-form-group label='authmode'>
-        <b-form-input v-model='authmode' type='text' disabled />
-      </b-form-group>
-      <div class='action'>
-        <b-button variant="primary" @click='save(essid, password)'>Save</b-button>
-      </div>
-    </b-container>
-    <b-container fluid>
+  <div id='ap'>
+    <card header='Settings'>
+      <form-col>
+        <div slot='fields'>
+          <field name='essid'>
+            <b-form-input v-model='essid' type='text' required />
+          </field>
+          <field name='password'>
+            <b-form-input v-model='password' type='password' data-minlength='8' required />
+          </field>
+          <field name='authmode'>
+            <b-form-input v-model='authmode' type='text' disabled />
+          </field>
+        </div>
+        <div slot='buttons' class='action'>
+          <b-button variant="primary" @click='save(essid, password)'>Save</b-button>
+        </div>
+      </form-col>
+    </card>
+    <card header='System'>
       <div class='action'>
         <b-button variant="primary" @click='reset()'>Restart</b-button>
         <b-button variant="primary" @click='factory()'>Factory Config</b-button>
       </div>
-    </b-container>
-  </b-container>
+    </card>
+  </div>
 </template>
 
 <script lang='coffee'>
@@ -31,6 +35,10 @@ url =
   factory: '/cfg/factory'
 
 module.exports =
+  components:
+    card: require('./card').default
+    formCol: require('./form').default
+    field: require('./field').default
   data: ->
     essid: ''
     password: ''
@@ -69,6 +77,3 @@ module.exports =
   created: ->
     @getStatus()
 </script>
-
-<style lang='scss'>
-</style>

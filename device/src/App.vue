@@ -37,7 +37,10 @@ module.exports =
         when 1
           new STA el: "#sta"
         when 2
-          new PWM el: "#pwm"
+          new PWM 
+            el: "#pwm"
+            propsData:
+              name: 'fan'
 </script>
 
 <style lang='scss'>
