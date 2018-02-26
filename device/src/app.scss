@@ -5,12 +5,18 @@ $padding: 10px;
 
 #ap, #sta, #pwm {
   margin: $margin;
-}
+  .card-body {
+    padding: .5rem;
+    > p {
+      margin-bottom: .5rem;
+    }
+  }
 
-div.action {
-  text-align: right;
-}
+  div.action {
+    text-align: right;
+  }
 
-.card + .card {
-  margin-top: $margin;
+  .card + .card {
+    margin-top: $margin;
+  }
 }
