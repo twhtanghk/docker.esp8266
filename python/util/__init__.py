@@ -24,8 +24,9 @@ def handler(f):
   return ret
 
 def static(req, res):
-  file = '../static' + req.url_match.group(1)
+  file = '..' + req.url_match.group(1)
   mime = picoweb.get_mime_type(file)
+  app = picoweb.WebApp(__name__)
   if b'gzip' in req.headers[b'Accept-Encoding']:
     gz = file + '.gz'
     try:
@@ -36,6 +37,3 @@ def static(req, res):
     except OSError:
       pass
   yield from app.sendfile(res, file, mime)
-
-app = picoweb.WebApp(__name__, serve_static=False)
-app.route(re.compile('^(.*)$'))(handler(static))

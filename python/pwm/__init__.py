@@ -1,1 +1,1 @@
-from pwm.controller import app
+from pwm.controller import list, crud, duty

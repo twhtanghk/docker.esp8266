@@ -1,1 +1,1 @@
-from wlan.sta.controller import app
+from wlan.sta.controller import crud, scan

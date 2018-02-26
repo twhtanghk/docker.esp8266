@@ -18,12 +18,9 @@ def set(req, res):
   model.set(opts)
   yield from get(req, res)
 
-def method(req, res):
+def crud(req, res):
   ret = {
     'GET': get,
     'PUT': set
   }
   yield from ret[req.method](req, res)
-
-app = picoweb.WebApp(__name__, serve_static=False)
-app.route('/')(handler(method))

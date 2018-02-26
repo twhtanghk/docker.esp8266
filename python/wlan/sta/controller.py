@@ -14,13 +14,9 @@ def scan(req, res):
   nets = model.scan()
   yield from ok(res, nets)
 
-def method(req, res):
+def crud(req, res):
   ret = {
     'GET': get,
     'PUT': set
   }
   yield from ret[req.method](req, res)
-
-app = picoweb.WebApp(__name__, serve_static=False)
-app.route('/')(handler(method))
-app.route('/scan')(handler(scan))

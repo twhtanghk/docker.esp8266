@@ -22,14 +22,9 @@ def factory(req, res):
   from wlan.ap import controller
   yield from controller.get(req, res)
 
-def method(req, res):
+def crud(req, res):
   ret = {
     'GET': get,
     'PUT': set
   }
   yield from ret[req.method](req, res)
-
-app = picoweb.WebApp(__name__, serve_static=False)
-app.route('/')(handler(method))
-app.route('/reset')(handler(reset))
-app.route('/factory')(handler(factory))

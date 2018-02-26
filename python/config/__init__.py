@@ -1,1 +1,1 @@
-from config.controller import app
+from config.controller import crud, reset, factory

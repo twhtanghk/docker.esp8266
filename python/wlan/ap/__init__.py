@@ -1,1 +1,1 @@
-from wlan.ap.controller import app
+from wlan.ap.controller import crud

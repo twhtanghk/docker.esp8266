@@ -37,14 +37,3 @@ def crud(req, res):
     'PUT': update
   }
   yield from ret[req.method](req, res)
-
-url = {
-  'list': '/',
-  'crud': re.compile('/(\w+)$'),
-  'duty': re.compile('/(\w+)/duty$')
-}
-
-app = picoweb.WebApp(__name__, serve_static=False)
-app.route(url['list'])(handler(list))
-app.route(url['crud'])(handler(crud))
-app.route(url['duty'])(handler(duty))
