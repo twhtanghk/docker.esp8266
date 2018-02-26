@@ -3,10 +3,10 @@
     <card header='Current Duty'>
       <b-row>
         <b-col cols='4'>
-          <b-form-input type='number' v-bind='attrs' v-model='value' @change='setValue($event)' />
+          <b-form-input type='number' v-bind='attrs' v-model='value' @change='setDuty($event)' />
         </b-col>
           <b-col cols='8'>
-            <b-form-input type='range' v-bind='attrs' v-model='value' @change='setValue($event)' />
+            <b-form-input type='range' v-bind='attrs' v-model='value' @change='setDuty($event)' />
           </b-col>
       </b-row>
     </card>
@@ -32,7 +32,11 @@
 <script lang='coffee'>
 model = require './model'
 
-url = '/pwm'
+url = (name = null) ->
+  if name?
+    "/pwm/#{name}"
+  else
+    '/pwm'
 
 module.exports =
   components:
@@ -60,16 +64,16 @@ module.exports =
     save: (pin, init) ->
       @init = @valid init
       model
-        .put url, {device: @name, pin: pin, default: @init}
+        .put url(@name), {pin: pin, default: @init}
         .catch console.error
-    setValue: (val) ->
+    setDuty: (val) ->
       @value = @valid val
       model
-        .put url, {device: @name, value: @value}
+        .put url(@name), {value: @value}
         .catch console.error
-    getValue: ->
+    list: ->
       model
-        .get url
+        .get url()
         .then (res) ->
           res.json()
         .then (res) =>
@@ -78,5 +82,5 @@ module.exports =
           @value = res[@name].value
         .catch console.error
   created: ->
-    @getValue()
+    @list()
 </script>
