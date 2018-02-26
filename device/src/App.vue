@@ -13,6 +13,9 @@
 </template>
 
 <script lang='coffee'>
+require './app.scss'
+require 'vue-toasted/dist/vue-toasted.min.css'
+
 Vue = require('vue').default
 error = console.error
 console.error = (msg) ->
@@ -42,8 +45,3 @@ module.exports =
             propsData:
               name: 'fan'
 </script>
-
-<style lang='scss'>
-@import 'app.scss';
-@import 'vue-toasted/dist/vue-toasted.min.css';
-</style>

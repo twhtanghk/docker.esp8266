@@ -14,9 +14,3 @@ module.exports =
     'bgVariant'
   ]
 </script>
-
-<style lang='scss' scoped>
-.card-body > p {
-  margin-bottom: 0;
-}
-</style>
