@@ -69,7 +69,7 @@ module.exports =
     setDuty: (val) ->
       @value = @valid val
       model
-        .put url(@name), {value: @value}
+        .put "#{url(@name)}/duty", {value: @value}
         .catch console.error
     list: ->
       model
