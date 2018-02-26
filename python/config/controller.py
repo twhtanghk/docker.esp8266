@@ -1,11 +1,9 @@
 import picoweb
 from config import model
-from util import notFound
-import logging
-logger = logging.getLogger(__name__)
+from util import handler, ok
 
 def get(req, res):
-  yield from picoweb.jsonify(res, model.load())
+  yield from ok(res, model.load())
 
 def set(req, res):
   yield from req.read_form_data()
@@ -16,7 +14,7 @@ def set(req, res):
   yield from get(req, res)
 
 def reset(req, res):
-  yield from picoweb.jsonify(res, {})
+  yield from ok(res)
   model.reset()
 
 def factory(req, res):
@@ -29,10 +27,9 @@ def method(req, res):
     'GET': get,
     'PUT': set
   }
-  logger.info('{0} {1}'.format(req.method, req.path))
-  yield from ret.get(req.method, notFound)(req, res)
+  yield from ret[req.method](req, res)
 
-app = picoweb.WebApp(__name__)
-app.route('/')(method)
-app.route('/reset')(reset)
-app.route('/factory')(factory)
+app = picoweb.WebApp(__name__, serve_static=False)
+app.route('/')(handler(method))
+app.route('/reset')(handler(reset))
+app.route('/factory')(handler(factory))

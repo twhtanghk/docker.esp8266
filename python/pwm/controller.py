@@ -1,33 +1,50 @@
 import picoweb
 from pwm import model
-import logging
-logger = logging.getLogger(__name__)
-from util import error, notFound
+from util import handler, ok
+import ure as re
 
-def get(req, res):
-  yield from picoweb.jsonify(res, model.get())
+def list(req, res):
+  if req.method != 'GET':
+    raise Exception('{} {} not found'.format(req.method, req.path))
+  yield from ok(res, model.get())
 
-def set(req, res):
+def read(req, res):
+  yield from ok(res, model.read(req.params))
+    
+def update(req, res):
   yield from req.read_form_data()
-  opts = {
-    'device': req.form['device'][0],
-    'value': int(req.form['value'][0])
-  }
-  try:
-    model.set(opts)
-    yield from picoweb.jsonify(res, {})
-  except:
-    error(req, res, "{} not found".format(opts['device']))
+  req.param['value'] = int(req.form['value'][0])
+  model.set(req.params)
+  yield from ok(res)
 
-def method(req, res):
+def duty(req, res):
+  g = url['crud'].match(req.path)
+  req.params = {
+    'device': g.group(1)
+  }
+  yield from req.read_form_data()
+  req.param['value'] = int(req.form['value'][0])
+  model.duty(req.params)
+  yield from ok(res)
+  
+def crud(req, res):
+  g = url['crud'].match(req.path)
+  req.params = {
+    'device': g.group(1)
+  }
   ret = {
-    'GET': get,
-    'PUT': set
+    'GET': read,
+    'PUT': update
   }
-  logger.info('{} {}'.format(req.method, req.path))
-  yield from ret.get(req.method, notFound)(req, res)
-  import gc
-  gc.collect()
+  yield from ret[req.method](req, res)
 
-app = picoweb.WebApp(__name__)
-app.route('/')(method)
+url = {
+  'list': '/',
+  'crud': re.compile('/(\w+)$'),
+  'duty': re.compile('/(\w+)/duty$')
+}
+
+app = picoweb.WebApp(__name__, serve_static=False)
+app.route(url['list'])(handler(list))
+app.route(url['crud'])(handler(crud))
+app.route(url['duty'])(handler(duty))

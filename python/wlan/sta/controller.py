@@ -1,29 +1,26 @@
-import gc
 import picoweb
 from wlan.sta import model
-from util import notFound
+from util import handler, ok
 
 def get(req, res):
-  yield from picoweb.jsonify(res, model.get())
+  yield from ok(res, model.get())
 
 def set(req, res):
   yield from req.read_form_data()
   model.set(req.form)
-  yield from picoweb.jsonify(res, {})
+  yield from ok(res)
 
 def scan(req, res):
   nets = model.scan()
-  yield from picoweb.jsonify(res, nets)
-  gc.collect()
+  yield from ok(res, nets)
 
 def method(req, res):
   ret = {
     'GET': get,
     'PUT': set
   }
-  yield from ret.get(req.method, notFound)(req, res)
-  gc.collect()
+  yield from ret[req.method](req, res)
 
-app = picoweb.WebApp(__name__)
-app.route('/')(method)
-app.route('/scan')(scan)
+app = picoweb.WebApp(__name__, serve_static=False)
+app.route('/')(handler(method))
+app.route('/scan')(handler(scan))
