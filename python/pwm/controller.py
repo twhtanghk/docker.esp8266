@@ -13,24 +13,26 @@ def read(req, res):
     
 def update(req, res):
   yield from req.read_form_data()
-  req.param['value'] = int(req.form['value'][0])
-  model.set(req.params)
+  req.params = {
+    'device': req.url_match.group(1),
+    'pin': int(req.form['default'][0]),
+    'default': int(req.form['default'][0])
+  }
+  model.update(req.params)
   yield from ok(res)
 
 def duty(req, res):
-  g = url['crud'].match(req.path)
   req.params = {
-    'device': g.group(1)
+    'device': req.url_match.group(1)
   }
   yield from req.read_form_data()
-  req.param['value'] = int(req.form['value'][0])
+  req.params['value'] = int(req.form['value'][0])
   model.duty(req.params)
   yield from ok(res)
   
 def crud(req, res):
-  g = url['crud'].match(req.path)
   req.params = {
-    'device': g.group(1)
+    'device': req.url_match.group(1)
   }
   ret = {
     'GET': read,

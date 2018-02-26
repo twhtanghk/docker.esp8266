@@ -1,22 +1,26 @@
 import ujson
 
-name = 'config.json'
+pkg = (
+  'ap',
+  'sta',
+  'pwm'
+)
 
 def boot():
-  try:
-    import os
-    os.stat(name)
-  except OSError:
-    factory()
+  for i in pkg:
+    lib = __import__(i)
+    lib.model.boot()
 
-def load():
-  f = open(name)
+def load(filename):
+  f = open(filename)
   data = ujson.loads(f.read())
   f.close()
+  import gc
+  gc.collect()
   return data
 
-def save(data):
-  f = open(name, 'w')
+def save(filename, data):
+  f = open(filename, 'w')
   f.write(ujson.dumps(data))
   f.close()
 
@@ -25,5 +29,6 @@ def reset():
   machine.reset()
 
 def factory():
-  from config.factory import cfg
-  save(cfg())
+  for i in pkg:
+    lib = __import__(i)
+    lib.model.factory()

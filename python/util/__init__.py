@@ -3,6 +3,14 @@ import ure as re
 import logging
 logger = logging.getLogger(__name__)
 
+def exists(filename):
+  try:
+    import os
+    os.stat(filename)
+    return True
+  except OSError:
+    return False
+
 def ok(res, data={}):
   yield from picoweb.jsonify(res, data)
 
