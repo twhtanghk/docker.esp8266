@@ -1,14 +1,20 @@
 # micorpython.esp8266
 
 ## boot.py
-initialize system by
-- call [config.model.boot](config)
-- call [wlan.ap.model.boot](wlan/ap)
-- call [wlan.sta.model.boot](wlan/sta)
-- call [pwm.model.boot](pwm)
+initialize system for ap, sta, pwm
 
 ## main.py
 start web app for routes
-- /cfg: [config](config)
-- /wlan/ap: [station]((wlan/ap)
-- /wlan/sta: [station]((wlan/sta)
+- GET /cfg: return system config in json
+- GET /cfg/reset: restart system
+- GET /cfg/factory: restore factory default settings for ap, sta, pwm
+- GET /sta: get sta config
+- PUT /sta: set sta config with parameters name (dhcp_hostname), ssid, passwd 
+- GET /sta/scan: scan for available wifi access point
+- GET /ap: get ap config
+- PUT /ap: set ap config with parameters essid, password
+- GET /pwm: get list of pwm devices {fan: {pin: 12, default: 600}, ...}
+- GET /pwm/:name: get config for specified device name
+- PUT /pwm/:name: set config for specified device name for parameters pin, default
+- PUT /pwm/:name/duty: set duty (value) for the specified device name
+- GET *: get static files in gzip compression content-encoding

@@ -15,7 +15,7 @@ def update(req, res):
   yield from req.read_form_data()
   req.params = {
     'device': req.url_match.group(1),
-    'pin': int(req.form['default'][0]),
+    'pin': int(req.form['pin'][0]),
     'default': int(req.form['default'][0])
   }
   model.update(req.params)
