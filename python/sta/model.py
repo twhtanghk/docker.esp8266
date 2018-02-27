@@ -21,7 +21,7 @@ def boot():
   cfg = model.load(filename)
   interface.config(dhcp_hostname=cfg['dhcp_hostname'])
   if 'ssid' in cfg:
-    interface.connect(opts['ssid'], opts['passwd'])
+    interface.connect(cfg['ssid'], cfg['passwd'])
   logger.info(ujson.dumps(get()))
 
 def get():
