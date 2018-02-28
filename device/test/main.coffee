@@ -10,7 +10,7 @@ qs = require 'querystring'
 
 global.opts = (obj = {}) ->
   obj['content-type'] = 'application/x-www-form-urlencoded'
-  if body of obj
+  if 'body' of obj
     obj.body = qs.stringify obj.body
   obj
 global.ok = (res) ->
