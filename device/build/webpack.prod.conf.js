@@ -92,6 +92,7 @@ if (config.build.productionGzip) {
         config.build.productionGzipExtensions.join('|') +
         ')$'
       ),
+      deleteOriginalAssets: true,
       threshold: 10240,
       minRatio: 0.8
     })
