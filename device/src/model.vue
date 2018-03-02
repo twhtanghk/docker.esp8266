@@ -1,4 +1,11 @@
 <script lang='coffee'>
+Queue = require 'promise-queue'
+queue = new Queue(1, Infinity)
+_fetch = fetch
+fetch = ->
+  queue.add ->
+    _fetch.apply arguments
+
 module.exports =
   param: (data) ->
     ret = new URLSearchParams()
