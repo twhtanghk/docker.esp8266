@@ -26,13 +26,23 @@ def boot():
     dev.duty(default)
   logger.info(ujson.dumps(cfg))
 
-def get():
+def list():
   cfg = model.load(filename)
   for name in cfg:
     pin = cfg[name]['pin']
-    dev = device(pin)
-    cfg[name]['value'] = dev.duty()
+    cfg[name] = {
+      'pin': pin,
+      'default': cfg[name]['default'],
+      'value': device(pin).duty()
+    }
   return cfg
+    
+def read(opts):
+  cfg = model.load(filename)
+  name = opts['device']
+  pin = cfg[name]['pin']
+  cfg[name]['value'] = device(pin).duty()
+  return cfg[name]
 
 def update(opts):
   cfg = model.load(filename)

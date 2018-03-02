@@ -28,7 +28,7 @@ def handler(f):
     except Exception as e:
       import sys
       sys.print_exception(e)
-      yield from error(res)
+      yield from error(res, '"{}"'.format(str(e)))
   return ret
 
 def static(req, res):
