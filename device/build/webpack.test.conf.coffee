@@ -16,5 +16,6 @@ module.exports =
   ]
   module:
     rules: [
+      { test: /\.vue$/, loader: 'vue-loader' }
       { test: /\.coffee$/, loader: 'coffee-loader' }
     ]
