@@ -30,7 +30,7 @@
 <script lang='coffee'>
 model = require './model'
 url = 
-  ap: '/wlan/ap'
+  ap: '/ap'
   reset: '/cfg/reset'
   factory: '/cfg/factory'
 

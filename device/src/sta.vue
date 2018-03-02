@@ -50,8 +50,8 @@
 model = require './model'
 
 url =
-  host: '/wlan/sta'
-  essid: '/wlan/sta/scan'
+  host: '/sta'
+  essid: '/sta/scan'
 
 module.exports =
   components:
@@ -99,6 +99,5 @@ module.exports =
       .catch console.error
   created: ->
     @getStatus()
-      .then =>
-        @getList()
+    @getList()
 </script>
