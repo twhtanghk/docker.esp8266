@@ -1,13 +1,12 @@
 URL = 'http://192.168.43.99'
-delay = 8000
 
 mocha.setup 
   ui: 'bdd'
-  timeout: delay + 1000
+  timeout: 0
 
-expect = require('chai').expect
 qs = require 'querystring'
 
+global.expect = require('chai').expect
 global.opts = (obj = {}) ->
   obj['content-type'] = 'application/x-www-form-urlencoded'
   if 'body' of obj
@@ -17,10 +16,7 @@ global.ok = (res) ->
   expect res.status
     .to.equal 200
 
-beforeEach ->
-  Promise = require 'bluebird'
-  Promise.delay delay
-
+require '../src/model.vue'
 require './10-static.coffee'
 require './20-ap.coffee'
 require './30-sta.coffee'
