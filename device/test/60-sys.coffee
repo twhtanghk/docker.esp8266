@@ -1,6 +1,6 @@
 describe 'config', ->
   it 'GET /cfg', ->
-    fetch '/cfg'
+    fetch '/cfg?name=pwm.json'
       .then ok
 
   it 'GET /cfg/factory', ->
