@@ -1,10 +1,9 @@
 <script lang='coffee'>
 Queue = require 'promise-queue'
 queue = new Queue(1, Infinity)
-_fetch = fetch
-fetch = ->
+fetch = (url, opts) ->
   queue.add ->
-    _fetch.apply arguments
+    window.fetch url, opts
 
 module.exports =
   param: (data) ->
