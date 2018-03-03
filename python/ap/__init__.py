@@ -1,4 +1,3 @@
-import picoweb
 from ap import model
 from util import handler, ok
 
