@@ -1,4 +1,3 @@
-import picoweb
 from sta import model
 from util import handler, ok
 
