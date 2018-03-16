@@ -1,4 +1,7 @@
-# micorpython.esp8266
+# micropython.esp8266
+
+## upload files to pyboard
+see [flash.sh](../flash.sh)
 
 ## boot.py
 initialize system for ap, sta, pwm
