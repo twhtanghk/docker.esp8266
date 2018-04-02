@@ -39,19 +39,19 @@ class Model(Config):
   def get(self, name):
     return {
       'name': name,
-      'pin': self.cfg[name].id
-      'value: self.pins[name].value()
+      'pin': self.cfg[name]['id'],
+      'value': self.pins[name].value()
     }
 
   def list(self):
     ret = {}
     for name in self.cfg:
-      ret.append self.get(name)
+      ret.append(self.get(name))
     return ret
 
 class Controller:
-  def __init__(self):
-    self.model = Model()
+  def __init__(self, model):
+    self.model = model
 
   def list(self, req, res):
     yield from ok(res, self.model.list())
@@ -75,4 +75,5 @@ class Controller:
     }
     yield from ret[req.method](req, res)
 
-ctl = Controller()
+model = Model()
+ctl = Controller(model)
