@@ -1,3 +1,4 @@
+import ujson
 import picoweb
 from config import model
 from util import handler, ok
