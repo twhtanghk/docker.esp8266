@@ -6,6 +6,9 @@
     <b-tab title='STA'>
       <div id='sta' />
     </b-tab>
+    <b-tab title='GPIO'>
+      <div id='gpio' />
+    </b-tab>
     <b-tab title='PWM'>
       <div id='pwm' />
     </b-tab>
@@ -28,6 +31,7 @@ console.info = (msg) ->
   Vue.toasted.info msg, duration: 5000
 AP = Vue.extend require('./ap').default
 STA = Vue.extend require('./sta').default
+GPIO = Vue.extend require('./gpio').default
 PWM = Vue.extend require('./pwm').default
 
 module.exports =
@@ -41,6 +45,8 @@ module.exports =
         when 1
           new STA el: "#sta"
         when 2
+          new GPIO el: "#gpio"
+        when 3
           new PWM 
             el: "#pwm"
             propsData:
