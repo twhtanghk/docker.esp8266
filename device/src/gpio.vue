@@ -1,38 +1,40 @@
 <template>
+  <div id='gpio'>
+    <card v-for='item in gpio' :key='item.name' header='item.name'>
+      <toggle v-model='item.value' :options='{on: 1, off:0}' @change='set(item)' />
+    </card>
+  </div>
 </template>
 
 <script lang='coffee'>
 model = require './model'
 
 url = (name = null) ->
+  root = 'http://192.168.0.106/gpio'
   if name?
-    "/gpio/#{name}"
-  else
-    '/gpio'
+    root = "#{root}/#{name}"
+  return root
 
 module.exports =
   components:
     card: require('./card').default
-    formCol: require('./form').default
-    field: require('./field').default
-  props: [
-    'name'
-  ]
+    toggle: require('vue-bootstrap-toggle').default
   data: ->
-    value: 0
+    gpio: []
   methods:
-    on: ->
+    set: (item) ->
+      {name, value} = item
       model
-        .put "#{url(@name)}", {value: 1}
-        .catch console.error
-    off: ->
-      model
-        .put "#{url(@name)}", {value: 2}
+        .put "#{url(name)}", {value: value}
         .catch console.error
     list: ->
       model
-        .get "#{url(@name)}"
+        .get "#{url()}"
         .then (res) ->
-          @value = res.value
+          res.json()
+        .then (res) ->
+          @gpio = res
         .catch console.error
+  created: ->
+    @list()
 </script>
