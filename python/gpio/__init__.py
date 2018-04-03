@@ -44,7 +44,7 @@ class Model(Config):
     }
 
   def list(self):
-    ret = {}
+    ret = []
     for name in self.cfg:
       ret.append(self.get(name))
     return ret
