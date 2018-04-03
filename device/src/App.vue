@@ -19,6 +19,7 @@
 require './app.scss'
 require 'vue-toasted/dist/vue-toasted.min.css'
 
+window.jQuery = window.$ = require 'jquery'
 Vue = require('vue').default
 Vue.use require('bootstrap-vue').default
 error = console.error
