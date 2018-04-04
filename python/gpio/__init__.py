@@ -1,6 +1,7 @@
 from config import Config
 from machine import Pin
 from util import ok
+import ujson
 
 class Model(Config):
   def __init__(self):
@@ -28,7 +29,7 @@ class Model(Config):
 
   def set(self, name, value):
     self.pins[name].value(value)
-    return self
+    return self.get(name)
 
   def on(self, name):
     return self.set(name, 1)
@@ -62,7 +63,7 @@ class Controller:
   def update(self, req, res):
     yield from req.read_form_data()
     name = req.params['name']
-    value = int(req.form['value'])
+    value = ujson.loads(req.form['value'][0])
     yield from ok(res, self.model.set(name, value))
 
   def crud(self, req, res):
@@ -70,8 +71,8 @@ class Controller:
       'name': req.url_match.group(1)
     }
     ret = {
-      'GET': read,
-      'PUT': update
+      'GET': self.read,
+      'PUT': self.update
     }
     yield from ret[req.method](req, res)
 
