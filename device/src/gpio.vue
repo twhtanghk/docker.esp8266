@@ -1,8 +1,9 @@
 <template>
   <div id='gpio'>
-    <card v-for='item in gpio' :key='item.name' header='item.name'>
+    <label class='checkbox' v-for='item in gpio' :key='item.name'>
       <toggle v-model='item.value' :options='{on: 1, off:0}' @change='set(item)' />
-    </card>
+      {{ item.name }}
+    </label>
   </div>
 </template>
 
@@ -10,14 +11,13 @@
 model = require './model'
 
 url = (name = null) ->
-  root = 'http://192.168.0.106/gpio'
+  root = '/gpio'
   if name?
     root = "#{root}/#{name}"
   return root
 
 module.exports =
   components:
-    card: require('./card').default
     toggle: require('vue-bootstrap-toggle').default
   data: ->
     gpio: []
@@ -32,7 +32,7 @@ module.exports =
         .get "#{url()}"
         .then (res) ->
           res.json()
-        .then (res) ->
+        .then (res) =>
           @gpio = res
         .catch console.error
   created: ->
