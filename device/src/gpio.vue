@@ -1,14 +1,13 @@
 <template>
   <div id='gpio'>
-    <label class='checkbox' v-for='item in gpio' :key='item.name'>
-      <toggle v-model='item.value' :options='{on: 1, off:0}' @change='set(item)' />
-      {{ item.name }}
-    </label>
+    <toggle-button v-for='item in gpio' :key='item.name' :value='item.value' :labels='labels(item)' :height='30' :width='80' @change='set($event, item)' :color='color' />
   </div>
 </template>
 
 <script lang='coffee'>
 model = require './model'
+Vue = require('vue').default
+Vue.use require('vue-js-toggle-button').default
 
 url = (name = null) ->
   root = '/gpio'
@@ -17,15 +16,16 @@ url = (name = null) ->
   return root
 
 module.exports =
-  components:
-    toggle: require('vue-bootstrap-toggle').default
   data: ->
     gpio: []
+    color: '#007bff'
   methods:
-    set: (item) ->
-      {name, value} = item
+    labels: (item) ->
+      checked: "#{item.name} On"
+      unchecked: "#{item.name} Off"
+    set: ({value, srcEvent}, item) ->
       model
-        .put "#{url(name)}", {value: value}
+        .put "#{url(item.name)}", {value: value}
         .catch console.error
     list: ->
       model
