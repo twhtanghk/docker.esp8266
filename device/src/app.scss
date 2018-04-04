@@ -3,8 +3,11 @@ $padding: 10px;
 
 @import '~bootstrap/scss/bootstrap.scss';
 
+div[role='tabpanel'] {
+  padding: $padding;
+}
+
 #ap, #sta, #pwm {
-  margin: $margin;
   .card-body {
     padding: .5rem;
     > p {
@@ -14,6 +17,9 @@ $padding: 10px;
 
   div.action {
     text-align: right;
+    button {
+      margin-left: $margin;
+    }
   }
 
   .card + .card {
