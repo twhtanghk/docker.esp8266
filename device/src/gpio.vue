@@ -1,6 +1,6 @@
 <template>
   <div id='gpio'>
-    <toggle-button v-for='item in gpio' :key='item.name' :value='item.value' :labels='labels(item)' :height='30' :width='80' @change='set($event, item)' :color='color' />
+    <toggle-button class='toggle' v-for='item in gpio' :key='item.name' :value='item.value' :labels='labels(item)' :height='30' :width='100' @change='set($event, item)' :color='color' />
   </div>
 </template>
 
@@ -38,3 +38,9 @@ module.exports =
   created: ->
     @list()
 </script>
+
+<style lang='scss' scoped>
+.toggle {
+  font-size: 14px !important;
+}
+</style>
