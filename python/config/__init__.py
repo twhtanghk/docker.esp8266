@@ -21,8 +21,8 @@ def reset(req, res):
 
 def factory(req, res):
   model.factory()
-  from wlan.ap import controller
-  yield from controller.get(req, res)
+  import ap
+  yield from ap.get(req, res)
 
 def crud(req, res):
   ret = {
