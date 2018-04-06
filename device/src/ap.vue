@@ -30,12 +30,6 @@
 </template>
 
 <script lang='coffee'>
-model = require './model'
-url = 
-  ap: '/ap'
-  reset: '/cfg/reset'
-  factory: '/cfg/factory'
-
 module.exports =
   components:
     model: require('./model').default
@@ -48,7 +42,7 @@ module.exports =
     authmode: ''
   methods:
     getStatus: ->
-      @$refs.ap.list()
+      @$refs.ap.get()
         .then (res) =>
           @essid = res.essid
           @authmode = res.authmode
