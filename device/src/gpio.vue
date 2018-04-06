@@ -32,7 +32,7 @@ module.exports =
             value: value
         .catch console.error
     list: ->
-      @refs.gpio
+      @$refs.gpio
         .list()
         .then (res) =>
           @gpio = res
