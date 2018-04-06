@@ -1,5 +1,6 @@
 <template>
   <div id='sta'>
+    <model ref='sta' baseUrl='/sta' />
     <card header='Status'>
       <b-row>
         <div class='col-lg'>
@@ -47,14 +48,9 @@
 </template>
 
 <script lang='coffee'>
-model = require './model'
-
-url =
-  host: '/sta'
-  essid: '/sta/scan'
-
 module.exports =
   components:
+    model: require('./model').default
     card: require('./card').default
     formCol: require('./form').default
     field: require('./field').default
@@ -67,29 +63,32 @@ module.exports =
     password: ''
   methods:
     getStatus: ->
-      model.get url.host
-        .then (res) ->
-          res.json()
+      @$refs.sta.get()
         .then (res) =>
           @isconnected = res.isconnected
           @config = res.curr
           @host = res.dhcp_hostname
         .catch console.error
     setHost: (val) ->
-      model.put url.host, name: val
+      @$refs.sta
+        .put
+          data:
+            name: val
         .then (res) ->
           console.info 'updated successfully'
         .catch console.error
     connect: (essid, passwd) ->
-      model
-        .put url.host, {ssid: essid, passwd: passwd}
+      @$refs.sta
+        .put 
+          data:
+            ssid: essid
+            passwd: passwd
         .then ->
           console.info 'connecting to specified essid'
         .catch console.error
     getList: ->
-      fetch url.essid
-        .then (res) ->
-          res.json()
+      @$refs.sta
+        .read 'scan'
         .then (res) =>
           @list = []
           for i in res.sort()
@@ -97,7 +96,7 @@ module.exports =
               value: i
               text: i
       .catch console.error
-  created: ->
+  mounted: ->
     @getStatus()
     @getList()
 </script>
