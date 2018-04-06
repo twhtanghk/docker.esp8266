@@ -66,8 +66,7 @@ module.exports =
     setDuty: (val) ->
       @value = @valid val
       @$refs.pwm
-        .put 
-          url: "#{@baseUrl}/#{@name}/duty"
+        .update "#{@name}/duty",
           data:
             value: @value
         .catch console.error
