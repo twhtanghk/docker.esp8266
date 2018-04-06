@@ -1,3 +1,4 @@
+import ujson
 import picoweb
 from config import model
 from util import handler, ok
@@ -20,8 +21,8 @@ def reset(req, res):
 
 def factory(req, res):
   model.factory()
-  from wlan.ap import controller
-  yield from controller.get(req, res)
+  import ap
+  yield from ap.get(req, res)
 
 def crud(req, res):
   ret = {
@@ -29,3 +30,19 @@ def crud(req, res):
     'PUT': set
   }
   yield from ret[req.method](req, res)
+
+class Config:
+  def __init__(self, filename):
+    self.filename = filename
+
+  def load(self):
+    f = open(self.filename)
+    data = ujson.load(f)
+    f.close()
+    return data
+
+  def save(self, data):
+    f = open(self.filename, 'w')
+    ujson.dump(data, f)
+    f.close()
+    return self

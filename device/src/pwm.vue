@@ -1,5 +1,6 @@
 <template>
   <div id='pwm' :name='name'>
+    <model ref='pwm' baseUrl='/pwm' />
     <card header='Current Duty'>
       <b-row>
         <b-col cols='4'>
@@ -30,16 +31,9 @@
 </template>
 
 <script lang='coffee'>
-model = require './model'
-
-url = (name = null) ->
-  if name?
-    "/pwm/#{name}"
-  else
-    '/pwm'
-
 module.exports =
   components:
+    model: require('./model').default
     card: require('./card').default
     formCol: require('./form').default
     field: require('./field').default
@@ -50,7 +44,7 @@ module.exports =
     attrs:
       required: true
       min: 0
-      max: 1024
+      max: 1023
     pin: 0
     init: 0
     value: 0
@@ -63,24 +57,27 @@ module.exports =
       return val
     save: (pin, init) ->
       @init = @valid init
-      model
-        .put url(@name), {pin: pin, default: @init}
+      @$refs.pwm
+        .update @name, 
+          data:
+            pin: pin
+            default: @init
         .catch console.error
     setDuty: (val) ->
       @value = @valid val
-      model
-        .put "#{url(@name)}/duty", {value: @value}
+      @$refs.pwm
+        .update "#{@name}/duty",
+          data:
+            value: @value
         .catch console.error
     list: ->
-      model
-        .get url()
-        .then (res) ->
-          res.json()
+      @$refs.pwm
+        .get()
         .then (res) =>
           @pin = res[@name].pin
           @init = res[@name].default
           @value = res[@name].value
         .catch console.error
-  created: ->
+  mounted: ->
     @list()
 </script>

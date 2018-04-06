@@ -5,5 +5,7 @@
 #webrepl.start()
 from config import model as cfg
 cfg.boot()
+from gpio import model
+model.boot()
 import gc
 gc.collect()

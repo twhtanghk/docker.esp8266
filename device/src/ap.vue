@@ -1,5 +1,7 @@
 <template>
   <div id='ap'>
+    <model ref='ap' baseUrl='/ap' />
+    <model ref='cfg' baseUrl='/cfg' />
     <card header='Settings'>
       <form-col>
         <div slot='fields'>
@@ -28,14 +30,9 @@
 </template>
 
 <script lang='coffee'>
-model = require './model'
-url = 
-  ap: '/ap'
-  reset: '/cfg/reset'
-  factory: '/cfg/factory'
-
 module.exports =
   components:
+    model: require('./model').default
     card: require('./card').default
     formCol: require('./form').default
     field: require('./field').default
@@ -45,35 +42,33 @@ module.exports =
     authmode: ''
   methods:
     getStatus: ->
-      model
-        .get url.ap
-        .then (res) ->
-          res.json()
+      @$refs.ap.get()
         .then (res) =>
           @essid = res.essid
           @authmode = res.authmode
         .catch console.error
     save: (essid, password) ->
-      model
-        .put url.ap, {essid: essid, password: password}
+      @$refs.ap
+        .put
+          data:
+            essid: essid
+            password: password
         .then ->
           console.info 'saved successfully'
         .catch console.error
     reset: ->
-      model
-        .get url.reset
+      @$refs.cfg
+        .read 'reset'
         .then ->
           console.info 'reset in progress'
         .catch console.error
     factory: ->
-      model
-        .get url.factory
-        .then (res) ->
-          res.json()
+      @$refs.cfg
+        .read 'factory'
         .then (res) =>
           @essid = res.essid
           @authmode = res.authmode
         .catch console.error
-  created: ->
+  mounted: ->
     @getStatus()
 </script>
