@@ -20,7 +20,9 @@
     "sass-loader": "^6.0.7",
     "vue-js-toggle-button": "^1.2.2",
     "vue-template-compiler": "^2.5.13",
-    "vue-toasted": "^1.1.24"
+    "vue-toasted": "^1.1.24",
+    "vue.model": "/tmp/vue.model/",
+    "vue.oauth2": "https://github.com/twhtanghk/vue.oauth2"
   },
   "babel": {
     "presets": [
