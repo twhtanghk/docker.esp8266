@@ -44,7 +44,7 @@ module.exports =
     attrs:
       required: true
       min: 0
-      max: 1024
+      max: 1023
     pin: 0
     init: 0
     value: 0
