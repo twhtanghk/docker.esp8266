@@ -58,7 +58,7 @@ class Controller:
     yield from ok(res, self.model.list())
 
   def read(self, req, res):
-    yield from ok(res, self.model.get(name))
+    yield from ok(res, self.model.get(req.params['name']))
 
   def update(self, req, res):
     yield from req.read_form_data()
