@@ -6,6 +6,9 @@
     <b-tab title='STA'>
       <div id='sta' />
     </b-tab>
+    <b-tab title='DDNS'>
+      <div id='ddns' />
+    </b-tab>
     <b-tab title='GPIO'>
       <div id='gpio' />
     </b-tab>
@@ -31,6 +34,7 @@ console.info = (msg) ->
   Vue.toasted.info msg, duration: 5000
 AP = Vue.extend require('./ap').default
 STA = Vue.extend require('./sta').default
+DDNS = Vue.extend require('./ddns').default
 GPIO = Vue.extend require('./gpio').default
 PWM = Vue.extend require('./pwm').default
 
@@ -45,8 +49,10 @@ module.exports =
         when 1
           new STA el: "#sta"
         when 2
-          new GPIO el: "#gpio"
+          new DDNS el: "#ddns"
         when 3
+          new GPIO el: "#gpio"
+        when 4
           new PWM 
             el: "#pwm"
             propsData:
