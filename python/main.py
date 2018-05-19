@@ -8,9 +8,11 @@ import ap
 import sta
 import pwm
 import gpio
+import ddns
 import util
 
 gpio.model.setup()
+ddns.model.setup()
 
 routes = [
   ('/cfg', util.handler(config.crud)),
