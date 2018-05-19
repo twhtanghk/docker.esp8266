@@ -1,6 +1,8 @@
 from config import Config
 from util import ok
 import ujson
+import logging
+logger = logging.getLogger(__name__)
 
 class Model(Config):
   def __init__(self):
@@ -11,7 +13,7 @@ class Model(Config):
     self.save({
       'url': 'https://dynupdate.no-ip.com/nic/update',
       'enable': False,
-      'interval': 5,
+      'interval': 300,
       'host': '',
       'user': '',
       'pass': ''
@@ -26,14 +28,24 @@ class Model(Config):
   def setup(self):
     self.cfg = self.load()
     import uasyncio as asyncio
-    async def dnsupdate():
+    async def task():
       while True:
-        if self.cfg['enable']:
-          print('dnsupdate')
         await asyncio.sleep(self.cfg['interval'])
+        self.ddnsupdate()
     loop = asyncio.get_event_loop()
-    loop.create_task(dnsupdate())
+    loop.create_task(task())
     loop.run_forever()
+
+  def ddnsupdate(self):
+    if self.cfg['enable']:
+      import urequests as req
+      from ubinascii import b2a_base64
+      auth = b2a_base64('{}:{}'.format(self.cfg['user'], self.cfg['pass']))
+      headers = { 'Authorization': 'Basic {}'.format(auth) }
+      url = '{}?{}={}'.format(self.cfg['url'], 'hostname', self.cfg['host'])
+      res = req.get(url, headers=headers)
+      logger.info(res.status_code)
+      res.close()
 
   def set(self, cfg):
     self.cfg = cfg
@@ -47,9 +59,6 @@ class Controller:
   def __init__(self, model):
     self.model = model
 
-  def list(self, req, res):
-    yield from ok(res, self.model.list())
-
   def read(self, req, res):
     yield from ok(res, self.model.get(name))
 
@@ -60,9 +69,6 @@ class Controller:
     yield from ok(res, self.model.set(name, value))
 
   def crud(self, req, res):
-    req.params = {
-      'name': req.url_match.group(1)
-    }
     ret = {
       'GET': self.read,
       'PUT': self.update

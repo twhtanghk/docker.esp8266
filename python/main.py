@@ -26,6 +26,7 @@ routes = [
   (re.compile('^/pwm/(\w+)/duty$'), util.handler(pwm.duty)),
   ('/gpio', util.handler(gpio.ctl.list)),
   (re.compile('^/gpio/(\w+)$'), util.handler(gpio.ctl.crud)),
+  (re.compile('^/ddns$'), util.handler(ddns.ctl.crud)),
   (re.compile('^(.*)$'), util.handler(util.static))
 ]
 app = picoweb.WebApp(__name__, routes, False)
