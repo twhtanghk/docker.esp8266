@@ -31,7 +31,10 @@ class Model(Config):
     async def task():
       while True:
         await asyncio.sleep(self.cfg['interval'])
-        self.ddnsupdate()
+        try:
+          self.ddnsupdate()
+        except:
+          logger.error('update failed')
     loop = asyncio.get_event_loop()
     loop.create_task(task())
     loop.run_forever()
