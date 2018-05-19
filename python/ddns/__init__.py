@@ -9,9 +9,9 @@ class Model(Config):
 
   def factory(self):
     self.save({
-      'url': 'https://dynupdate.no-ip.com/nic/update'
+      'url': 'https://dynupdate.no-ip.com/nic/update',
       'enable': False,
-      'interval': 5000,
+      'interval': 5,
       'host': '',
       'user': '',
       'pass': ''
@@ -25,13 +25,15 @@ class Model(Config):
 
   def setup(self):
     self.cfg = self.load()
-    import asyncio as asyncio
-    async def dnsupdate(cfg):
-      if cfg.enable:
-        print('dnsupdate')
-      await asyncio.sleep_ms(cfg.interval)
+    import uasyncio as asyncio
+    async def dnsupdate():
+      while True:
+        if self.cfg['enable']:
+          print('dnsupdate')
+        await asyncio.sleep(self.cfg['interval'])
     loop = asyncio.get_event_loop()
-    loop.run_until_complete(dnsupdate())   
+    loop.create_task(dnsupdate())
+    loop.run_forever()
 
   def set(self, cfg):
     self.cfg = cfg
