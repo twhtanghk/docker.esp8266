@@ -11,8 +11,10 @@ import gpio
 import ddns
 import util
 
-gpio.model.setup()
-ddns.model.setup()
+pkg = ['ap', 'gpio', 'ddns']
+for i in pkg:
+  lib = __import__(i)
+  lib.model.setup()
 
 routes = [
   ('/cfg', util.handler(config.crud)),
