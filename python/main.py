@@ -22,7 +22,7 @@ routes = [
   ('/cfg/factory', util.handler(config.factory)),
   ('/sta', util.handler(sta.crud)),
   ('/sta/scan', util.handler(sta.scan)),
-  ('/ap', util.handler(ap.crud)),
+  ('/ap', util.handler(ap.ctl.crud)),
   ('/pwm', util.handler(pwm.list)),
   (re.compile('^/pwm/(\w+)$'), util.handler(pwm.crud)),
   (re.compile('^/pwm/(\w+)/duty$'), util.handler(pwm.duty)),
@@ -33,3 +33,7 @@ routes = [
 ]
 app = picoweb.WebApp(__name__, routes, False)
 app.run(host="0.0.0.0", port=80)
+
+import uasyncio as asyncio
+loop = asyncio.get_event_loop()
+loop.run_forever()

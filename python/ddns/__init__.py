@@ -37,7 +37,6 @@ class Model(Config):
           logger.error('update failed')
     loop = asyncio.get_event_loop()
     loop.create_task(task())
-    loop.run_forever()
 
   def ddnsupdate(self):
     if self.cfg['enable']:
