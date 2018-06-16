@@ -7,23 +7,16 @@ logger = logging.getLogger(__name__)
 class Model(Config):
   def __init__(self):
     Config.__init__(self, '/ddns.json')
-    self.pins = {}
 
   def factory(self):
     self.save({
       'url': 'https://dynupdate.no-ip.com/nic/update',
-      'enable': False,
       'interval': 300,
       'host': '',
       'user': '',
       'pass': ''
     })
     return self
-
-  def boot(self):
-    from util import exists
-    if not exists(self.filename):
-      self.factory()
 
   def setup(self):
     self.cfg = self.load()
@@ -38,8 +31,11 @@ class Model(Config):
     loop = asyncio.get_event_loop()
     loop.create_task(task())
 
+  def enabled(self):
+    return self.cfg['user'] != '' and self.cfg['pass'] != '' and self.cfg['host'] != ''
+
   def ddnsupdate(self):
-    if self.cfg['enable']:
+    if self.enabled():
       import urequests as req
       from ubinascii import b2a_base64
       auth = b2a_base64('{}:{}'.format(self.cfg['user'], self.cfg['pass']))
