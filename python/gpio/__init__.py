@@ -17,11 +17,6 @@ class Model(Config):
     })
     return self
 
-  def boot(self):
-    from util import exists
-    if not exists(self.filename):
-      self.factory()
-
   def setup(self):
     self.cfg = self.load()
     for name in self.cfg:

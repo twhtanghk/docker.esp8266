@@ -35,6 +35,11 @@ class Config:
   def __init__(self, filename):
     self.filename = filename
 
+  def boot(self):
+    from util import exists
+    if not exists(self.filename):
+      self.factory()
+
   def load(self):
     f = open(self.filename)
     data = ujson.load(f)

@@ -28,11 +28,6 @@ class Model(Config):
       'password': 'micropyhonN'
     })
 
-  def boot(self):
-    from util import exists
-    if not exists(self.filename):
-      self.factory()
-
   def setup(self):
     self.cfg = self.load()
     self.interface.config(essid=self.cfg['essid'], password=self.cfg['password'])
