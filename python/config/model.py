@@ -1,7 +1,6 @@
 import ujson
 
 pkg = (
-  'ap',
   'sta',
   'pwm'
 )

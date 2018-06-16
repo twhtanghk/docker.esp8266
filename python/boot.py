@@ -1,11 +1,13 @@
 # This file is executed on every boot (including wake-boot from deepsleep)
 #import esp
 #esp.osdebug(None)
-#import webrepl
-#webrepl.start()
+import webrepl
+webrepl.start()
 from config import model as cfg
 cfg.boot()
-from gpio import model
-model.boot()
+pkg = ['ap', 'gpio', 'ddns']
+for i in pkg:
+  lib = __import__(i)
+  lib.model.boot()
 import gc
 gc.collect()
