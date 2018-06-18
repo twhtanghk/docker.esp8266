@@ -31,7 +31,8 @@ class Model(Config):
       loop.run_until_complete(gps())
       async def task():
         import uart
-        while true:
+        await asyncio.sleep(10)
+        while True:
           line = await self.reader.readline()
           logger.info(line)
           uart.model.writer.awrite(line)
