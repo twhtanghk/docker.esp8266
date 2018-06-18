@@ -32,13 +32,8 @@ class Model(Config):
       poll = uselect.poll()
       poll.register(self.uart, uselect.POLLIN)
       import uasyncio as asyncio
-      async def task():
-        reader = asyncio.StreamReader(self.uart)
-        while True:
-          line = await reader.readline()
-          logger.info(line)
-      loop = asyncio.get_event_loop()
-      loop.create_task(task())
+      self.reader = asyncio.StreamReader(self.uart)
+      self.writer = asyncio.StreamWriter(self.uart, {})
 
   def set(self, cfg):
     self.cfg = cfg

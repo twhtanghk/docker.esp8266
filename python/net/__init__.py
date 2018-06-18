@@ -19,17 +19,23 @@ class Model(Config):
     self.cfg = self.load()
     if self.enabled():
       import uasyncio as asyncio
-      async def task():
+      async def gps():
         try:
           await asyncio.sleep(10)
           reader, writer = await asyncio.open_connection(host=self.cfg['host'], port=self.cfg['port'])
-          while True:
-            line = await reader.readline()
-            logger.info(line)
+          self.reader = reader
+          self.writer = writer
         except:
           logger.info('connection error')
       loop = asyncio.get_event_loop()
-      loop.create_task(task())
+      loop.run_until_complete(gps())
+      async def task():
+        import uart
+        while true:
+          line = await self.reader.readline()
+          logger.info(line)
+          uart.model.writer.awrite(line)
+      loop.create_task(task()) 
 
   def enabled(self):
     return self.cfg['host'] != None and self.cfg['port'] != None
