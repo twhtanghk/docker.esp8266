@@ -1,5 +1,6 @@
 import picoweb
 import ure as re
+import uasyncio as asyncio
 import logging
 logger = logging.getLogger(__name__)
 
@@ -45,3 +46,19 @@ def static(req, res):
     except OSError:
       pass
   yield from app.sendfile(res, file, mime)
+
+def uart(**kwargs):
+  id = kwargs.get('id', 2)
+  baudrate = kwargs.get('baudrate', 4800)
+  bits = kwargs.get('bits', 8)
+  parity = kwargs.get('parity', None)
+  stop = kwargs.get('stop', 1)
+  from machine import UART
+  uart = UART(id, baudrate=baudrate, bits=bits, parity=parity, stop=stop)
+  return {
+    'reader': asyncio.StreamReader(uart),
+    'writer': asyncio.StreamWriter(uart, {})
+  }
+
+def net(**kwargs):
+  return await asyncio.open_connection(**kwargs)
