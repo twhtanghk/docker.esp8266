@@ -28,12 +28,15 @@ class Model(Config):
         parity=self.cfg['parity'],
         stop=self.cfg['stop']
       )
-      import uselect
-      poll = uselect.poll()
-      poll.register(self.uart, uselect.POLLIN)
       import uasyncio as asyncio
       self.reader = asyncio.StreamReader(self.uart)
       self.writer = asyncio.StreamWriter(self.uart, {})
+      async def task():
+        while True:
+          line = await self.reader.readline()
+          logger.info(line)
+      loop = asyncio.get_event_loop()
+      loop.create_task(task())
 
   def set(self, cfg):
     self.cfg = cfg
