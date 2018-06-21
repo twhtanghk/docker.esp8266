@@ -11,7 +11,7 @@ import gpio
 import ddns
 import util
 
-pkg = ['ap', 'gpio', 'ddns', 'uart', 'net']
+pkg = ['ap', 'gpio', 'ddns', 'gps']
 for i in pkg:
   lib = __import__(i)
   lib.model.setup()

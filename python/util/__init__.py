@@ -55,10 +55,10 @@ def uart(**kwargs):
   stop = kwargs.get('stop', 1)
   from machine import UART
   uart = UART(id, baudrate=baudrate, bits=bits, parity=parity, stop=stop)
-  return {
-    'reader': asyncio.StreamReader(uart),
-    'writer': asyncio.StreamWriter(uart, {})
-  }
+  return [
+    asyncio.StreamReader(uart),
+    asyncio.StreamWriter(uart, {})
+  ]
 
 def net(**kwargs):
   return await asyncio.open_connection(**kwargs)

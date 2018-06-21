@@ -6,12 +6,17 @@ logger = logging.getLogger(__name__)
 
 class Model(Config):
   def __init__(self):
-    Config.__init__(self, '/net.json')
+    Config.__init__(self, '/gps.json')
 
   def factory(self):
     self.save({
       'host': None,
-      'port': None,
+      'port': 2947,
+      'uart': 2,
+      'baudrate': 4800,
+      'bits': 8,
+      'parity': None,
+      'stop': 1
     })
     return self
 
@@ -19,24 +24,22 @@ class Model(Config):
     self.cfg = self.load()
     if self.enabled():
       import uasyncio as asyncio
-      async def gps():
+      loop = asyncio.get_event_loop()
+      async def task():
         try:
-          await asyncio.sleep(10)
-          reader, writer = await asyncio.open_connection(host=self.cfg['host'], port=self.cfg['port'])
-          self.reader = reader
-          self.writer = writer
+          import time
+          time.sleep(10)
+          self.gps = await asyncio.open_connection(host=self.cfg['host'], port=self.cfg['port'])
+          logger.info(self.gps)
         except:
           logger.info('connection error')
-      loop = asyncio.get_event_loop()
-      loop.run_until_complete(gps())
-      async def task():
-        import uart
-        await asyncio.sleep(10)
+        import util
+        self.uart = util.uart()
         while True:
-          line = await self.reader.readline()
+          line = await self.gps[0].readline()
           logger.info(line)
-          uart.model.writer.awrite(line)
-      loop.create_task(task()) 
+          await self.uart[1].awrite(line)
+      loop.create_task(task())
 
   def enabled(self):
     return self.cfg['host'] != None and self.cfg['port'] != None
