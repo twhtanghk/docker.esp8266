@@ -30,3 +30,6 @@ max485 <-> mcu
   RE, DE -> HIGH : data from mcu to max485
   DI (RX) -> TX
   
+max485 <-> vhf
+  A <-> Green (GPS -)
+  B <-> Yellow (GPS +)
