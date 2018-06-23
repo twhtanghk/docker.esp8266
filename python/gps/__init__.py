@@ -26,19 +26,8 @@ class Model(Config):
       import uasyncio as asyncio
       loop = asyncio.get_event_loop()
       async def task():
-        try:
-          import time
-          time.sleep(10)
-          self.gps = await asyncio.open_connection(host=self.cfg['host'], port=self.cfg['port'])
-          logger.info(self.gps)
-        except:
-          logger.info('connection error')
         import util
-        self.uart = util.uart()
-        while True:
-          line = await self.gps[0].readline()
-          logger.info(line)
-          await self.uart[1].awrite(line)
+        self.gps = await util.uartServer()
       loop.create_task(task())
 
   def enabled(self):
