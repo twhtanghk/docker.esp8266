@@ -34,6 +34,8 @@ routes = [
 app = picoweb.WebApp(__name__, routes, False)
 app.run(host="0.0.0.0", port=80)
 
+util.uartServer()
+
 import uasyncio as asyncio
 loop = asyncio.get_event_loop()
 loop.run_forever()

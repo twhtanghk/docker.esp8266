@@ -63,29 +63,20 @@ def uart(**kwargs):
 async def net(**kwargs):
   return await asyncio.open_connection(**kwargs)
 
-async def uartServer(**kwargs):
+async def pipe(reader, writer):
+  while True:
+    line = await reader.readline()
+    await writer.awrite(line)
+
+def uartServer(**kwargs):
   try:
     port = kwargs.get('port', 2947)
     uart2 = uart()
-    async def net2uart(reader, writer):
-      while True:
-        line = await reader.readline()
-        logger.info('-> {}'.format(line))
-        await uart2[1].awrite(line)
-    async def uart2net(reader, writer):
-      import uselect
-      poll = uselect.poll()
-      poll.register(uart2[0], uselect.POLLIN)
-      try:
-        async for obj in poll.ipoll():
-          logger.info('<- {}'.format(obj))
-      except:
-        logger.info('poll exception')
-    async def cb(reader, writer):
-      while True:
-        await net2uart(reader, writer)
-        await uart2net(reader, writer)
-    return await asyncio.start_server(cb, host='', port=port)
+    loop = asyncio.get_event_loop()
+    def cb(reader, writer):
+      loop.create_task(pipe(reader, uart2[1]))
+      loop.create_task(pipe(uart2[0], writer))
+    loop.run_until_complete(asyncio.start_server(cb, host='', port=port))
   except Exception as e:
     import sys
     sys.print_exception(e)
