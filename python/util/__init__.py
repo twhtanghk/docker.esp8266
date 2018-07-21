@@ -63,19 +63,25 @@ def uart(**kwargs):
 async def net(**kwargs):
   return await asyncio.open_connection(**kwargs)
 
-async def pipe(reader, writer):
+async def pipe(reader, writer, pin, write = 0):
   while True:
     line = await reader.readline()
+    pin.value(write)
     await writer.awrite(line)
+    logger.info(line)
+    if write == 1:
+      pin.value(0)
 
 def uartServer(**kwargs):
   try:
+    from machine import Pin
+    pin = Pin(kwargs.get('pin', 5), Pin.OUT)
     port = kwargs.get('port', 2947)
     uart2 = uart()
     loop = asyncio.get_event_loop()
     def cb(reader, writer):
-      loop.create_task(pipe(reader, uart2[1]))
-      loop.create_task(pipe(uart2[0], writer))
+      loop.create_task(pipe(reader, uart2[1], pin, 1))
+      loop.create_task(pipe(uart2[0], writer, pin, 0))
     loop.run_until_complete(asyncio.start_server(cb, host='', port=port))
   except Exception as e:
     import sys
