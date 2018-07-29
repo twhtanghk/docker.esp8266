@@ -69,6 +69,7 @@ async def pipe(reader, writer, pin, write = 0):
     pin.value(write)
     await writer.awrite(line)
     logger.info(line)
+    await asyncio.sleep_ms(200)
     if write == 1:
       pin.value(0)
 
