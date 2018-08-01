@@ -81,9 +81,23 @@ def uartServer(**kwargs):
     uart2 = uart()
     loop = asyncio.get_event_loop()
     def cb(reader, writer):
-      loop.create_task(pipe(reader, uart2[1], pin, 1))
-      loop.create_task(pipe(uart2[0], writer, pin, 0))
-    loop.run_until_complete(asyncio.start_server(cb, host='', port=port))
+      tcp2uart = loop.create_task(pipe(reader, uart2[1], pin, 1))
+      uart2tcp = loop.create_task(pipe(uart2[0], writer, pin, 0))
+    server = loop.run_until_complete(asyncio.start_server(cb, host='', port=port))
+    logger.info(server)
+    return server
   except Exception as e:
     import sys
+    logger.info('uart')
+    sys.print_exception(e)
+
+def inetd(**kwargs):
+  try:
+    loop = asyncio.get_event_loop()
+    async def task():
+      await uartServer()
+    loop.create_task(task())
+  except Exception as e:
+    import sys
+    logger.info('inetd')
     sys.print_exception(e)
