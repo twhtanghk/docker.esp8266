@@ -5,7 +5,7 @@ import webrepl
 webrepl.start()
 from config import model as cfg
 cfg.boot()
-pkg = ['ap', 'gpio', 'ddns', 'gps']
+pkg = ['ap', 'gpio', 'ddns']
 for i in pkg:
   lib = __import__(i)
   lib.model.boot()
