@@ -1,6 +1,7 @@
 import ure as re
 import logging
 logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
 
 import picoweb
 import config
@@ -11,10 +12,12 @@ import gpio
 import ddns
 import util
 
-pkg = ['ap', 'gpio', 'ddns', 'gps']
+pkg = ['ap', 'gpio', 'ddns']
 for i in pkg:
   lib = __import__(i)
   lib.model.setup()
+
+util.inetd()
 
 routes = [
   ('/cfg', util.handler(config.crud)),
@@ -33,9 +36,3 @@ routes = [
 ]
 app = picoweb.WebApp(__name__, routes, False)
 app.run(host="0.0.0.0", port=80)
-
-util.uartServer()
-
-import uasyncio as asyncio
-loop = asyncio.get_event_loop()
-loop.run_forever()
