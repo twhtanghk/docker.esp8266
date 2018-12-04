@@ -1,6 +1,5 @@
 <template>
   <div id='sta'>
-    <model ref='sta' baseUrl='/sta' />
     <card header='Status'>
       <b-row>
         <div class='col-lg'>
@@ -48,7 +47,9 @@
 </template>
 
 <script lang='coffee'>
-module.exports =
+{sta} = require('./model').default
+
+export default
   components:
     model: require('./model').default
     card: require('./card').default
@@ -63,14 +64,14 @@ module.exports =
     password: ''
   methods:
     getStatus: ->
-      @$refs.sta.get()
+      sta.get()
         .then (res) =>
           @isconnected = res.isconnected
           @config = res.curr
           @host = res.dhcp_hostname
         .catch console.error
     setHost: (val) ->
-      @$refs.sta
+      sta
         .put
           data:
             name: val
@@ -78,7 +79,7 @@ module.exports =
           console.info 'updated successfully'
         .catch console.error
     connect: (essid, passwd) ->
-      @$refs.sta
+      sta
         .put 
           data:
             ssid: essid
@@ -87,7 +88,7 @@ module.exports =
           console.info 'connecting to specified essid'
         .catch console.error
     getList: ->
-      @$refs.sta
+      sta
         .read 'scan'
         .then (res) =>
           @list = []

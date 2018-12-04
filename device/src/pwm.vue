@@ -1,6 +1,5 @@
 <template>
   <div id='pwm' :name='name'>
-    <model ref='pwm' baseUrl='/pwm' />
     <card header='Current Duty'>
       <b-row>
         <b-col cols='4'>
@@ -31,7 +30,9 @@
 </template>
 
 <script lang='coffee'>
-module.exports =
+{pwm} = require('./model').default
+
+export default
   components:
     model: require('./model').default
     card: require('./card').default
@@ -57,7 +58,7 @@ module.exports =
       return val
     save: (pin, init) ->
       @init = @valid init
-      @$refs.pwm
+      pwm
         .update @name, 
           data:
             pin: pin
@@ -65,13 +66,13 @@ module.exports =
         .catch console.error
     setDuty: (val) ->
       @value = @valid val
-      @$refs.pwm
+      pwm
         .update "#{@name}/duty",
           data:
             value: @value
         .catch console.error
     list: ->
-      @$refs.pwm
+      pwm
         .get()
         .then (res) =>
           @pin = res[@name].pin

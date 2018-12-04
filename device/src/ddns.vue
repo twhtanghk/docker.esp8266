@@ -1,6 +1,5 @@
 <template>
   <div id='ddns'>
-    <model ref='model' baseUrl='ddns' />
     <form-col>
       <div slot='fields'>
         <field name='url'>
@@ -31,7 +30,9 @@
 </template>
 
 <script lang='coffee'>
-module.exports =
+{ddns} = require('./model').default
+
+export default
   components:
     model:
       extends: require('vue.model/src/model').default
@@ -50,7 +51,7 @@ module.exports =
     enable: false
   methods:
     get: ->
-      @$refs.model.get()
+      ddns.get()
         .then (res) =>
           @url = res.url
           @interval = res.interval
@@ -58,7 +59,7 @@ module.exports =
           @enable = res.enable
         .catch console.error
     save: ->
-      @$refs.model
+      ddns
         .put data: _.pick @, 'url', 'interval', 'host', 'user', 'pass', 'enable'
         .then ->
           console.info 'saved successfully'

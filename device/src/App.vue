@@ -38,7 +38,7 @@ DDNS = Vue.extend require('./ddns').default
 GPIO = Vue.extend require('./gpio').default
 PWM = Vue.extend require('./pwm').default
 
-module.exports =
+export default
   methods:
     select: (tabIndex) ->
       component = @$children[0].$children[tabIndex]

@@ -1,7 +1,5 @@
 <template>
   <div id='ap'>
-    <model ref='ap' baseUrl='/ap' />
-    <model ref='cfg' baseUrl='/cfg' />
     <card header='Settings'>
       <form-col>
         <div slot='fields'>
@@ -30,8 +28,10 @@
 </template>
 
 <script lang='coffee'>
-module.exports =
-  components:
+{ap, cfg} = require('./model').default
+
+export default
+  component:
     model: require('./model').default
     card: require('./card').default
     formCol: require('./form').default
@@ -42,13 +42,13 @@ module.exports =
     authmode: ''
   methods:
     getStatus: ->
-      @$refs.ap.get()
+      ap.get()
         .then (res) =>
           @essid = res.essid
           @authmode = res.authmode
         .catch console.error
     save: (essid, password) ->
-      @$refs.ap
+      ap
         .put
           data:
             essid: essid
@@ -57,13 +57,13 @@ module.exports =
           console.info 'saved successfully'
         .catch console.error
     reset: ->
-      @$refs.cfg
+      cfg
         .read 'reset'
         .then ->
           console.info 'reset in progress'
         .catch console.error
     factory: ->
-      @$refs.cfg
+      cfg
         .read 'factory'
         .then (res) =>
           @essid = res.essid
