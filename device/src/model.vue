@@ -16,7 +16,7 @@ Vue.component 'rest',
       default: eventBus
   
 export default
-  cfg:
+  cfg: new Vue
     extends: Vue.component 'rest'
     props:
       baseUrl:
@@ -31,17 +31,17 @@ export default
     props:
       baseUrl:
         default: '/sta'
-  ddns:
+  ddns: new Vue
     extends: Vue.component 'rest'
     props:
       baseUrl:
         default: '/ddns'
-  gpio:
+  gpio: new Vue
     extends: Vue.component 'rest'
     props:
       baseUrl:
         default: '/gpio'
-  pwm:
+  pwm: new Vue
     extends: Vue.component 'rest'
     props:
       baseUrl:
