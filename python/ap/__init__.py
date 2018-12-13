@@ -55,10 +55,10 @@ class Controller:
   def __init__(self, model):
     self.model = model
 
-  def get(req, res):
+  def get(self, req, res):
     yield from ok(res, model.get())
 
-  def set(req, res):
+  def set(self, req, res):
     yield from req.read_form_data()
     opts = {
       'essid': req.form.get('essid', [''])[0],
@@ -71,7 +71,7 @@ class Controller:
     model.set(opts)
     yield from get(req, res)
 
-  def crud(req, res):
+  def crud(self, req, res):
     ret = {
       'GET': self.get,
       'PUT': self.set
