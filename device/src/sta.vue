@@ -89,7 +89,7 @@ export default
         .catch console.error
     getList: ->
       sta
-        .read 'scan'
+        .get url: '/sta/scan'
         .then (res) =>
           @list = []
           for i in res.sort()
