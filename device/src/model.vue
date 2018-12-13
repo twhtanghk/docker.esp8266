@@ -10,6 +10,7 @@ Vue.component 'rest',
     mw: [
       @form
       @req
+      @res
     ]
   props:
     eventBus:
