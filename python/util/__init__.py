@@ -4,6 +4,10 @@ import uasyncio as asyncio
 import logging
 logger = logging.getLogger(__name__)
 
+headers = {
+  'Access-Control-Allow-Origin': '*'
+}
+
 def exists(filename):
   try:
     import os
@@ -13,10 +17,12 @@ def exists(filename):
     return False
 
 def ok(res, data={}):
-  yield from picoweb.jsonify(res, data)
+  import ujson
+  yield from picoweb.start_response(res, "application/json", headers=headers)
+  yield from res.awrite(ujson.dumps(data))
 
 def error(res, msg='bad request'):
-  yield from picoweb.start_response(res, status='400')
+  yield from picoweb.start_response(res, status='400', headers=headers)
   yield from res.awrite("{}\r\n".format(msg))
 
 def handler(f):
