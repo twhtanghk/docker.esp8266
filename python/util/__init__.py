@@ -39,7 +39,7 @@ def handler(f):
   return ret
 
 def static(req, res):
-  file = '..' + req.url_match.group(1)
+  file = '../statics' + req.url_match.group(1)
   mime = picoweb.get_mime_type(file)
   app = picoweb.WebApp(__name__)
   if b'gzip' in req.headers[b'Accept-Encoding']:
