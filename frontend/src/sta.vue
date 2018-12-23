@@ -13,7 +13,7 @@
     </card>
 
     <card header='Settings'>
-      <v-select v-model='essid' label='ESSID' items='list' box />
+      <v-select v-model='essid' label='ESSID' :items='list' box />
       <v-text-field v-model='password' type='password' />
       <v-btn color="primary" @click='connect(essid, password)'>Connect</v-btn>
       <v-btn color="secondary" @click='getList()'>Scan</v-btn>
@@ -61,7 +61,7 @@ export default
         .catch console.error
     getList: ->
       sta
-        .get url: '/sta/scan'
+        .get url: "#{sta.baseUrl}/scan"
         .then (res) =>
           @list = []
           for i in res.sort()
