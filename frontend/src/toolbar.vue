@@ -4,7 +4,7 @@
       ESP
     </v-toolbar-title>
     <v-spacer></v-spacer>
-    <v-toolbar-items class='hidden-sm-and-down'>
+    <v-toolbar-items>
       <v-btn flat href='#/ap'>AP</v-btn>
       <v-btn flat href='#/sta'>STA</v-btn>
       <v-btn flat href='#/ddns'>DDNS</v-btn>
