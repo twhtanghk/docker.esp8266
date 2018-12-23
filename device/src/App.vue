@@ -1,21 +1,10 @@
 <template>
-  <b-tabs @input='select($event)'>
-    <b-tab title='AP' active>
-      <div id='ap' />
-    </b-tab>
-    <b-tab title='STA'>
-      <div id='sta' />
-    </b-tab>
-    <b-tab title='DDNS'>
-      <div id='ddns' />
-    </b-tab>
-    <b-tab title='GPIO'>
-      <div id='gpio' />
-    </b-tab>
-    <b-tab title='PWM'>
-      <div id='pwm' />
-    </b-tab>
-  </b-tabs>
+  <v-app>
+    <toolbar />
+    <v-container fluid>
+      <router-view />
+    </v-container>
+  </v-app>
 </template>
 
 <script lang='coffee'>
@@ -23,6 +12,7 @@ require './app.scss'
 require 'vue-toasted/dist/vue-toasted.min.css'
 
 Vue = require('vue').default
+Vue.use require 'vuetify'
 Vue.use require('bootstrap-vue').default
 error = console.error
 console.error = (msg) ->
@@ -38,23 +28,5 @@ DDNS = Vue.extend require('./ddns').default
 GPIO = Vue.extend require('./gpio').default
 PWM = Vue.extend require('./pwm').default
 
-export default
-  methods:
-    select: (tabIndex) ->
-      component = @$children[0].$children[tabIndex]
-      id = component.$el.id
-      switch tabIndex
-        when 0
-          new AP el: "#ap"
-        when 1
-          new STA el: "#sta"
-        when 2
-          new DDNS el: "#ddns"
-        when 3
-          new GPIO el: "#gpio"
-        when 4
-          new PWM 
-            el: "#pwm"
-            propsData:
-              name: 'fan'
+export default {}
 </script>
