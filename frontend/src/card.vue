@@ -24,4 +24,12 @@ export default
 .rounded-card {
   border-radius: 1em;
 }
+
+.v-card__title {
+  padding: .5em;
+}
+
+.headline {
+  font-size: 16px !important;
+}
 </style>
