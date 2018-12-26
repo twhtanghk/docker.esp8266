@@ -14,7 +14,7 @@
 
     <card header='Settings'>
       <v-select v-model='essid' label='ESSID' :items='list' box />
-      <v-text-field v-model='password' type='password' />
+      <v-text-field v-model='password' label='Password' type='password' />
       <v-btn color="primary" @click='connect(essid, password)'>Connect</v-btn>
       <v-btn color="secondary" @click='getList()'>Scan</v-btn>
     </card>
