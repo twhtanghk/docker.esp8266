@@ -4,12 +4,29 @@
       ESP
     </v-toolbar-title>
     <v-spacer></v-spacer>
-    <v-toolbar-items>
-      <v-btn flat href='#/ap'>AP</v-btn>
-      <v-btn flat href='#/sta'>STA</v-btn>
-      <v-btn flat href='#/ddns'>DDNS</v-btn>
-      <v-btn flat href='#/gpio'>GPIO</v-btn>
-      <v-btn flat href='#/pwm'>PWM</v-btn>
-    </v-toolbar-items>
+    <v-menu bottom left>
+      <v-btn slot='activator' dark icon>
+        <v-icon>more_vert</v-icon>
+      </v-btn>
+      <v-list>
+        <v-list-tile v-for='(desc, action) in actions' :key='action' @click='click(action)'>
+          <v-list-tile-title>{{desc}}</v-list-tile-title>
+        </v-list-tile>
+      </v-list>
+    </v-menu>
   </v-toolbar>
 </template>
+
+<script lang='coffee'>
+export default
+  data: ->
+    actions:
+      ap: 'Access Point'
+      sta: 'Station'
+      ddns: 'Dynamic DNS'
+      gpio: 'General Purpose IO'
+      pwm: 'Pulse Width Modulation'
+  methods:
+    click: (action) ->
+      window.location.hash = "#/#{action}"
+</script>
