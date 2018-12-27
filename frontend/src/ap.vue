@@ -42,13 +42,13 @@ export default
         .catch console.error
     reset: ->
       cfg
-        .read 'reset'
+        .get url: "#{cfg.baseUrl}/reset"
         .then ->
           console.info 'reset in progress'
         .catch console.error
     factory: ->
       cfg
-        .read 'factory'
+        .get url: "#{cfg.baseUrl}/factory"
         .then (res) =>
           @essid = res.essid
           @authmode = res.authmode
