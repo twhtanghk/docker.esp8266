@@ -12,7 +12,7 @@ import gpio
 import ddns
 import util
 
-pkg = ['ap', 'gpio', 'ddns']
+pkg = ['config', 'ap', 'sta', 'gpio', 'ddns', 'pwm']
 for i in pkg:
   lib = __import__(i)
   lib.model.setup()
@@ -20,15 +20,15 @@ for i in pkg:
 util.inetd()
 
 routes = [
-  ('/cfg', util.handler(config.crud)),
-  ('/cfg/reset', util.handler(config.reset)),
-  ('/cfg/factory', util.handler(config.factory)),
-  ('/sta', util.handler(sta.crud)),
-  ('/sta/scan', util.handler(sta.scan)),
+  ('/cfg', util.handler(config.ctl.crud)),
+  ('/cfg/reset', util.handler(config.ctl.reset)),
+  ('/cfg/factory', util.handler(config.ctl.factory)),
+  ('/sta', util.handler(sta.ctl.crud)),
+  ('/sta/scan', util.handler(sta.ctl.scan)),
   ('/ap', util.handler(ap.ctl.crud)),
-  ('/pwm', util.handler(pwm.list)),
-  (re.compile('^/pwm/(\w+)$'), util.handler(pwm.crud)),
-  (re.compile('^/pwm/(\w+)/duty$'), util.handler(pwm.duty)),
+  ('/pwm', util.handler(pwm.ctl.list)),
+  (re.compile('^/pwm/(\w+)$'), util.handler(pwm.ctl.crud)),
+  (re.compile('^/pwm/(\w+)/duty$'), util.handler(pwm.ctl.duty)),
   ('/gpio', util.handler(gpio.ctl.list)),
   (re.compile('^/gpio/(\w+)$'), util.handler(gpio.ctl.crud)),
   (re.compile('^/ddns$'), util.handler(ddns.ctl.crud)),
