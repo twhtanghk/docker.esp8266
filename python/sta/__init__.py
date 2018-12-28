@@ -1,4 +1,5 @@
 from config import Config
+from util import ok
 import ubinascii
 import ujson
 import network
@@ -69,7 +70,7 @@ class Controller:
     for key, value in req.form.items():
       cfg[key] = value
     model.save(cfg)
-    yield from get(req, res)
+    yield from self.get(req, res)
 
   def scan(self, req, res):
     nets = self.model.scan()
@@ -77,8 +78,8 @@ class Controller:
 
   def crud(self, req, res):
     ret = {
-      'GET': 'get',
-      'PUT': 'set'
+      'GET': self.get,
+      'PUT': self.set
     }
     yield from ret[req.method](req, res)
 

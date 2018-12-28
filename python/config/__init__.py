@@ -44,8 +44,8 @@ class Controller:
 
   def crud(self, req, res):
     ret = {
-      'GET': get,
-      'PUT': set
+      'GET': self.get,
+      'PUT': self.set
     }
     yield from ret[req.method](req, res)
 
