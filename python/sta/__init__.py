@@ -1,3 +1,4 @@
+from config import Config
 import ubinascii
 import ujson
 import network
@@ -7,8 +8,8 @@ logger = logging.getLogger(__name__)
 class Model(Config):
   def __init__(self):
     Config.__init__(self, 'sta.json')
-    interface = network.WLAN(network.STA_IF)
-    interface.active(True)
+    self.interface = network.WLAN(network.STA_IF)
+    self.interface.active(True)
 
   def factory(self):
     mac = self.interface.config('mac')
@@ -18,12 +19,12 @@ class Model(Config):
       'dhcp_hostname': 'ESP-{}'.format(mac)
     })
 
-  def boot(self):
-    cfg = self.load(filename)
+  def setup(self):
+    cfg = self.load()
     self.interface.config(dhcp_hostname=cfg['dhcp_hostname'])
     if 'ssid' in cfg:
       self.interface.connect(cfg['ssid'], cfg['passwd'])
-    logger.info(ujson.dumps(get()))
+    logger.info(ujson.dumps(self.get()))
 
   def get(self):
     ret = {}
@@ -63,12 +64,16 @@ class Controller:
     yield from ok(res, model.load())
 
   def set(self, req, res):
-    yield from req.read_form_data(0
-    cfg = model.load()
+    yield from req.read_form_data()
+    cfg = self.model.load()
     for key, value in req.form.items():
       cfg[key] = value
     model.save(cfg)
     yield from get(req, res)
+
+  def scan(self, req, res):
+    nets = self.model.scan()
+    yield from ok(res, nets)
 
   def crud(self, req, res):
     ret = {
@@ -79,4 +84,3 @@ class Controller:
 
 model = Model()
 ctl = Controller(model)
-    	

@@ -27,15 +27,12 @@ class Config:
     return self
 
 class Controller:
-  def __init__(self, model):
-    self.model = model
+  def __init__(self):
+    return
 
   def factory(self, req, res):
-    pkg = (
-      'sta',
-      'pwm'
-    )
-    for i in pkg:
+    import pkg
+    for i in pkg.list:
       lib = __import__(i)
       lib.model.factory()
     yield from ok(res)
@@ -45,22 +42,6 @@ class Controller:
     import machine
     machine.reset()
 
-  def get(self, req, res):
-    req.parse_qs()
-    yield from ok(res, model.load(req.form['name'][0]))
-
-  def set(self, req, res):
-    yield from req.read_form_data()
-    cfg = model.load()
-    for key, value in req.form.items():
-      cfg[key] = value
-    model.save(cfg)
-    yield from get(req, res)
-
-  def reset(self, req, res):
-    yield from ok(res)
-    model.reset()
-
   def crud(self, req, res):
     ret = {
       'GET': get,
@@ -68,5 +49,4 @@ class Controller:
     }
     yield from ret[req.method](req, res)
 
-model = Model()
-ctl = Controller(model)
+ctl = Controller()

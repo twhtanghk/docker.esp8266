@@ -49,12 +49,12 @@ class Model(Config):
     Config.__init__(self, 'pwm.json')
 
   def factory(self):
-    return {
+    self.save({
       'fan': {
         'pin': 12,
         'default': 600
       }
-    }
+    })
 
   def device(self, pin):
     import machine
@@ -62,10 +62,10 @@ class Model(Config):
 
   def setup(self):
     from util import exists
-    self.cfg = self.load(filename)
-    for name in self.cfg:
-      pin = self.cfg[name]['pin']
-      default = self.cfg[name]['default']
+    cfg = self.load()
+    for name in cfg:
+      pin = cfg[name]['pin']
+      default = cfg[name]['default']
       dev = self.device(pin)
       dev.freq(1024)
       dev.duty(default)

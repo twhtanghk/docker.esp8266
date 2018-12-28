@@ -12,7 +12,7 @@ import gpio
 import ddns
 import util
 
-pkg = ['config', 'ap', 'sta', 'gpio', 'ddns', 'pwm']
+pkg = ['ap', 'sta', 'gpio', 'ddns', 'pwm']
 for i in pkg:
   lib = __import__(i)
   lib.model.setup()
@@ -21,7 +21,6 @@ util.inetd()
 
 routes = [
   ('/cfg', util.handler(config.ctl.crud)),
-  ('/cfg/reset', util.handler(config.ctl.reset)),
   ('/cfg/factory', util.handler(config.ctl.factory)),
   ('/sta', util.handler(sta.ctl.crud)),
   ('/sta/scan', util.handler(sta.ctl.scan)),
