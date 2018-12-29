@@ -14,7 +14,10 @@ module.exports =
       config.plugins.push new CompressionWebpackPlugin
         deleteOriginalAssets: true
         include: [
-          /\.ico$/
+          /\.eot$/
+          /\.woff2$/
+          /\.woff$/
+          /\.ttf$/
           /\.html$/
           /\.js$/
           /\.css$/

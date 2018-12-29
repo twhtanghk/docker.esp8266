@@ -19,8 +19,9 @@ export default
     toolbar: require('./toolbar').default
 </script>
 
-<style>
-@import url('https://fonts.googleapis.com/css?family=Roboto:300,400,500,700|Material+Icons');
+<style lang='scss'>
+$material-icons-font-path: '~material-icons/iconfont/';
+@import '~material-icons/iconfont/material-icons.scss';
 @import '~vuetify/dist/vuetify.min.css';
 
 #app {
