@@ -3,8 +3,8 @@
 #esp.osdebug(None)
 import webrepl
 webrepl.start()
-pkg = ['ap', 'sta', 'gpio', 'ddns', 'pwm']
-for i in pkg:
+import pkg
+for i in pkg.list:
   lib = __import__(i)
   lib.model.boot()
 import gc

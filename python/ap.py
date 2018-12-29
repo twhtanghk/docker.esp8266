@@ -43,33 +43,31 @@ class Model(Config):
     return ret
 
   def set(self, opts):
-    cfg = model.load(filename)
-    essid = opts['essid']
-    password = opts['password']
-    self.cfg['essid'] = opts['essid']
-    self.cfg['password'] = opts['password']
-    logger.info(ujson.dumps(self.cfg))
+    cfg = self.load()
+    cfg['essid'] = opts['essid']
+    cfg['password'] = opts['password']
     self.save(cfg)
+    self.interface.config(essid=opts['essid'], password=opts['password'])
 
 class Controller:
   def __init__(self, model):
     self.model = model
 
   def get(self, req, res):
-    yield from ok(res, model.get())
+    yield from ok(res, self.model.get())
 
   def set(self, req, res):
     yield from req.read_form_data()
     opts = {
-      'essid': req.form.get('essid', [''])[0],
-      'password': req.form.get('password', [''])[0]
+      'essid': req.form.get('essid', ''),
+      'password': req.form.get('password', '')
     }
     if not opts['essid']:
       raise Exception('empty essid')
     if len(opts['password']) < 8:
       raise Exception('password min length 8')
-    model.set(opts)
-    yield from get(req, res)
+    self.model.set(opts)
+    yield from self.get(req, res)
 
   def crud(self, req, res):
     ret = {

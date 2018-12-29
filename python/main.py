@@ -11,16 +11,16 @@ import pwm
 import gpio
 import ddns
 import util
+import pkg
 
-pkg = ['ap', 'sta', 'gpio', 'ddns', 'pwm']
-for i in pkg:
+for i in pkg.list:
   lib = __import__(i)
   lib.model.setup()
 
 util.inetd()
 
 routes = [
-  ('/cfg', util.handler(config.ctl.crud)),
+  ('/cfg', util.handler(config.ctl.read)),
   ('/cfg/reset', util.handler(config.ctl.reset)),
   ('/cfg/factory', util.handler(config.ctl.factory)),
   ('/sta', util.handler(sta.ctl.crud)),

@@ -19,8 +19,8 @@ class Controller:
     yield from req.read_form_data()
     req.params = {
       'device': req.url_match.group(1),
-      'pin': int(req.form['pin'][0]),
-      'default': int(req.form['default'][0])
+      'pin': int(req.form['pin']),
+      'default': int(req.form['default'])
     }
     model.update(req.params)
     yield from ok(res)
@@ -30,8 +30,8 @@ class Controller:
       'device': req.url_match.group(1)
     }
     yield from req.read_form_data()
-    req.params['value'] = int(req.form['value'][0])
-    model.duty(req.params)
+    req.params['value'] = int(req.form['value'])
+    self.model.duty(req.params)
     yield from ok(res)
   
   def crud(self, req, res):
@@ -39,8 +39,8 @@ class Controller:
       'device': req.url_match.group(1)
     }
     ret = {
-      'GET': read,
-      'PUT': update
+      'GET': self.read,
+      'PUT': self.update
     }
     yield from ret[req.method](req, res)
 
@@ -72,30 +72,34 @@ class Model(Config):
     logger.info(ujson.dumps(cfg))
 
   def list(self):
-    for name in self.cfg:
-      pin = self.cfg[name]['pin']
-      self.cfg[name] = {
+    cfg = self.load()
+    for name in cfg:
+      pin = cfg[name]['pin']
+      cfg[name] = {
         'pin': pin,
         'default': cfg[name]['default'],
-        'value': device(pin).duty()
+        'value': self.device(pin).duty()
       }
-    return self.cfg
+    return cfg
     
   def read(self, opts):
+    cfg = self.load()
     name = opts['device']
-    pin = self.cfg[name]['pin']
-    self.cfg[name]['value'] = self.device(pin).duty()
-    return self.cfg[name]
+    pin = cfg[name]['pin']
+    cfg[name]['value'] = self.device(pin).duty()
+    return cfg[name]
 
   def update(self, opts):
-    self.cfg[opts['device']] = {
+    cfg = self.load()
+    cfg[opts['device']] = {
       'pin': opts['pin'],
       'default': opts['default']
     }
     self.save(cfg)
   
   def duty(self, opts):
-    device(self.cfg['pin']).duty(opts['value'])
+    cfg = self.load()
+    self.device(cfg[opts['device']]['pin']).duty(opts['value'])
 
 model = Model()
 ctl = Controller(model)

@@ -42,11 +42,12 @@ class Controller:
     import machine
     machine.reset()
 
-  def crud(self, req, res):
-    ret = {
-      'GET': self.get,
-      'PUT': self.set
-    }
-    yield from ret[req.method](req, res)
+  def read(self, req, res):
+    data = {}
+    import pkg
+    for i in pkg.list:
+      lib = __import__(i)
+      data[i] = lib.model.load()
+    yield from ok(res, data)
 
 ctl = Controller()
