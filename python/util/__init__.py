@@ -5,7 +5,8 @@ import logging
 logger = logging.getLogger(__name__)
 
 headers = {
-  'Access-Control-Allow-Origin': '*'
+  'Access-Control-Allow-Origin': '*',
+  'Access-Control-Allow-Methods': 'POST, PUT, GET, DELETE, OPTIONS'
 }
 
 def exists(filename):
@@ -21,6 +22,10 @@ def ok(res, data={}):
   yield from picoweb.start_response(res, "application/json", headers=headers)
   yield from res.awrite(ujson.dumps(data))
 
+def cors(req, res):
+  yield from picoweb.start_response(res, headers=headers)
+  yield from res.aclose()
+
 def error(res, msg='bad request'):
   yield from picoweb.start_response(res, status='400', headers=headers)
   yield from res.awrite("{}\r\n".format(msg))
@@ -29,7 +34,10 @@ def handler(f):
   def ret(req, res):
     logger.info('{} {}'.format(req.method, req.path))
     try:
-      yield from f(req, res)
+      if req.method == 'OPTIONS':
+        yield from cors(req, res)
+      else:
+        yield from f(req, res)
       import gc
       gc.collect()
     except Exception as e:
