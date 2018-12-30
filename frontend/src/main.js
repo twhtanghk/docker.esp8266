@@ -9,9 +9,9 @@ const router = new VueRouter({
   routes: [
     {path: '/ap', component: require('./ap').default},
     {path: '/sta', component: require('./sta').default},
+    {path: '/gpio', component: require('./gpio').default},
 /*
     {path: '/ddns', component: require('./ddns').default},
-    {path: '/gpio', component: require('./gpio').default},
     {path: '/pwm', component: require('./pwm').default},
 */
     {path: '*', redirect: '/ap'}

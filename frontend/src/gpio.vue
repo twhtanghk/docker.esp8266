@@ -1,35 +1,24 @@
 <template>
   <div id='gpio'>
-    <toggle-button class='toggle' v-for='item in gpio' :key='item.name' :value='item.value' :labels='labels(item)' :height='30' :width='100' @change='set($event, item)' :color='color' />
+    <v-switch v-for='item in gpio' :key='item.name' v-model='item.value' :label='labels(item)' @change='set(item)' />
   </div>
 </template>
 
 <script lang='coffee'>
 {gpio} = require('./model').default
-Vue = require('vue').default
-Vue.use require('vue-js-toggle-button').default
-
-url = (name = null) ->
-  root = '/gpio'
-  if name?
-    root = "#{root}/#{name}"
-  return root
 
 export default
-  components:
-    model: require('./model').default
   data: ->
     gpio: []
-    color: '#007bff'
   methods:
     labels: (item) ->
-      checked: "#{item.name} On"
-      unchecked: "#{item.name} Off"
-    set: ({value, srcEvent}, item) ->
+      "#{item.name} #{if item.value == 0 then 'Off' else 'On'}"
+    set: (item) ->
       gpio
-        .update item.name,
+        .update
           data:
-            value: value
+            id: item.name
+            value: if item.value then 1 else 0
         .catch console.error
     list: ->
       gpio
