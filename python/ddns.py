@@ -14,7 +14,8 @@ class Model(Config):
       'interval': 300,
       'host': '',
       'user': '',
-      'pass': ''
+      'pass': '',
+      'enable': False
     })
     return self
 
@@ -58,7 +59,7 @@ class Controller:
     self.model = model
 
   def read(self, req, res):
-    yield from ok(res, self.model.get(name))
+    yield from ok(res, self.model.get())
 
   def update(self, req, res):
     yield from req.read_form_data()

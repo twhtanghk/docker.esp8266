@@ -4,7 +4,6 @@
       <v-text-field v-model='isconnected' label='Connected' disabled />
       <v-text-field v-model='JSON.stringify(config)' label='Config' disabled />
       <v-btn color="primary" @click='getStatus()'>Refresh</v-btn>
-      </div>
     </card>
 
     <card header='Host'>

@@ -1,32 +1,15 @@
 <template>
-  <div id='ddns'>
-    <form-col>
-      <div slot='fields'>
-        <field name='url'>
-          <b-form-input v-model='url' type='text' />
-        </field>
-        <field name='interval (sec)'>
-          <b-form-input v-model='interval' type='number' />
-        </field>
-        <field name='hostname'>
-          <b-form-input v-model='host' type='text' />
-        </field>
-        <field name='user'>
-          <b-form-input v-model='user' type='text' />
-        </field>
-        <field name='password'>
-          <b-form-input v-model='pass' type='password' />
-        </field>
-        <field name='enable'>
-          <b-form-checkbox v-model='enable' :value='true' :unchecked-value='false' />
-        </field>
-      </div>
-      <div slot='buttons' class='action'>
-        <b-button variant="primary" @click='save'>Save</b-button>
-      </div>
-
-    </form-col>
-  </div>
+  <v-layout row wrap>
+    <card header='Settings'>
+      <v-text-field v-model='url' label='URL' disabled />
+      <v-text-field v-model='interval' label='Interval' disabled />
+      <v-text-field v-model='host' label='Hostname' />
+      <v-text-field v-model='user' label='Username' />
+      <v-text-field v-model='pass' label='Password' />
+      <v-switch v-model='enable' label='Enbale' />
+      <v-btn color="primary" @click='save'>Save</v-btn>
+    </card>
+  </v-layout>
 </template>
 
 <script lang='coffee'>
@@ -34,14 +17,7 @@
 
 export default
   components:
-    model:
-      extends: require('vue.model/src/model').default
-      data: ->
-        mw: [
-          @form
-          @req
-          @res
-        ]
+    card: require('./card').default
   data: ->
     url: ''
     interval: 0
@@ -56,13 +32,12 @@ export default
           @url = res.url
           @interval = res.interval
           @host = res.host
+          @user = res.user
           @enable = res.enable
         .catch console.error
     save: ->
       ddns
         .put data: _.pick @, 'url', 'interval', 'host', 'user', 'pass', 'enable'
-        .then ->
-          console.info 'saved successfully'
         .catch console.error
   created: ->
     @get()
