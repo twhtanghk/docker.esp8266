@@ -10,6 +10,7 @@ Vue.component 'rest',
       @form
       @req
       @res
+      @error
     ]
   props:
     eventBus:
@@ -21,30 +22,30 @@ export default
     extends: Vue.component 'rest'
     props:
       baseUrl:
-        default: "#{process.env.VUE_APP_BASE_URL}/cfg"
+        default: "#{process.env.API_URL}/cfg"
   ap: new Vue
     extends: Vue.component 'rest'
     props:
       baseUrl:
-        default: "#{process.env.VUE_APP_BASE_URL}/ap"
+        default: "#{process.env.API_URL}/ap"
   sta: new Vue
     extends: Vue.component 'rest'
     props:
       baseUrl:
-        default: "#{process.env.VUE_APP_BASE_URL}/sta"
+        default: "#{process.env.API_URL}/sta"
   ddns: new Vue
     extends: Vue.component 'rest'
     props:
       baseUrl:
-        default: "#{process.env.VUE_APP_BASE_URL}/ddns"
+        default: "#{process.env.API_URL}/ddns"
   gpio: new Vue
     extends: Vue.component 'rest'
     props:
       baseUrl:
-        default: "#{process.env.VUE_APP_BASE_URL}/gpio"
+        default: "#{process.env.API_URL}/gpio"
   pwm: new Vue
     extends: Vue.component 'rest'
     props:
       baseUrl:
-        default: "#{process.env.VUE_APP_BASE_URL}/pwm"
+        default: "#{process.env.API_URL}/pwm"
 </script>

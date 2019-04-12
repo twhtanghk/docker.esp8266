@@ -1,10 +1,10 @@
 _ = require 'lodash'
-webpack = require 'webpack'
+{EnvironmentPlugin} = require 'webpack'
 CompressionWebpackPlugin = require 'compression-webpack-plugin'
-process.env.VUE_APP_BASE_URL ?= '.'
 
 module.exports =
-  baseUrl: './'
+  publicPath: './'
+  outputDir: './dist'
   lintOnSave: false
   devServer:
     host: '0.0.0.0'
@@ -23,8 +23,11 @@ module.exports =
           /\.css$/
           /\.map$/
         ]
+      process.env.API_URL = '.'
+    config.plugins.push new EnvironmentPlugin [
+      'API_URL'
+    ]
     config.module.rules.push
         test: /\.coffee$/
         use: ['babel-loader', 'coffee-loader']
-    _.extend config.optimization, minimize: false
     return
