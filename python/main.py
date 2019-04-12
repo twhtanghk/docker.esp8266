@@ -23,7 +23,7 @@ routes = [
   ('/cfg', util.handler(config.ctl.read)),
   ('/cfg/reset', util.handler(config.ctl.reset)),
   ('/cfg/factory', util.handler(config.ctl.factory)),
-  ('/sta', util.handler(sta.ctl.crud)),
+  ('/sta', util.handler2({'GET': sta.ctl.get, 'PUT': sta.ctl.set})),
   ('/sta/scan', util.handler(sta.ctl.scan)),
   ('/ap', util.handler(ap.ctl.crud)),
   ('/pwm', util.handler(pwm.ctl.list)),

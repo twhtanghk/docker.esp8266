@@ -26,6 +26,9 @@ def cors(req, res):
   yield from picoweb.start_response(res, headers=headers)
   yield from res.aclose()
 
+def notFound(res):
+  yield from picoweb.start_response(res, status='404', headers=headers)
+  
 def error(res, msg='bad request'):
   yield from picoweb.start_response(res, status='400', headers=headers)
   yield from res.awrite("{}\r\n".format(msg))
@@ -44,6 +47,15 @@ def handler(f):
       import sys
       sys.print_exception(e)
       yield from error(res, '"{}"'.format(str(e)))
+  return ret
+
+def handler2(map):
+  map['OPTIONS'] = cors
+  def ret(req, res):
+    if req.method in map:
+      yield from handler(map[req.method])(req, res)
+    else:
+      yield from notFound(res)
   return ret
 
 def static(req, res):
