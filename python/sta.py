@@ -25,9 +25,9 @@ class Model(Config):
     self.interface.config(dhcp_hostname=cfg['dhcp_hostname'])
     if 'ssid' in cfg:
       self.interface.connect(cfg['ssid'], cfg['passwd'])
-    logger.info(ujson.dumps(self.get()))
+    logger.info(ujson.dumps(self._status()))
 
-  def get(self):
+  def _status(self):
     ret = {}
     for prop in ['mac', 'dhcp_hostname']:
       ret[prop] = self.interface.config(prop)
@@ -36,52 +36,44 @@ class Model(Config):
     ret['curr'] = self.interface.ifconfig()
     return ret
 
-  def set(self, opts):
-    cfg = self.model.load(filename)
-    if 'name' in opts:
-      name = opts['name']
-      self.interface.config(dhcp_hostname=name)
-      cfg['dhcp_hostname'] = name
-    if 'ssid' in opts and 'passwd' in opts:
-      ssid = opts['ssid']
-      passwd = opts['passwd']
-      self.interface.connect(ssid, passwd)
-      cfg['ssid'] = ssid
-      cfg['passwd'] = passwd
-    self.model.save(cfg)
+  def _hostname(self, opts):
+    name = opts['name']
+    self.interface.config(dhcp_hostname=name)
+    cfg = self.load()
+    cfg['dhcp_hostname'] = name
+    self.save(cfg)
 
-  def scan(self):
+  def _connect(self, opts):
+    ssid = opts['ssid']
+    passwd = opts['passwd']
+    self.interface.connect(ssid, passwd)
+    cfg = self.load()
+    cfg['ssid'] = ssid
+    cfg['passwd'] = passwd
+    self.save(cfg)
+
+  def _scan(self):
     nets = []
     for net in self.interface.scan():
       if net[0] not in nets:
         nets.append(net[0])
     return nets
 
-class Controller:
-  def __init__(self, model):
-    self.model = model
-
-  def get(self, req, res):
-    yield from ok(res, model.get())
+  def status(self, req, res):
+    yield from ok(res, self._status())
 
   def set(self, req, res):
     yield from req.read_form_data()
-    cfg = self.model.load()
+    opts = {}
     for key, value in req.form.items():
-      cfg[key] = value
-    model.save(cfg)
-    yield from self.get(req, res)
+      opts[key] = value
+    if 'name' in opts:
+      self._hostname(opts)
+    if 'ssid' in opts and 'passwd' in opts:
+      self._connect(opts)
+    yield from self.status(req, res)
 
   def scan(self, req, res):
-    nets = self.model.scan()
-    yield from ok(res, nets)
-
-  def crud(self, req, res):
-    ret = {
-      'GET': self.get,
-      'PUT': self.set
-    }
-    yield from ret[req.method](req, res)
+    yield from ok(res, self._scan())
 
 model = Model()
-ctl = Controller(model)
