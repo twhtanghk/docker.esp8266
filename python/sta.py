@@ -62,7 +62,7 @@ class Controller:
     self.model = model
 
   def get(self, req, res):
-    yield from ok(res, model.load())
+    yield from ok(res, model.get())
 
   def set(self, req, res):
     yield from req.read_form_data()
