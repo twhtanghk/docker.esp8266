@@ -12,7 +12,9 @@ class Model(Config):
     self.save({
       'sw13': {
         'id': 13,
-        'mode': Pin.OUT
+        'mode': Pin.OPEN_DRAIN,
+        'pull': Pin.PULL_UP,
+        'value': 1
       }
     })
     return self
@@ -20,7 +22,8 @@ class Model(Config):
   def setup(self):
     self.cfg = self.load()
     for name in self.cfg:
-      self.pins[name] = Pin(self.cfg[name]['id'], self.cfg[name]['mode'])
+      self.pins[name] = Pin(self.cfg[name]['id'], self.cfg[name]['mode'], self.cfg[name]['pull'])
+      self.pins[name].value(self.cfg[name]['value'])
 
   def set(self, name, value):
     self.pins[name].value(value)
