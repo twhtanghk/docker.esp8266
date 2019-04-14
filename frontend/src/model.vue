@@ -33,6 +33,11 @@ export default
     props:
       baseUrl:
         default: "#{process.env.API_URL}/sta"
+  syslog: new Vue
+    extends: Vue.component 'rest'
+    props:
+      baseUrl:
+        default: "#{process.env.API_URL}/log"
   ddns: new Vue
     extends: Vue.component 'rest'
     props:

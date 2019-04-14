@@ -23,6 +23,7 @@ export default
     actions:
       ap: 'Access Point'
       sta: 'Station'
+      syslog: 'Syslog'
       ddns: 'Dynamic DNS'
       gpio: 'General Purpose IO'
       pwm: 'Pulse Width Modulation'

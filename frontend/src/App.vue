@@ -12,7 +12,6 @@
 <script lang='coffee'>
 Vue = require('vue').default
 Vue.use require 'vuetify'
-Vue.use require 'vee-validate'
 
 export default
   components:

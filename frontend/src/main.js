@@ -9,6 +9,7 @@ const router = new VueRouter({
   routes: [
     {path: '/ap', component: require('./ap').default},
     {path: '/sta', component: require('./sta').default},
+    {path: '/syslog', component: require('./syslog').default},
     {path: '/gpio', component: require('./gpio').default},
     {path: '/ddns', component: require('./ddns').default},
 /*
