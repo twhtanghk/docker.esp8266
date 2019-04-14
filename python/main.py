@@ -1,21 +1,13 @@
 import ure as re
-import logging
-logging.basicConfig(level=logging.INFO)
-logger = logging.getLogger(__name__)
-
 import picoweb
 import config
 import ap
 import sta
+import log
 import pwm
 import gpio
 import ddns
 import util
-import pkg
-
-for i in pkg.list:
-  lib = __import__(i)
-  lib.model.setup()
 
 util.inetd()
 
@@ -26,6 +18,7 @@ routes = [
   ('/sta', util.handler2({'GET': sta.model.status, 'PUT': sta.model.set})),
   ('/sta/scan', util.handler(sta.model.scan)),
   ('/ap', util.handler(ap.ctl.crud)),
+  ('/log', util.handler2({'GET': log.model.status, 'PUT': log.model.set})),
   ('/pwm', util.handler(pwm.ctl.list)),
   (re.compile('^/pwm/(\w+)$'), util.handler(pwm.ctl.crud)),
   (re.compile('^/pwm/(\w+)/duty$'), util.handler(pwm.ctl.duty)),
