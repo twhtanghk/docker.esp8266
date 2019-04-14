@@ -2,7 +2,7 @@ import ujson
 from config import Config
 from util import handler, ok
 import ure as re
-import logging
+import log as logging
 logger = logging.getLogger(__name__)
 
 class Controller:
@@ -60,8 +60,8 @@ class Model(Config):
     import machine
     return machine.PWM(machine.Pin(pin))
 
-  def setup(self):
-    from util import exists
+  def boot(self):
+    Config.boot(self)
     cfg = self.load()
     for name in cfg:
       pin = cfg[name]['pin']
