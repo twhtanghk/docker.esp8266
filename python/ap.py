@@ -3,8 +3,6 @@ from util import ok
 import network
 import ujson
 import ubinascii
-import logging
-logger = logging.getLogger(__name__)
 
 class Model(Config):
   authmode = {
@@ -28,10 +26,10 @@ class Model(Config):
       'password': 'micropyhonN'
     })
 
-  def setup(self):
+  def boot(self):
+    Config.boot(self)
     self.cfg = self.load()
     self.interface.config(essid=self.cfg['essid'], password=self.cfg['password'])
-    logger.info(ujson.dumps(self.get()))
 
   def get(self):
     ret = {}
