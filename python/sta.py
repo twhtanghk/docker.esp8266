@@ -3,8 +3,6 @@ from util import ok
 import ubinascii
 import ujson
 import network
-import logging
-logger = logging.getLogger(__name__)
 
 class Model(Config):
   def __init__(self):
@@ -20,12 +18,12 @@ class Model(Config):
       'dhcp_hostname': 'ESP-{}'.format(mac)
     })
 
-  def setup(self):
+  def boot(self):
+    Config.boot(self)
     cfg = self.load()
     self.interface.config(dhcp_hostname=cfg['dhcp_hostname'])
     if 'ssid' in cfg:
       self.interface.connect(cfg['ssid'], cfg['passwd'])
-    logger.info(ujson.dumps(self._status()))
 
   def _status(self):
     ret = {}
@@ -64,13 +62,10 @@ class Model(Config):
 
   def set(self, req, res):
     yield from req.read_form_data()
-    opts = {}
-    for key, value in req.form.items():
-      opts[key] = value
-    if 'name' in opts:
-      self._hostname(opts)
-    if 'ssid' in opts and 'passwd' in opts:
-      self._connect(opts)
+    if 'name' in req.form:
+      self._hostname(req.form)
+    if 'ssid' in req.form and 'passwd' in req.form:
+      self._connect(req.form)
     yield from self.status(req, res)
 
   def scan(self, req, res):
