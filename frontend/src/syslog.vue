@@ -3,7 +3,7 @@
     <card header='Settings'>
       <v-text-field v-model='ip' label='IP' />
       <v-text-field v-model='port' label='Port' />
-      <v-switch v-model='active' label='Enbale' />
+      <v-switch v-model='active' label='Enable' />
       <v-btn color="primary" @click='save'>Save</v-btn>
     </card>
   </v-layout>
