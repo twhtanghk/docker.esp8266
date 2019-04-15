@@ -1,8 +1,6 @@
 import picoweb
 import ure as re
 import uasyncio as asyncio
-import logging
-logger = logging.getLogger(__name__)
 
 headers = {
   'Access-Control-Allow-Origin': '*',
@@ -35,6 +33,8 @@ def error(res, msg='bad request'):
 
 def handler(f):
   def ret(req, res):
+    import log as logging
+    logger = logging.getLogger(__name__)
     logger.info('{} {}'.format(req.method, req.path))
     try:
       if req.method == 'OPTIONS':
@@ -61,7 +61,7 @@ def handler2(map):
 def static(req, res):
   file = '../static' + req.url_match.group(1)
   mime = picoweb.get_mime_type(file)
-  app = picoweb.WebApp(__name__)
+  app = picoweb.WebApp(None)
   if b'gzip' in req.headers[b'Accept-Encoding']:
     gz = file + '.gz'
     try:
@@ -90,6 +90,8 @@ async def net(**kwargs):
   return await asyncio.open_connection(**kwargs)
 
 async def pipe(reader, writer, pin, write = 0):
+  import log as logging
+  logger = logging.getLogger(__name__)
   while True:
     line = await reader.readline()
     pin.value(write)
@@ -100,6 +102,8 @@ async def pipe(reader, writer, pin, write = 0):
       pin.value(0)
 
 def uartServer(**kwargs):
+  import log as logging
+  logger = logging.getLogger(__name__)
   try:
     from machine import Pin
     pin = Pin(kwargs.get('pin', 5), Pin.OUT)
@@ -118,6 +122,8 @@ def uartServer(**kwargs):
     sys.print_exception(e)
 
 def inetd(**kwargs):
+  import log as logging
+  logger = logging.getLogger(__name__)
   try:
     loop = asyncio.get_event_loop()
     async def task():
