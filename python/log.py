@@ -9,7 +9,7 @@ class Logger(logging.Logger):
   def log(self, level, msg, *args):
     if level >= (self.level or logging._level):
       msg = "{}:{}:{}:{}".format(level, self.name, msg, args)
-      if hasattr(model, 'address'):
+      if hasattr(model, 'address') and model.address != None:
         logging._stream.sendto(msg, model.address)
 
 def getLogger(name):
@@ -56,6 +56,8 @@ class Model(Config):
 
   def set(self, req, res):
     yield from req.read_form_data()
+    req.form['port'] = int(req.form['port'])
+    req.form['active'] = req.form['active'] == 'true'
     yield from ok(res, self._set(req.form))
 
 model = Model()
