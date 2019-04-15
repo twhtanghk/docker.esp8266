@@ -7,6 +7,5 @@ import pkg
 for i in pkg.list:
   lib = __import__(i)
   lib.model.boot()
-  lib.model.setup()
 import gc
 gc.collect()
