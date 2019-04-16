@@ -20,6 +20,7 @@ class Model(Config):
     return self
 
   def boot(self):
+    Config.boot(self)
     self.cfg = self.load()
     for name in self.cfg:
       self.pins[name] = Pin(self.cfg[name]['id'], self.cfg[name]['mode'], self.cfg[name]['pull'])
