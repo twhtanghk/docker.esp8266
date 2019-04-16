@@ -60,6 +60,6 @@ class Model(Config):
     if len(opts['password']) < 8:
       raise Exception('password min length 8')
     self._set(opts)
-    yield from self._get(req, res)
+    yield from self.get(req, res)
 
 model = Model()
