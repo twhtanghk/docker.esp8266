@@ -51,7 +51,10 @@ def handler2(map):
   return ret
 
 def static(req, res):
-  file = '../static' + req.url_match.group(1)
+  file = req.url_match.group(1)
+  if file == '/':
+    file = '/index.html'
+  file = '../static' + file
   mime = picoweb.get_mime_type(file)
   app = picoweb.WebApp(None)
   if b'gzip' in req.headers[b'Accept-Encoding']:
