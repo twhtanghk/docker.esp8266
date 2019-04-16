@@ -12,7 +12,7 @@ export default
     gpio: []
   methods:
     labels: (item) ->
-      "#{item.name} #{if item.value == 0 then 'Off' else 'On'}"
+      "#{item.name} #{if item.value then 'Off' else 'On'}"
     set: (item) ->
       gpio
         .update
