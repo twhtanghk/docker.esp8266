@@ -8,7 +8,7 @@ import logging
 class Logger(logging.Logger):
   def log(self, level, msg, *args):
     if level >= (self.level or logging._level):
-      msg = "{}:{}:{}:{}".format(level, self.name, msg, args)
+      msg = "{}:{}:{}:{}".format(logging._level_dict[level], self.name, msg, args)
       if hasattr(model, 'address') and model.address != None:
         logging._stream.sendto(msg, model.address)
 
