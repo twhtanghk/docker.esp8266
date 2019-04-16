@@ -6,7 +6,7 @@
       <v-text-field v-model='host' label='Hostname' />
       <v-text-field v-model='user' label='Username' />
       <v-text-field v-model='pass' label='Password' />
-      <v-switch v-model='enable' label='Enbale' />
+      <v-switch v-model='enable' label='Enable' />
       <v-btn color="primary" @click='save'>Save</v-btn>
     </card>
   </v-layout>
