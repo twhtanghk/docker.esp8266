@@ -7,14 +7,6 @@ headers = {
   'Access-Control-Allow-Methods': 'POST, PUT, GET, DELETE, OPTIONS'
 }
 
-def exists(filename):
-  try:
-    import os
-    os.stat(filename)
-    return True
-  except OSError:
-    return False
-
 def ok(res, data={}):
   import ujson
   yield from picoweb.start_response(res, "application/json", headers=headers)
