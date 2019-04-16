@@ -1,7 +1,6 @@
 from config import Config
 from util import ok
 import network
-import ujson
 import ubinascii
 
 class Model(Config):
@@ -31,7 +30,7 @@ class Model(Config):
     self.cfg = self.load()
     self.interface.config(essid=self.cfg['essid'], password=self.cfg['password'])
 
-  def get(self):
+  def _get(self):
     ret = {}
     for prop in ['mac', 'essid', 'hidden', 'authmode']:
       ret[prop] = self.interface.config(prop)
@@ -40,19 +39,15 @@ class Model(Config):
     ret['curr'] = self.interface.ifconfig()
     return ret
 
-  def set(self, opts):
+  def _set(self, opts):
     cfg = self.load()
     cfg['essid'] = opts['essid']
     cfg['password'] = opts['password']
     self.save(cfg)
     self.interface.config(essid=opts['essid'], password=opts['password'])
 
-class Controller:
-  def __init__(self, model):
-    self.model = model
-
   def get(self, req, res):
-    yield from ok(res, self.model.get())
+    yield from ok(res, self._get())
 
   def set(self, req, res):
     yield from req.read_form_data()
@@ -64,15 +59,7 @@ class Controller:
       raise Exception('empty essid')
     if len(opts['password']) < 8:
       raise Exception('password min length 8')
-    self.model.set(opts)
-    yield from self.get(req, res)
-
-  def crud(self, req, res):
-    ret = {
-      'GET': self.get,
-      'PUT': self.set
-    }
-    yield from ret[req.method](req, res)
+    self._set(opts)
+    yield from self._get(req, res)
 
 model = Model()
-ctl = Controller(model)
