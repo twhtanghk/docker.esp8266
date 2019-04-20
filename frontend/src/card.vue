@@ -1,13 +1,15 @@
 <template>
   <v-flex xs12>
-    <v-card class='rounded-card'>
-      <v-card-title class='primary white--text'>
-        <div>
-          <div class='headline'>{{header}}</div>
-        </div>
-      </v-card-title>
+    <v-card class='rounded-card' flat color='grey lighten-3'>
+      <v-toolbar dense color='primary' class='white--text'>
+        <v-toolbar-title>Switch</v-toolbar-title>
+        <v-spacer/>
+        <v-btn v-for='cmd in actions' dark icon>
+          <v-icon>{{cmd}}</v-icon>
+        </v-btn>
+      </v-toolbar>
       <v-card-text>
-        <slot></slot>
+        <slot/>
       </v-card-text>
     </v-card>
   </v-flex>
@@ -17,19 +19,12 @@
 export default
   props: [
     'header'
+    'actions'
   ]
 </script>
 
 <style scoped>
 .rounded-card {
   border-radius: 1em;
-}
-
-.v-card__title {
-  padding: .5em;
-}
-
-.headline {
-  font-size: 16px !important;
 }
 </style>
