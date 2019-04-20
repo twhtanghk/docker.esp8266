@@ -4,7 +4,7 @@
       <v-toolbar dense color='primary' class='white--text'>
         <v-toolbar-title>Switch</v-toolbar-title>
         <v-spacer/>
-        <v-btn v-for='cmd in actions' dark icon>
+        <v-btn v-for='cmd in actions' :key='cmd' dark icon>
           <v-icon>{{cmd}}</v-icon>
         </v-btn>
       </v-toolbar>
