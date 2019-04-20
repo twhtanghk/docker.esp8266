@@ -20,7 +20,7 @@ export default
   data: ->
     ip: '192.168.0.105'
     port: 541
-    enable: false
+    active: false
   validations:
     ip: {required, ipAddress}
     port: {integer}
