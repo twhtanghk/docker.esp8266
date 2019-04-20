@@ -1,13 +1,17 @@
 <template>
-  <div id='gpio'>
-    <v-switch v-for='item in gpio' :key='item.name' v-model='item.value' :label='labels(item)' @change='set(item)' />
-  </div>
+  <v-layout row wrap>
+    <card header='Switch' :actions='["add_box"]'>
+      <v-switch v-for='item in gpio' :key='item.name' v-model='item.value' :label='labels(item)' @change='set(item)' />
+    </card>
+  </v-layout>
 </template>
 
 <script lang='coffee'>
 {gpio} = require('./model').default
 
 export default
+  components:
+    card: require('./card').default
   data: ->
     gpio: []
   methods:

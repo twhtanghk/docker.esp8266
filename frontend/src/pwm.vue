@@ -1,76 +1,56 @@
 <template>
-  <div id='pwm' :name='name'>
+  <v-layout row wrap>
     <card header='Current Duty'>
-      <b-row>
-        <b-col cols='4'>
-          <b-form-input type='number' v-bind='attrs' v-model='value' @change='setDuty($event)' />
-        </b-col>
-          <b-col cols='8'>
-            <b-form-input type='range' v-bind='attrs' v-model='value' @change='setDuty($event)' />
-          </b-col>
-      </b-row>
+      <v-slider
+        :label="name"
+        v-model="value"
+        :max="1023"
+        :min="0"
+        @change='setDuty(value)'/>
     </card>
 
     <card header='Settings'>
-      <form-col>
-        <div slot='fields'>
-          <field name='pin'>
-            <b-form-input type='number' v-model='pin' />
-          </field>
-          <field name='default'>
-            <b-form-input type='number' v-bind='attrs' v-model='init' @change='init = valid($event)' />
-          </field>
-        </div>
-        <div slot='buttons' class='action'>
-          <b-button variant="primary" @click='save(pin, init)'>Save</b-button>
-        </div>
-      </form-col>
+      <v-text-field v-model='name' label='Name' required />
+      <v-text-field v-model='pin' label='Pin' required />
+      <v-text-field v-model='init' label='Default' required />
+      <v-btn color="primary" @click='save(pin, init)'>Save</v-btn>
     </card>
-  </div>
+  </v-layout>
 </template>
 
 <script lang='coffee'>
 {pwm} = require('./model').default
+{required, integer, minValue, maxValue} = require 'vuelidate/lib/validators'
 
 export default
   components:
-    model: require('./model').default
     card: require('./card').default
-    formCol: require('./form').default
-    field: require('./field').default
-  props: [
-    'name'
-  ]
   data: ->
-    attrs:
-      required: true
-      min: 0
-      max: 1023
+    name: 'fan'
     pin: 0
     init: 0
     value: 0
+  validations:
+    init: {required, minValue: minValue(0), maxValue: maxValue(1023)}
+    value: {required, minValue: minValue(0), maxValue: maxValue(1023)}
   methods:
-    valid: (val) ->
-      if val > @attrs.max
-        val = @attrs.max
-      if val < @attrs.min
-        val = @attrs.min
-      return val
     save: (pin, init) ->
-      @init = @valid init
-      pwm
-        .update @name, 
+      try
+        await pwm.update
+          url: "#{pwm.baseUrl}/#{@name}"
           data:
             pin: pin
             default: @init
-        .catch console.error
+      catch err
+        console.error err
     setDuty: (val) ->
-      @value = @valid val
-      pwm
-        .update "#{@name}/duty",
+      try
+        await pwm.update
+          url: "#{pwm.baseUrl}/#{@name}/duty"
           data:
-            value: @value
-        .catch console.error
+            value: val
+      catch err
+        console.error err
     list: ->
       pwm
         .get()
