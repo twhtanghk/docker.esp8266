@@ -1,11 +1,24 @@
 import ujson
 
+def logger(req, res):
+  print(req.action)
+
+def json(req, res):
+  res.set({
+    "Content-Type": "application/json"
+  })
+
+def cors(req, res):
+  res.set({
+    'Access-Control-Allow-Origin': '*',
+    'Access-Control-Allow-Methods': 'POST, PUT, GET, DELETE, OPTIONS'
+  })
+
 class Req:
   def __init__(self, socket):
     self.socket = socket
     (method, url, version) = socket.readline().decode('utf-8').split(" ")
     self.action = "%s %s" % (method, url)
-    print(self.action)
     self.header = self._header()
     self.body = {}
     if b'Content-Length' in self.header:
@@ -28,12 +41,17 @@ class Req:
 class Res:
   def __init__(self, socket):
     self.socket = socket
+    self.header = {}
+
+  def set(self, header):
+    self.header.update(header)
 
   def ok(self, data):
     data = ujson.dumps(data)
     self.socket.write("HTTP/2 200\r\n")
-    self.socket.write("content-type: application/json\r\n")
-    self.socket.write("content-length: %s\r\n\r\n" % len(data))
+    for k, v in self.header.items():
+      self.socket.write("%s: %s\r\n" % (k, v))
+    self.socket.write("Content-Length: %s\r\n\r\n" % len(data))
     self.socket.write(data)
 
   def err(self, code, msg):
@@ -70,6 +88,9 @@ class App:
     try:
       res = Res(socket)
       req = Req(socket)
+      logger(req, res)
+      json(req, res)
+      cors(req, res)
       for route in self.routes:
         if route['action'].match(req.action):
           route['mw'](req, res)
