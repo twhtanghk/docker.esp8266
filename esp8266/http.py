@@ -46,13 +46,15 @@ class Res:
   def set(self, header):
     self.header.update(header)
 
-  def ok(self, data):
-    data = ujson.dumps(data)
+  def ok(self, data=None):
     self.socket.write("HTTP/2 200\r\n")
     for k, v in self.header.items():
       self.socket.write("%s: %s\r\n" % (k, v))
-    self.socket.write("Content-Length: %s\r\n\r\n" % len(data))
-    self.socket.write(data)
+    if data != None:
+      data = ujson.dumps(data)
+      self.socket.write("Content-Length: %s\r\n" % len(data))
+      self.socket.write(data)
+    self.socket.write("\r\n")
 
   def err(self, code, msg):
     self.socket.write("HTTP/2 %s %s\r\n\r\n" % (code, msg))
@@ -68,6 +70,9 @@ class App:
       'action': re.compile('%s %s' % (method, url)),
       'mw': mw
     })
+
+  def options(self, url, mw):
+    self.method('OPTIONS', url, mw)
 
   def get(self, url, mw):
     self.method('GET', url, mw)
