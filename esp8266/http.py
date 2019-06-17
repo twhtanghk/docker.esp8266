@@ -46,10 +46,13 @@ class Res:
   def set(self, header):
     self.header.update(header)
 
-  def ok(self, data=None):
-    self.socket.write("HTTP/2 200\r\n")
+  def flushHeaders(self):
     for k, v in self.header.items():
       self.socket.write("%s: %s\r\n" % (k, v))
+
+  def ok(self, data=None):
+    self.socket.write("HTTP/2 200\r\n")
+    self.flushHeaders()
     if data != None:
       data = ujson.dumps(data)
       self.socket.write("Content-Length: %s\r\n" % len(data))
@@ -59,6 +62,34 @@ class Res:
   def err(self, code, msg):
     self.socket.write("HTTP/2 %s %s\r\n\r\n" % (code, msg))
 
+  def mime(self, fname):
+    if fname.endswith('.html'):
+      return 'text/html'
+    if fname.endswith('.css'):
+      return 'text/css'
+    if fname.endswith('.png') or fname.endswith('.jpg'):
+      return 'image'
+    return 'text/plain'
+    
+  def sendfile(self, fname):
+    self.set({
+      "Content-Type": self.mime(fname)
+    })
+    self.socket.write("HTTP/2 200\r\n")
+    self.flushHeaders()
+    try:
+      import pkg_resources
+      with pkg_resources.resource_stream(__name__, fname) as f:
+        buf = bytearray(64)
+        while True:
+          l = f.readinot(buf)
+          if not l:
+            break
+          self.socket.write(buf)
+    except Exception as e:
+      print(e)
+      self.err(500, 'Internal Server Error')
+  
 import ure as re
 
 class App:
