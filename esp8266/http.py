@@ -5,6 +5,7 @@ class Req:
     self.socket = socket
     (method, url, version) = socket.readline().decode('utf-8').split(" ")
     self.action = "%s %s" % (method, url)
+    print(self.action)
     self.header = self._header()
     self.body = {}
     if b'Content-Length' in self.header:
