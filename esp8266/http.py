@@ -62,6 +62,9 @@ class App:
   def delete(self, url, mw):
     self.method('DELETE', url, mw)
 
+  def all(self, url, mw):
+    self.method('.*', url, mw)
+
   def handle(self, socket):
     try:
       res = Res(socket)
@@ -71,10 +74,10 @@ class App:
           route['mw'](req, res)
           return
       res.err(404, 'Not Found')
-    except:
+    except Exception as e:
+      print(e)
       res.err(500, 'Internal Server Error')
     finally:
-      print('socket closed')
       socket.close()
 
   def run(self, host='0.0.0.0', port=80):
