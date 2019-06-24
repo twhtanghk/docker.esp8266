@@ -1,4 +1,3 @@
-import net
 import http
 from multimeter import voltage, current
 

@@ -1,7 +1,9 @@
 import machine
 
-def _voltage(r1=680, r2=220):
-  return machine.ADC(0).read() * 3.3 / 1024 * (1 + r1 / r2)
+# https://forum.arduino.cc/index.php?topic=445538.0
+# voltage = 1v, r1 = 220kOhm, r2 = 100kOhm
+def _voltage(r1=680+680+220, r2=100):
+  return machine.ADC(0).read() / 1024 * (1 + r1 / r2)
 
 def _current(acsRange=20):
   sensitivity = {
