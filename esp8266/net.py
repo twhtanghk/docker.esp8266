@@ -1,10 +1,13 @@
 import network
+import ubinascii
 
-ap = {
-  'essid': 'dcmultimeter',
-  'password': 'password'
-}
 ap_if = network.WLAN(network.AP_IF)
+mac = ap_if.config('mac')
+mac = ubinascii.hexlify(mac).decode('utf-8')[6:]
+ap = {
+  'essid': 'Micropython-{}'.format(mac),
+  'password': 'micropythoN'
+}
 ap_if.config(essid=ap['essid'], password=ap['password'])
 ap_if.active(True)
 
