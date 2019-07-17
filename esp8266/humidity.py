@@ -13,4 +13,14 @@ class DHT:
     }
 
   def json(self, req, res):
-    res.ok(self._json())
+    yield from res.ok(self._json())
+
+sensor = DHT()
+
+async def publish(topic='iot/humidity', interval=10):
+  from mqtt import client
+  import ujson
+  from uasyncio import sleep
+  while True:
+    client.publish(topic, ujson.dumps(sensor._json()))
+    await sleep(interval)

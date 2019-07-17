@@ -15,19 +15,22 @@ def cors(req, res):
   })
 
 class Req:
-  def __init__(self, socket):
-    self.socket = socket
-    (method, url, version) = socket.readline().decode('utf-8').split(" ")
+  def __init__(self, reader):
+    self.reader = reader
+
+  def parse(self):
+    l = yield from self.reader.readline()
+    (method, url, version) = l.decode('utf-8').split(" ")
     self.action = "%s %s" % (method, url)
-    self.header = self._header()
+    self.header = yield from self._header()
     self.body = {}
     if b'Content-Length' in self.header:
-      self.body = self._body()
+      self.body = yield from self._body()
 
   def _header(self):
     ret = {}
     while True:
-      l = self.socket.readline()
+      l = yield from self.reader.readline()
       if l == b"\r\n":
         break
       k, v = l.split(b":", 1)
@@ -36,11 +39,12 @@ class Req:
 
   def _body(self):
     len = int(self.header[b'Content-Length'])
-    return ujson.loads(self.socket.recv(len))
+    data = yield from self.reader.readexactly(len)
+    return ujson.loads(data)
 
 class Res:
-  def __init__(self, socket):
-    self.socket = socket
+  def __init__(self, writer):
+    self.writer = writer
     self.header = {}
 
   def set(self, header):
@@ -48,19 +52,19 @@ class Res:
 
   def flushHeaders(self):
     for k, v in self.header.items():
-      self.socket.write("%s: %s\r\n" % (k, v))
+      yield from self.writer.awrite("%s: %s\r\n" % (k, v))
 
   def ok(self, data=None):
-    self.socket.write("HTTP/2 200\r\n")
-    self.flushHeaders()
+    yield from self.writer.awrite("HTTP/2 200\r\n")
+    yield from self.flushHeaders()
     if data != None:
       data = ujson.dumps(data)
-      self.socket.write("Content-Length: %s\r\n" % len(data))
-      self.socket.write(data)
-    self.socket.write("\r\n")
+      yield from self.writer.awrite("Content-Length: %s\r\n" % len(data))
+      yield from self.writer.awrite(data)
+    yield from self.writer.awrite("\r\n")
 
   def err(self, code, msg):
-    self.socket.write("HTTP/2 %s %s\r\n\r\n" % (code, msg))
+    yield from self.writer.awrite("HTTP/2 %s %s\r\n\r\n" % (code, msg))
 
   def mime(self, fname):
     if fname.endswith('.html'):
@@ -75,7 +79,7 @@ class Res:
     self.set({
       "Content-Type": self.mime(fname)
     })
-    self.socket.write("HTTP/2 200\r\n")
+    yield from self.writer.awrite("HTTP/2 200\r\n")
     self.flushHeaders()
     try:
       import pkg_resources
@@ -85,7 +89,7 @@ class Res:
           l = f.readinot(buf)
           if not l:
             break
-          self.socket.write(buf)
+          yield from self.writer.awrite(buf, 0, l)
     except Exception as e:
       print(e)
       self.err(500, 'Internal Server Error')
@@ -120,29 +124,21 @@ class App:
   def all(self, url, mw):
     self.method('.*', url, mw)
 
-  def handle(self, socket):
+  def handle(self, reader, writer):
     try:
-      res = Res(socket)
-      req = Req(socket)
+      res = Res(writer)
+      req = Req(reader)
+      yield from req.parse()
       logger(req, res)
       json(req, res)
       cors(req, res)
       for route in self.routes:
         if route['action'].match(req.action):
-          route['mw'](req, res)
+          yield from route['mw'](req, res)
           return
       res.err(404, 'Not Found')
     except Exception as e:
       print(e)
       res.err(500, 'Internal Server Error')
     finally:
-      socket.close()
-
-  def run(self, host='0.0.0.0', port=80):
-    import usocket
-    server = usocket.socket()
-    server.bind((host, port))
-    server.listen(1)
-    while True:
-      (socket, sockaddr) = server.accept()
-      self.handle(socket)
+      yield from writer.aclose()
