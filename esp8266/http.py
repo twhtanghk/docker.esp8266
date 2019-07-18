@@ -59,9 +59,10 @@ class Res:
     yield from self.flushHeaders()
     if data != None:
       data = ujson.dumps(data)
-      yield from self.writer.awrite("Content-Length: %s\r\n" % len(data))
+      yield from self.writer.awrite("Content-Length: %s\r\n\r\n" % len(data))
       yield from self.writer.awrite(data)
-    yield from self.writer.awrite("\r\n")
+    else:
+      yield from self.writer.awrite("\r\n")
 
   def err(self, code, msg):
     yield from self.writer.awrite("HTTP/2 %s %s\r\n\r\n" % (code, msg))
