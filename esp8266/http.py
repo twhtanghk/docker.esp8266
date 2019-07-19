@@ -14,33 +14,30 @@ def cors(req, res):
     'Access-Control-Allow-Methods': 'POST, PUT, GET, DELETE, OPTIONS'
   })
 
+def headerParser(req, res):
+  l = yield from req.reader.readline()
+  (method, url, version) = l.decode('utf-8').split(" ")
+  req.action = "%s %s" % (method, url)
+  req.header = {}
+  while True:
+    l = yield from req.reader.readline()
+    if l == b"\r\n":
+      break
+    k, v = l.split(b":", 1)
+    req.header[k] = v.strip()
+
+def bodyParser(req, res):
+  yield from headerParser(req, res)
+  if b'Content-Length' in req.header:
+    len = int(req.header[b'Content-Length'])
+    data = yield from req.reader.readexactly(len)
+    req.body = ujson.loads(data)
+  else:
+    req.body = {}
+
 class Req:
   def __init__(self, reader):
     self.reader = reader
-
-  def parse(self):
-    l = yield from self.reader.readline()
-    (method, url, version) = l.decode('utf-8').split(" ")
-    self.action = "%s %s" % (method, url)
-    self.header = yield from self._header()
-    self.body = {}
-    if b'Content-Length' in self.header:
-      self.body = yield from self._body()
-
-  def _header(self):
-    ret = {}
-    while True:
-      l = yield from self.reader.readline()
-      if l == b"\r\n":
-        break
-      k, v = l.split(b":", 1)
-      ret[k] = v.strip()
-    return ret
-
-  def _body(self):
-    len = int(self.header[b'Content-Length'])
-    data = yield from self.reader.readexactly(len)
-    return ujson.loads(data)
 
 class Res:
   def __init__(self, writer):
@@ -129,7 +126,7 @@ class App:
     try:
       res = Res(writer)
       req = Req(reader)
-      yield from req.parse()
+      yield from bodyParser(req, res)
       logger(req, res)
       json(req, res)
       cors(req, res)
