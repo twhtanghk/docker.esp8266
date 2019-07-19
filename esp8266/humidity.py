@@ -13,7 +13,10 @@ class DHT:
     }
 
   def json(self, req, res):
-    yield from res.ok(self._json())
+    try:
+      yield from res.ok(self._json())
+    except:
+      yield from res.err(500, 'DHT error')     
 
 sensor = DHT()
 
@@ -22,5 +25,8 @@ async def publish(topic='iot/humidity', interval=10):
   import ujson
   from uasyncio import sleep
   while True:
-    client.publish(topic, ujson.dumps(sensor._json()))
-    await sleep(interval)
+    try:
+      client.publish(topic, ujson.dumps(sensor._json()))
+      await sleep(interval)
+    except:
+      pass
