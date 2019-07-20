@@ -1,5 +1,8 @@
 import ujson
 
+def preflight(req, res):
+  yield from res.ok()
+
 def logger(req, res):
   print(req.action)
 
@@ -35,6 +38,24 @@ def bodyParser(req, res):
   else:
     req.body = {}
 
+def static(req, res):
+  print(req.url_match.group(1))
+  file = req.url_match.group(1)
+  if file == '/':
+    file = '/index.html'
+  file = '../static' + file
+  if b'gzip' in req.header[b'Accept-Encoding']:
+    gz = file + '.gz'
+    try:
+      import os
+      os.stat(gz)
+      res.set({'Content-Encoding': 'gzip'})
+      yield from res.sendfile(gz)
+      return
+    except OSError:
+      pass
+  yield from res.sendfile(file)
+
 class Req:
   def __init__(self, reader):
     self.reader = reader
@@ -50,13 +71,14 @@ class Res:
   def flushHeaders(self):
     for k, v in self.header.items():
       yield from self.writer.awrite("%s: %s\r\n" % (k, v))
+    yield from self.writer.awrite("\r\n")
 
   def ok(self, data=None):
     yield from self.writer.awrite("HTTP/2 200\r\n")
-    yield from self.flushHeaders()
     if data != None:
       data = ujson.dumps(data)
-      yield from self.writer.awrite("Content-Length: %s\r\n\r\n" % len(data))
+      yield from self.writer.awrite("Content-Length: %s\r\n" % len(data))
+      yield from self.flushHeaders()
       yield from self.writer.awrite(data)
     else:
       yield from self.writer.awrite("\r\n")
@@ -65,6 +87,8 @@ class Res:
     yield from self.writer.awrite("HTTP/2 %s %s\r\n\r\n" % (code, msg))
 
   def mime(self, fname):
+    if fname.endswith('.gz'):
+      fname = fname[:-len('.gz')]
     if fname.endswith('.html'):
       return 'text/html'
     if fname.endswith('.css'):
@@ -78,16 +102,15 @@ class Res:
       "Content-Type": self.mime(fname)
     })
     yield from self.writer.awrite("HTTP/2 200\r\n")
-    self.flushHeaders()
+    yield from self.flushHeaders()
     try:
-      import pkg_resources
-      with pkg_resources.resource_stream(__name__, fname) as f:
-        buf = bytearray(64)
-        while True:
-          l = f.readinot(buf)
-          if not l:
-            break
-          yield from self.writer.awrite(buf, 0, l)
+      f = open(fname, 'rb')
+      buf = bytearray(64)
+      while True:
+        l = f.readinto(buf)
+        if not l:
+          break
+        yield from self.writer.awrite(buf, 0, l)
     except Exception as e:
       print(e)
       self.err(500, 'Internal Server Error')
@@ -132,6 +155,7 @@ class App:
       cors(req, res)
       for route in self.routes:
         if route['action'].match(req.action):
+          req.url_match = route['action'].match(req.action)
           yield from route['mw'](req, res)
           return
       res.err(404, 'Not Found')
