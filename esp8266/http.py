@@ -73,7 +73,7 @@ class Res:
     yield from self.writer.awrite("\r\n")
 
   def ok(self, data=None):
-    yield from self.writer.awrite("HTTP/2 200\r\n")
+    yield from self.writer.awrite("HTTP/1.1 200 OK\r\n")
     if data != None:
       data = ujson.dumps(data)
       yield from self.writer.awrite("Content-Length: %s\r\n" % len(data))

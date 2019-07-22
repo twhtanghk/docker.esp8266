@@ -26,6 +26,6 @@ app.get('(.*)', http.static)
 import uasyncio as asyncio
 loop = asyncio.get_event_loop()
 loop.create_task(asyncio.start_server(app.handle, '0.0.0.0', 80))
-loop.create_task(humidity.publish())
-loop.create_task(thermistor.publish())
+#loop.create_task(humidity.publish())
+#loop.create_task(thermistor.publish())
 loop.run_forever()
