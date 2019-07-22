@@ -39,11 +39,10 @@ def bodyParser(req, res):
     req.body = {}
 
 def static(req, res):
-  print(req.url_match.group(1))
   file = req.url_match.group(1)
   if file == '/':
     file = '/index.html'
-  file = '../static' + file
+  file = 'static' + file
   if b'gzip' in req.header[b'Accept-Encoding']:
     gz = file + '.gz'
     try:
