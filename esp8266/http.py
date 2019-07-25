@@ -14,9 +14,18 @@ def json(req, res):
 def cors(req, res):
   res.set({
     'Access-Control-Allow-Origin': '*',
-    'Access-Control-Allow-Methods': 'POST, PUT, GET, DELETE, OPTIONS'
+    'Access-Control-Allow-Methods': 'POST, PUT, GET, DELETE, OPTIONS',
+    'Access-Control-Allow-Headers': 'Content-Type, X-HTTP-Method-Override'
   })
 
+def methodOverride(req, res):
+  try:
+    (method, url) = req.action.split(" ")
+    method = req.header['X-HTTP-Method-Override']
+    req.action = "%s %s" % (method, url)
+  except KeyError:
+    pass
+    
 def headerParser(req, res):
   l = yield from req.reader.readline()
   (method, url, version) = l.decode('utf-8').split(" ")
@@ -26,24 +35,26 @@ def headerParser(req, res):
     l = yield from req.reader.readline()
     if l == b"\r\n":
       break
-    k, v = l.split(b":", 1)
+    k, v = l.decode('utf-8').split(":", 1)
     req.header[k] = v.strip()
 
 def bodyParser(req, res):
   yield from headerParser(req, res)
-  if b'Content-Length' in req.header:
-    len = int(req.header[b'Content-Length'])
-    data = yield from req.reader.readexactly(len)
-    req.body = ujson.loads(data)
-  else:
-    req.body = {}
+  req.body = None
+  try:
+    len = int(req.header['Content-Length'])
+    if len != 0:
+      data = yield from req.reader.readexactly(len)
+      req.body = ujson.loads(data)
+  except KeyError:
+    pass
 
 def static(req, res):
   file = req.url_match.group(1)
   if file == '/':
     file = '/index.html'
   file = 'static' + file
-  if b'gzip' in req.header[b'Accept-Encoding']:
+  if 'gzip' in req.header['Accept-Encoding']:
     gz = file + '.gz'
     try:
       import os
@@ -72,15 +83,12 @@ class Res:
       yield from self.writer.awrite("%s: %s\r\n" % (k, v))
     yield from self.writer.awrite("\r\n")
 
-  def ok(self, data=None):
+  def ok(self, data={}):
     yield from self.writer.awrite("HTTP/1.1 200 OK\r\n")
-    if data != None:
-      data = ujson.dumps(data)
-      yield from self.writer.awrite("Content-Length: %s\r\n" % len(data))
-      yield from self.flushHeaders()
-      yield from self.writer.awrite(data)
-    else:
-      yield from self.writer.awrite("\r\n")
+    data = ujson.dumps(data)
+    yield from self.writer.awrite("Content-Length: %s\r\n" % len(data))
+    yield from self.flushHeaders()
+    yield from self.writer.awrite(data)
 
   def err(self, code, msg):
     yield from self.writer.awrite("HTTP/1.1 %s %s\r\n\r\n" % (code, msg))
@@ -122,7 +130,7 @@ class App:
 
   def method(self, method, url, mw):
     self.routes.append({
-      'action': re.compile('%s %s' % (method, url)),
+      'action': re.compile('^%s %s$' % (method, url)),
       'mw': mw
     })
 
@@ -149,6 +157,7 @@ class App:
       res = Res(writer)
       req = Req(reader)
       yield from bodyParser(req, res)
+      methodOverride(req, res)
       logger(req, res)
       json(req, res)
       cors(req, res)

@@ -57,17 +57,26 @@ def reboot(req, res):
   import machine
   machine.reset()
 
+ap_if = network.WLAN(network.AP_IF)
+def getAP(req, res):
+  yield from res.ok(ap_if.ifconfig())
+
 def configAP(req, res):
   config = load()
   config['name'] = req.body['ssid']
   save(config)
-  ap_if = network.WLAN(network.AP_IF)
   ap_if.config(essid=req.body['ssid'], password=req.body['password'])
   yield from res.ok()
 
+sta_if = network.WLAN(network.STA_IF)
+def getSTA(req, res):
+  yield from res.ok({
+    'essid': sta_if.config('essid'),
+    'ip': sta_if.ifconfig()
+  })
+
 def configSTA(req, res):
   config = load()
-  sta_if = network.WLAN(network.STA_IF)
   sta_if.active(True)
   sta_if.config(dhcp_hostname=config['name'])
   sta_if.connect(req.body['ssid'], req.body['password'])
