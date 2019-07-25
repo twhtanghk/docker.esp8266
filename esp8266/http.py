@@ -83,7 +83,7 @@ class Res:
       yield from self.writer.awrite("\r\n")
 
   def err(self, code, msg):
-    yield from self.writer.awrite("HTTP/2 %s %s\r\n\r\n" % (code, msg))
+    yield from self.writer.awrite("HTTP/1.1 %s %s\r\n\r\n" % (code, msg))
 
   def mime(self, fname):
     if fname.endswith('.gz'):
@@ -100,7 +100,7 @@ class Res:
     self.set({
       "Content-Type": self.mime(fname)
     })
-    yield from self.writer.awrite("HTTP/2 200\r\n")
+    yield from self.writer.awrite("HTTP/1.1 200 OK\r\n")
     yield from self.flushHeaders()
     try:
       f = open(fname, 'rb')
