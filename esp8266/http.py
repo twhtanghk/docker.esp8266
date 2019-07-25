@@ -97,13 +97,13 @@ class Res:
     return 'text/plain'
     
   def sendfile(self, fname):
-    self.set({
-      "Content-Type": self.mime(fname)
-    })
-    yield from self.writer.awrite("HTTP/1.1 200 OK\r\n")
-    yield from self.flushHeaders()
     try:
       f = open(fname, 'rb')
+      self.set({
+        "Content-Type": self.mime(fname)
+      })
+      yield from self.writer.awrite("HTTP/1.1 200 OK\r\n")
+      yield from self.flushHeaders()
       buf = bytearray(64)
       while True:
         l = f.readinto(buf)
@@ -112,7 +112,7 @@ class Res:
         yield from self.writer.awrite(buf, 0, l)
     except Exception as e:
       print(e)
-      self.err(500, 'Internal Server Error')
+      yield from self.err(500, 'Internal Server Error')
   
 import ure as re
 
