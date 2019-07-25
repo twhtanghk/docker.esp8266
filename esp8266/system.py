@@ -72,7 +72,8 @@ sta_if = network.WLAN(network.STA_IF)
 def getSTA(req, res):
   yield from res.ok({
     'essid': sta_if.config('essid'),
-    'ip': sta_if.ifconfig()
+    'isconnected': sta_if.isconnected(),
+    'curr': sta_if.ifconfig()
   })
 
 def configSTA(req, res):
