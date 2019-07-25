@@ -5,13 +5,6 @@ Vue.use require('vue.model/src/plugin').default
 
 Vue.component 'rest',
   extends: Vue.component 'model'
-  data: ->
-    mw: [
-      @form
-      @req
-      @res
-      @error
-    ]
   props:
     eventBus:
       default: ->

@@ -12,7 +12,7 @@
     </card>
 
     <card header='Settings'>
-      <v-select v-model='essid' label='ESSID' :items='list' box />
+      <v-select v-model='essid' label='ESSID' :items='list' filled />
       <v-text-field v-model='password' label='Password' type='password' />
       <v-btn color="primary" @click='connect(essid, password)'>Connect</v-btn>
       <v-btn color="secondary" @click='getList()'>Scan</v-btn>
@@ -54,7 +54,7 @@ export default
         .put 
           data:
             ssid: essid
-            passwd: passwd
+            password: passwd
         .then ->
           console.info 'connecting to specified essid'
         .catch console.error

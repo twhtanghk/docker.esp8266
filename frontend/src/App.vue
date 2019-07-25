@@ -2,7 +2,7 @@
   <v-app>
     <toolbar />
     <v-card>
-      <v-container fluid grid-list-lg>
+      <v-container grid-list-lg>
         <router-view />
       </v-container>
     </v-card>
@@ -11,7 +11,6 @@
 
 <script lang='coffee'>
 Vue = require('vue').default
-Vue.use require 'vuetify'
 
 export default
   components:

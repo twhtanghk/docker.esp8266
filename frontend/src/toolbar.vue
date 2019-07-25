@@ -5,13 +5,15 @@
     </v-toolbar-title>
     <v-spacer></v-spacer>
     <v-menu bottom left>
-      <v-btn slot='activator' dark icon>
-        <v-icon>more_vert</v-icon>
-      </v-btn>
+      <template v-slot:activator="{ on }">
+        <v-btn dark icon v-on="on">
+          <v-icon>more_vert</v-icon>
+        </v-btn>
+      </template>
       <v-list>
-        <v-list-tile v-for='(desc, action) in actions' :key='action' @click='click(action)'>
-          <v-list-tile-title>{{desc}}</v-list-tile-title>
-        </v-list-tile>
+        <v-list-item v-for='(desc, action) in actions' :key='action' @click='click(action)'>
+          <v-list-item-title>{{desc}}</v-list-item-title>
+        </v-list-item>
       </v-list>
     </v-menu>
   </v-toolbar>

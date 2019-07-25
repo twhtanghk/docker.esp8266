@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 import App from './App.vue'
+import vuetify from './plugins/vuetify.coffee'
 
 Vue.config.productionTip = false
 
@@ -20,4 +21,5 @@ const router = new VueRouter({
 new Vue({
   router,
   render: h => h(App),
+  vuetify
 }).$mount('#app')

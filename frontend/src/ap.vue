@@ -2,7 +2,7 @@
   <v-layout row wrap>
     <card header='Settings'>
       <v-text-field v-model='essid' label='ESSID' required />
-      <v-text-field v-model='password' label='Password' type='password' v-validate="'min:8'" required />
+      <v-text-field v-model='password' label='Password' type='password' required />
       <v-text-field v-model='authmode' label='Auth Mode' disabled />
       <v-btn color='primary' @click='save(essid, password)'>Save</v-btn>
     </card>
@@ -16,6 +16,7 @@
 
 <script lang='coffee'>
 {ap, cfg} = require('./model').default
+{required, minLength} = require 'vuelidate/lib/validators'
 
 export default
   components:
@@ -24,6 +25,12 @@ export default
     essid: ''
     password: ''
     authmode: ''
+  validations:
+    essid:
+      required
+    password:
+      required: required
+      minLength: minLength(8)
   methods:
     getStatus: ->
       ap.get()
