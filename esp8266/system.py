@@ -59,13 +59,16 @@ def reboot(req, res):
 
 ap_if = network.WLAN(network.AP_IF)
 def getAP(req, res):
-  yield from res.ok(ap_if.ifconfig())
+  yield from res.ok({
+    'essid': ap_if.config('essid'),
+    'config': ap_if.ifconfig()
+  })
 
 def configAP(req, res):
   config = load()
-  config['name'] = req.body['ssid']
+  config['name'] = req.body['essid']
   save(config)
-  ap_if.config(essid=req.body['ssid'], password=req.body['password'])
+  ap_if.config(essid=req.body['essid'], password=req.body['password'])
   yield from res.ok()
 
 sta_if = network.WLAN(network.STA_IF)
