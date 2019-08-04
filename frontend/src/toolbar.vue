@@ -23,8 +23,7 @@
 export default
   data: ->
     actions:
-      ap: 'Access Point'
-      sta: 'Station'
+      system: 'System'
       syslog: 'Syslog'
       ddns: 'Dynamic DNS'
       gpio: 'General Purpose IO'

@@ -15,7 +15,7 @@ export default
     extends: Vue.component 'rest'
     props:
       baseUrl:
-        default: "#{process.env.API_URL}/cfg"
+        default: "#{process.env.API_URL}"
   ap: new Vue
     extends: Vue.component 'rest'
     props:

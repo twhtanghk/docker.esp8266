@@ -1,53 +1,40 @@
 <template>
-  <v-layout row wrap>
-    <card header='Status'>
-      <v-text-field v-model='isconnected' label='Connected' disabled />
-      <v-text-field v-model='JSON.stringify(config)' label='Config' disabled />
-      <v-btn color="primary" @click='getStatus()'>Refresh</v-btn>
-    </card>
-
-    <card header='Host'>
-      <v-text-field v-model='host' label='Hostname' required />
-      <v-btn color='primary' @click='setHost(host)'>Save</v-btn>
-    </card>
-
-    <card header='Settings'>
-      <v-select v-model='essid' label='ESSID' :items='list' filled />
-      <v-text-field v-model='password' label='Password' type='password' />
-      <v-btn color="primary" @click='connect(essid, password)'>Connect</v-btn>
-      <v-btn color="secondary" @click='getList()'>Scan</v-btn>
-    </card>
-  </v-layout>
+  <card :header='"Station " + status'>
+    <v-select v-model='essid' label='ESSID' :items='list' filled :rules='[required($v.essid)]'/>
+    <v-text-field v-model='password' label='Password' type='password' :rules='[required($v.password), minLength($v.password)]' required />
+    <v-btn color="primary" @click='connect(essid, password)'>Connect</v-btn>
+    <v-btn color="secondary" @click='getList()'>Scan</v-btn>
+  </card>
 </template>
 
 <script lang='coffee'>
 {sta} = require('./model').default
+{required, minLength} = require 'vuelidate/lib/validators'
+rule = require('jsOAuth2/frontend/src/rule').default
 
 export default
   components:
     card: require('./card').default
   data: ->
-    isconnected: false
     config: {}
-    host: ''
     essid: ''
     list: []
     password: ''
+  validations:
+    essid:
+      required: required
+    password:
+      required: required
+      minLength: minLength(8) 
+  computed:
+    status: ->
+      if @config.isconnected then JSON.stringify(@config.curr) else ''
   methods:
     getStatus: ->
       sta.get()
         .then (res) =>
-          @isconnected = res.isconnected
-          @config = res.curr
-          @host = res.dhcp_hostname
-        .catch console.error
-    setHost: (val) ->
-      sta
-        .put
-          data:
-            name: val
-        .then (res) ->
-          console.info 'updated successfully'
+          @config = res
+          @essid = res.essid
         .catch console.error
     connect: (essid, passwd) ->
       sta
@@ -55,8 +42,8 @@ export default
           data:
             ssid: essid
             password: passwd
-        .then ->
-          console.info 'connecting to specified essid'
+        .then =>
+          @getStatus()
         .catch console.error
     getList: ->
       sta
@@ -68,6 +55,8 @@ export default
               value: i
               text: i
       .catch console.error
+    required: rule.required
+    minLength: rule.minLength
   mounted: ->
     @getStatus()
     @getList()
