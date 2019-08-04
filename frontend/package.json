@@ -9,6 +9,7 @@
     "test": "mocha test/*.coffee"
   },
   "dependencies": {
+    "jsOAuth2": "https://github.com/twhtanghk/jsOAuth2",
     "vue": "^2.5.17",
     "vuelidate": "^0.7.4"
   },

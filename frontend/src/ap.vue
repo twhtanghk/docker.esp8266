@@ -1,10 +1,10 @@
 <template>
   <v-layout row wrap>
-    <card header='Settings'>
-      <v-text-field v-model='essid' label='ESSID' required />
-      <v-text-field v-model='password' label='Password' type='password' required />
-      <v-text-field v-model='authmode' label='Auth Mode' disabled />
-      <v-btn color='primary' @click='save(essid, password)'>Save</v-btn>
+    <card header='Access Point'>
+      <v-text-field v-model='essid' label='ESSID' :rules='[required($v.essid)]' required />
+      <v-text-field v-model='password' label='Password' type='password' :rules='[required($v.password), minLength($v.password)]' required />
+      <v-text-field v-model='passwordAgain' label='Confirm password' type='password' :rules='[required($v.passwordAgain), minLength($v.passwordAgain)]' required />
+      <v-btn color='primary' @click='save(essid, password)' :disabled='$v.$invalid'>Save</v-btn>
     </card>
 
     <card header='System'>
@@ -17,6 +17,7 @@
 <script lang='coffee'>
 {ap, cfg} = require('./model').default
 {required, minLength} = require 'vuelidate/lib/validators'
+rule = require('jsOAuth2/frontend/src/rule').default
 
 export default
   components:
@@ -24,11 +25,14 @@ export default
   data: ->
     essid: ''
     password: ''
-    authmode: ''
+    passwordAgain: ''
   validations:
     essid:
-      required
+      required: required
     password:
+      required: required
+      minLength: minLength(8)
+    passwordAgain:
       required: required
       minLength: minLength(8)
   methods:
@@ -36,7 +40,6 @@ export default
       ap.get()
         .then (res) =>
           @essid = res.essid
-          @authmode = res.authmode
         .catch console.error
     save: (essid, password) ->
       ap
@@ -60,6 +63,8 @@ export default
           @essid = res.essid
           @authmode = res.authmode
         .catch console.error
+    required: rule.required
+    minLength: rule.minLength
   mounted: ->
     @getStatus()
 </script>
