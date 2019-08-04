@@ -52,8 +52,10 @@ def factory(req, res):
   save(config())
   yield from res.ok()
   
-def reboot(req, res):
-  yield from res.ok()
+async def reboot(req, res):
+  await res.ok()
+  from uasyncio import sleep
+  await sleep(1)
   import machine
   machine.reset()
 
