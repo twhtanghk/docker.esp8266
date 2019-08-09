@@ -89,7 +89,7 @@ def configSTA(req, res):
   yield from res.ok()
 
 def hotspot(req, res):
-  sta_if = network.WLAN(network.STA_IF)
+  sta_if.active(True)
   nets = []
   for net in sta_if.scan():
     if net[0] not in nets:
