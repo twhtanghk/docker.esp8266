@@ -34,7 +34,7 @@
     "vue-template-compiler": "^2.5.17",
     "vue.model": "https://github.com/twhtanghk/vue.model",
     "vue.oauth2": "https://github.com/twhtanghk/vue.oauth2",
-    "vuetify": "^2.0.0"
+    "vuetify": "^2.0.5"
   },
   "eslintConfig": {
     "root": true,
