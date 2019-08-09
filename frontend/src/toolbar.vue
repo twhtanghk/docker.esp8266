@@ -24,10 +24,11 @@ export default
   data: ->
     actions:
       system: 'System'
+      pwm: 'Pulse Width Modulation'
+      dht: 'Humidity and Temperature'
       syslog: 'Syslog'
       ddns: 'Dynamic DNS'
       gpio: 'General Purpose IO'
-      pwm: 'Pulse Width Modulation'
   methods:
     click: (action) ->
       window.location.hash = "#/#{action}"

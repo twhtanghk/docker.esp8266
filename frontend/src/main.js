@@ -13,6 +13,7 @@ const router = new VueRouter({
     {path: '/gpio', component: require('./gpio').default},
     {path: '/ddns', component: require('./ddns').default},
     {path: '/pwm', component: require('./pwm').default},
+    {path: '/dht', component: require('./dht').default},
     {path: '*', redirect: '/system'}
   ]
 })

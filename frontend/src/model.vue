@@ -46,4 +46,9 @@ export default
     props:
       baseUrl:
         default: "#{process.env.API_URL}/pwm"
+  dht: new Vue
+    extends: Vue.component 'rest'
+    props:
+      baseUrl:
+        default: "#{process.env.API_URL}/dht"
 </script>
