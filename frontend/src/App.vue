@@ -29,9 +29,14 @@ $material-icons-font-path: '~material-icons/iconfont/';
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #2c3e50;
+
+  button {
+    margin: .4em;
+  }
 }
 
 .v-content {
   height: 100%;
 }
+
 </style>
