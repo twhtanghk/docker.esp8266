@@ -2,7 +2,7 @@
   <card header='Access Point'>
     <v-text-field v-model='essid' label='ESSID' :rules='[required($v.essid)]' required />
     <v-text-field v-model='password' label='Password' type='password' :rules='[required($v.password), minLength($v.password)]' required />
-    <v-text-field v-model='passwordAgain' label='Confirm password' type='password' :rules='[required($v.passwordAgain), minLength($v.passwordAgain)]' required />
+    <v-text-field v-model='passwordAgain' label='Confirm password' type='password' :rules='[required($v.passwordAgain), minLength($v.passwordAgain), match($v.password, $v.passwordAgain)]' required />
     <v-btn color='primary' @click='save(essid, password)' :disabled='$v.$invalid'>Save</v-btn>
   </card>
 </template>
@@ -45,6 +45,7 @@ export default
         .catch console.error
     required: rule.required
     minLength: rule.minLength
+    match: rule.match
   mounted: ->
     @getStatus()
 </script>
