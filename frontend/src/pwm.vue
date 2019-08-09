@@ -2,18 +2,11 @@
   <v-layout row wrap>
     <card header='Current Duty'>
       <v-slider
-        :label="name"
+        :label="label(pin, value)"
         v-model="value"
-        :max="1023"
+        :max="1024"
         :min="0"
-        @change='setDuty(value)'/>
-    </card>
-
-    <card header='Settings'>
-      <v-text-field v-model='name' label='Name' required />
-      <v-text-field v-model='pin' label='Pin' required />
-      <v-text-field v-model='init' label='Default' required />
-      <v-btn color="primary" @click='save(pin, init)'>Save</v-btn>
+        @change='duty(pin, value)'/>
     </card>
   </v-layout>
 </template>
@@ -26,39 +19,28 @@ export default
   components:
     card: require('./card').default
   data: ->
-    name: 'fan'
-    pin: 0
-    init: 0
+    pin: 5
     value: 0
   validations:
-    init: {required, minValue: minValue(0), maxValue: maxValue(1023)}
-    value: {required, minValue: minValue(0), maxValue: maxValue(1023)}
+    value: {required, minValue: minValue(0), maxValue: maxValue(1024)}
   methods:
-    save: (pin, init) ->
+    label: (pin, value) ->
+      "Pin #{pin} (#{value})"
+    duty: (pin, value) ->
       try
         await pwm.update
-          url: "#{pwm.baseUrl}/#{@name}"
           data:
-            pin: pin
-            default: @init
+            id: @pin
+            duty: @value
       catch err
         console.error err
-    setDuty: (val) ->
+    getDuty: (val) ->
       try
-        await pwm.update
-          url: "#{pwm.baseUrl}/#{@name}/duty"
+        @value = await pwm.read
           data:
-            value: val
+            id: @pin
       catch err
         console.error err
-    list: ->
-      pwm
-        .get()
-        .then (res) =>
-          @pin = res[@name].pin
-          @init = res[@name].default
-          @value = res[@name].value
-        .catch console.error
   mounted: ->
-    @list()
+    await @getDuty()
 </script>

@@ -1,11 +1,11 @@
 <template>
   <v-app>
     <toolbar />
-    <v-card>
-      <v-container grid-list-lg>
+    <v-content>
+      <v-container grid-list-md>
         <router-view />
       </v-container>
-    </v-card>
+    </v-content>
   </v-app>
 </template>
 
@@ -29,5 +29,9 @@ $material-icons-font-path: '~material-icons/iconfont/';
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #2c3e50;
+}
+
+.v-content {
+  height: 100%;
 }
 </style>
