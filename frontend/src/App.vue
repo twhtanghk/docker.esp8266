@@ -22,6 +22,7 @@ export default
 $material-icons-font-path: '~material-icons/iconfont/';
 @import '~material-icons/iconfont/material-icons.scss';
 @import '~vuetify/dist/vuetify.min.css';
+@import '~c3/c3.min.css';
 
 #app {
   font-family: 'Avenir', Helvetica, Arial, sans-serif;
