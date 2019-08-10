@@ -6,6 +6,9 @@ module.exports =
   publicPath: './'
   outputDir: './dist'
   lintOnSave: false
+  productionSourceMap: false
+  css:
+    sourceMap: false
   devServer:
     host: '0.0.0.0'
     disableHostCheck: true
