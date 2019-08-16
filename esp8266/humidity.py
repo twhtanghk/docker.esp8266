@@ -12,11 +12,11 @@ class DHT:
       'humidity': self.sensor.humidity()
     }
 
-  def json(self, req, res):
+  async def json(self, req, res, next):
     try:
-      yield from res.ok(self._json())
+      await res.ok(self._json())
     except:
-      yield from res.err(500, 'DHT error')     
+      await res.err(500, 'DHT error')     
 
 sensor = DHT()
 

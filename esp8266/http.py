@@ -1,55 +1,60 @@
 import ujson
 
-def preflight(req, res):
-  yield from res.ok()
+async def preflight(req, res, next):
+  await res.ok()
 
-def logger(req, res):
+async def logger(req, res, next):
   print(req.action)
+  await next()
 
-def json(req, res):
+async def json(req, res, next):
   res.set({
     "Content-Type": "application/json"
   })
+  await next()
 
-def cors(req, res):
+async def cors(req, res, next):
   res.set({
     'Access-Control-Allow-Origin': '*',
     'Access-Control-Allow-Methods': 'POST, PUT, GET, DELETE, OPTIONS',
     'Access-Control-Allow-Headers': 'Content-Type, X-HTTP-Method-Override'
   })
+  await next()
 
-def methodOverride(req, res):
+async def methodOverride(req, res, next):
   try:
     (method, url) = req.action.split(" ")
     method = req.header['X-HTTP-Method-Override']
     req.action = "%s %s" % (method, url)
   except KeyError:
     pass
+  await next()
     
-def headerParser(req, res):
-  l = yield from req.reader.readline()
+async def headerParser(req, res):
+  l = await req.reader.readline()
   (method, url, version) = l.decode('utf-8').split(" ")
   req.action = "%s %s" % (method, url)
   req.header = {}
   while True:
-    l = yield from req.reader.readline()
+    l = await req.reader.readline()
     if l == b"\r\n":
       break
     k, v = l.decode('utf-8').split(":", 1)
     req.header[k] = v.strip()
 
-def bodyParser(req, res):
-  yield from headerParser(req, res)
+async def bodyParser(req, res, next):
+  await headerParser(req, res)
   req.body = None
   try:
     len = int(req.header['Content-Length'])
     if len != 0:
-      data = yield from req.reader.readexactly(len)
+      data = await req.reader.readexactly(len)
       req.body = ujson.loads(data)
   except KeyError:
     pass
+  await next()
 
-def static(req, res):
+async def static(req, res, next):
   file = req.url_match.group(1)
   if file == '/':
     file = '/index.html'
@@ -60,11 +65,12 @@ def static(req, res):
       import os
       os.stat(gz)
       res.set({'Content-Encoding': 'gzip'})
-      yield from res.sendfile(gz)
+      await res.sendfile(gz)
       return
     except OSError:
       pass
-  yield from res.sendfile(file)
+  await res.sendfile(file)
+  await next()
 
 class Req:
   def __init__(self, reader):
@@ -78,20 +84,20 @@ class Res:
   def set(self, header):
     self.header.update(header)
 
-  def flushHeaders(self):
+  async def flushHeaders(self):
     for k, v in self.header.items():
-      yield from self.writer.awrite("%s: %s\r\n" % (k, v))
-    yield from self.writer.awrite("\r\n")
+      await self.writer.awrite("%s: %s\r\n" % (k, v))
+    await self.writer.awrite("\r\n")
 
-  def ok(self, data={}):
-    yield from self.writer.awrite("HTTP/1.1 200 OK\r\n")
+  async def ok(self, data={}):
+    await self.writer.awrite("HTTP/1.1 200 OK\r\n")
     data = ujson.dumps(data)
-    yield from self.writer.awrite("Content-Length: %s\r\n" % len(data))
-    yield from self.flushHeaders()
-    yield from self.writer.awrite(data)
+    await self.writer.awrite("Content-Length: %s\r\n" % len(data))
+    await self.flushHeaders()
+    await self.writer.awrite(data)
 
-  def err(self, code, msg):
-    yield from self.writer.awrite("HTTP/1.1 %s %s\r\n\r\n" % (code, msg))
+  async def err(self, code, msg):
+    await self.writer.awrite("HTTP/1.1 %s %s\r\n\r\n" % (code, msg))
 
   def mime(self, fname):
     if fname.endswith('.gz'):
@@ -104,71 +110,101 @@ class Res:
       return 'image'
     return 'text/plain'
     
-  def sendfile(self, fname):
+  async def sendfile(self, fname):
     try:
       f = open(fname, 'rb')
       self.set({
         "Content-Type": self.mime(fname)
       })
-      yield from self.writer.awrite("HTTP/1.1 200 OK\r\n")
-      yield from self.flushHeaders()
+      await self.writer.awrite("HTTP/1.1 200 OK\r\n")
+      await self.flushHeaders()
       buf = bytearray(64)
       while True:
         l = f.readinto(buf)
         if not l:
           break
-        yield from self.writer.awrite(buf, 0, l)
+        await self.writer.awrite(buf, 0, l)
     except Exception as e:
       print(e)
-      yield from self.err(500, 'Internal Server Error')
+      await self.err(500, 'Internal Server Error')
   
 import ure as re
 
-class App:
+def compose(mw):
+  if not isinstance(mw, list):
+    raise TypeError("Middleware stack must be an array")
+  for fn in mw:
+    if not callable(fn):
+      raise TypeError("Middleware must be composed of functions")
+
+  async def ret(req, res, next):
+    async def dispatch(i):
+      if i == len(mw):
+        await next()
+      else:
+        async def remaining():
+          await dispatch(i + 1)
+        await mw[i](req, res, remaining) 
+    await dispatch(0)
+
+  return ret
+
+class Router:
   def __init__(self):
-    self.routes = []
+    self.stack = []
 
   def method(self, method, url, mw):
-    self.routes.append({
+    self.stack.append({
+      'orgAction': '%s %s' % (method, url),
       'action': re.compile('^%s %s$' % (method, url)),
       'mw': mw
     })
+    return self
 
   def options(self, url, mw):
-    self.method('OPTIONS', url, mw)
+    return self.method('OPTIONS', url, mw)
 
   def get(self, url, mw):
-    self.method('GET', url, mw)
+    return self.method('GET', url, mw)
 
   def post(self, url, mw):
-    self.method('POST', url, mw)
+    return self.method('POST', url, mw)
 
   def put(self, url, mw):
-    self.method('PUT', url, mw)
+    return self.method('PUT', url, mw)
 
   def delete(self, url, mw):
-    self.method('DELETE', url, mw)
+    return self.method('DELETE', url, mw)
 
   def all(self, url, mw):
-    self.method('.*', url, mw)
+    return self.method('.*', url, mw)
 
-  def handle(self, reader, writer):
+  def routes(self):
+    async def ret(req, res, next):
+      matched = []
+      for i in self.stack:
+        if i['action'].match(req.action):
+          req.url_match = i['action'].match(req.action)
+          matched.append(i['mw'])
+      await compose(matched)(req, res, next)
+    return ret
+
+class App:
+  def __init__(self):
+    self.mw = []
+  
+  def use(self, mw):
+    self.mw.append(mw)
+
+  async def handle(self, reader, writer):
     try:
       res = Res(writer)
       req = Req(reader)
-      yield from bodyParser(req, res)
-      methodOverride(req, res)
-      logger(req, res)
-      json(req, res)
-      cors(req, res)
-      for route in self.routes:
-        if route['action'].match(req.action):
-          req.url_match = route['action'].match(req.action)
-          yield from route['mw'](req, res)
-          return
-      res.err(404, 'Not Found')
+      def noop():
+        return
+      await compose(self.mw)(req, res, noop)
     except Exception as e:
-      print(e)
-      res.err(500, 'Internal Server Error')
+      print('exception %s' % e)
+      await res.err(500, 'Internal Server Error')
     finally:
-      yield from writer.aclose()
+      await res.writer.aclose()

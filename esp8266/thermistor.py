@@ -34,8 +34,8 @@ class Thermistor:
   def _json(self):
     return self.f()
 
-  def json(self, req, res):
-    yield from res.ok(self._json())
+  async def json(self, req, res, next):
+    await res.ok(self._json())
 
 sensor = Thermistor()
 

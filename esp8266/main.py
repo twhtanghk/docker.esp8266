@@ -7,26 +7,34 @@ import thermistor
 import gpio
 import pwm
 
+router = http.Router()
+router.options('.*', http.preflight)
+router.get('/factory', system.factory)
+router.get('/reboot', system.reboot)
+router.post('/mqtt', mqtt.reset)
+router.get('/ap', system.getAP)
+router.put('/ap', system.configAP)
+router.get('/sta/scan', system.hotspot)
+router.get('/sta', system.getSTA)
+router.put('/sta', system.configSTA)
+router.get('/voltage', voltage)
+router.get('/current', current)
+router.get('/dht', humidity.sensor.json)
+router.get('/thermistor', thermistor.sensor.json)
+router.get('/gpio/(\d+)', gpio.get)
+router.put('/gpio/(\d+)/mode', gpio.mode) # set id: 5, mode: 'in'
+router.put('/gpio/(\d+)/value', gpio.set) # set id: 5, value: 1
+router.get('/pwm/(\d+)', pwm.get)
+router.put('/pwm/(\d+)', pwm.duty) # set id: 5, duty: 600
+router.get('(.*)', http.static)
+
 app = http.App()
-app.options('.*', http.preflight)
-app.get('/factory', system.factory)
-app.get('/reboot', system.reboot)
-app.post('/mqtt', mqtt.reset)
-app.get('/ap', system.getAP)
-app.put('/ap', system.configAP)
-app.get('/sta', system.getSTA)
-app.get('/sta/scan', system.hotspot)
-app.put('/sta', system.configSTA)
-app.get('/voltage', voltage)
-app.get('/current', current)
-app.get('/dht', humidity.sensor.json)
-app.get('/thermistor', thermistor.sensor.json)
-app.get('/gpio/(\d+)', gpio.get)
-app.put('/gpio/(\d+)/mode', gpio.mode) # set id: 5, mode: 'in'
-app.put('/gpio/(\d+)/value', gpio.set) # set id: 5, value: 1
-app.get('/pwm/(\d+)', pwm.get)
-app.put('/pwm/(\d+)', pwm.duty) # set id: 5, duty: 600
-app.get('(.*)', http.static)
+app.use(http.bodyParser)
+app.use(http.methodOverride)
+app.use(http.logger)
+app.use(http.json)
+app.use(http.cors)
+app.use(router.routes())
 
 import uasyncio as asyncio
 loop = asyncio.get_event_loop()

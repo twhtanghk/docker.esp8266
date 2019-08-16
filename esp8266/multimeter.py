@@ -14,12 +14,12 @@ def _current(acsRange=5):
   }
   return (_voltage() - 2.5) * 1000 / sensitivity[acsRange]
   
-def voltage(req, res):
-  yield from res.ok({
+async def voltage(req, res, next):
+  await res.ok({
     "voltage": _voltage()
   })
 
-def current(req, res):
-  yield from res.ok({
+async def current(req, res, next):
+  await res.ok({
     "current": _current()
   })

@@ -13,9 +13,9 @@ except MQTTException as e:
   print('mqtt user and password not yet defined')
   pass
 
-def reset(req, res):
+async def reset(req, res, next):
   config = system.load()
   config['mqtt']['user'] = req.body['user']
   config['mqtt']['password'] = req.body['password']
   system.save(config)
-  yield from res.ok()
+  await res.ok()

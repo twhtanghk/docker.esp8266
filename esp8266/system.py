@@ -46,13 +46,13 @@ def factorySTA():
   sta_if.active(True)
   sta_if.config(dhcp_hostname=config()['name'])
 
-def factory(req, res):
+async def factory(req, res, next):
   factoryAP()
   factorySTA()
   save(config())
-  yield from res.ok()
+  await res.ok()
   
-async def reboot(req, res):
+async def reboot(req, res, next):
   await res.ok()
   from uasyncio import sleep
   await sleep(1)
@@ -60,38 +60,38 @@ async def reboot(req, res):
   machine.reset()
 
 ap_if = network.WLAN(network.AP_IF)
-def getAP(req, res):
-  yield from res.ok({
+async def getAP(req, res, next):
+  await res.ok({
     'essid': ap_if.config('essid'),
     'config': ap_if.ifconfig()
   })
 
-def configAP(req, res):
+async def configAP(req, res, next):
   config = load()
   config['name'] = req.body['essid']
   save(config)
   ap_if.config(essid=req.body['essid'], password=req.body['password'])
-  yield from res.ok()
+  await res.ok()
 
 sta_if = network.WLAN(network.STA_IF)
-def getSTA(req, res):
-  yield from res.ok({
+async def getSTA(req, res, next):
+  await res.ok({
     'essid': sta_if.config('essid'),
     'isconnected': sta_if.isconnected(),
     'curr': sta_if.ifconfig()
   })
 
-def configSTA(req, res):
+async def configSTA(req, res, next):
   config = load()
   sta_if.active(True)
   sta_if.config(dhcp_hostname=config['name'])
   sta_if.connect(req.body['ssid'], req.body['password'])
-  yield from res.ok()
+  await res.ok()
 
-def hotspot(req, res):
+async def hotspot(req, res, next):
   sta_if.active(True)
   nets = []
   for net in sta_if.scan():
     if net[0] not in nets:
       nets.append(net[0])
-  yield from res.ok(nets)
+  await res.ok(nets)
