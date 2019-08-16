@@ -1,6 +1,9 @@
 import network
 import ujson
 
+ap_if = network.WLAN(network.AP_IF)
+sta_if = network.WLAN(network.STA_IF)
+
 def exists(filename):
   try:
     import os
@@ -11,7 +14,6 @@ def exists(filename):
 
 def config():
   import ubinascii
-  ap_if = network.WLAN(network.AP_IF)
   mac = ap_if.config('mac')
   mac = ubinascii.hexlify(mac).decode('utf-8')[6:]
   return {
@@ -37,12 +39,10 @@ def save(data):
   f.close()
   
 def factoryAP():
-  ap_if = network.WLAN(network.AP_IF)
   ap_if.config(essid=config()['name'], password='micropythoN')
   ap_if.active(True)
 
 def factorySTA():
-  sta_if = network.WLAN(network.STA_IF)
   sta_if.active(True)
   sta_if.config(dhcp_hostname=config()['name'])
 
@@ -59,7 +59,6 @@ async def reboot(req, res):
   import machine
   machine.reset()
 
-ap_if = network.WLAN(network.AP_IF)
 def getAP(req, res):
   yield from res.ok({
     'essid': ap_if.config('essid'),
@@ -73,7 +72,6 @@ def configAP(req, res):
   ap_if.config(essid=req.body['essid'], password=req.body['password'])
   yield from res.ok()
 
-sta_if = network.WLAN(network.STA_IF)
 def getSTA(req, res):
   yield from res.ok({
     'essid': sta_if.config('essid'),
