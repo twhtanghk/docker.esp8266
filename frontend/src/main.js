@@ -14,6 +14,7 @@ const router = new VueRouter({
     {path: '/ddns', component: require('./ddns').default},
     {path: '/pwm', component: require('./pwm').default},
     {path: '/dht', component: require('./dht').default},
+    {path: '/liquid', component: require('./liquid').default},
     {path: '*', redirect: '/system'}
   ]
 })

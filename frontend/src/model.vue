@@ -51,4 +51,9 @@ export default
     props:
       baseUrl:
         default: "#{process.env.API_URL}/dht"
+  liquid: new Vue
+    extends: Vue.component 'rest'
+    props:
+      baseUrl:
+        default: "#{process.env.API_URL}/liquid"
 </script>

@@ -26,6 +26,7 @@ export default
       system: 'System'
       pwm: 'Pulse Width Modulation'
       dht: 'Humidity and Temperature'
+      liquid: 'Liquid Level'
       syslog: 'Syslog'
       ddns: 'Dynamic DNS'
       gpio: 'General Purpose IO'
