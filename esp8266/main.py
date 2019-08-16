@@ -6,6 +6,7 @@ import humidity
 import thermistor
 import gpio
 import pwm
+import liquid
 
 app = http.App()
 app.options('.*', http.preflight)
@@ -26,6 +27,7 @@ app.put('/gpio/(\d+)/mode', gpio.mode) # set id: 5, mode: 'in'
 app.put('/gpio/(\d+)/value', gpio.set) # set id: 5, value: 1
 app.get('/pwm/(\d+)', pwm.get)
 app.put('/pwm/(\d+)', pwm.duty) # set id: 5, duty: 600
+app.get('/liquid/(\d+)', liquid.get)
 app.get('(.*)', http.static)
 
 import uasyncio as asyncio
