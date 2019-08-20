@@ -17,7 +17,7 @@ def config():
   mac = ap_if.config('mac')
   mac = ubinascii.hexlify(mac).decode('utf-8')[6:]
   return {
-    'name': 'Micropython-{}'.format(mac),
+    'name': 'TT{}'.format(mac),
     'mqtt': {
       'user': '',
       'password': ''
@@ -39,7 +39,7 @@ def save(data):
   f.close()
   
 def factoryAP():
-  ap_if.config(essid=config()['name'], password='micropythoN')
+  ap_if.config(essid=config()['name'], password='password')
   ap_if.active(True)
 
 def factorySTA():
