@@ -1,4 +1,3 @@
-from machine import Pin
-from uln2003 import Stepper, HALF_STEP
+from uln2003 import Stepper, FULL_STEP
 
-device = Stepper(HALF_STEP, Pin(14), Pin(12), Pin(13), Pin(15), delay=5)
+device = Stepper(FULL_STEP, 14, 12, 13, 15, delay=2000)
