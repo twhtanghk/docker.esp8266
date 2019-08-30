@@ -55,6 +55,7 @@ class Driver():
 class Stepper():
     def __init__(self, mode, pin1, pin2, pin3, pin4, delay=2):
         self.mode = mode
+        self.stop = False
         self.pin1 = Pin(pin1, Pin.OUT)
         self.pin2 = Pin(pin2, Pin.OUT)
         self.pin3 = Pin(pin3, Pin.OUT)
@@ -68,15 +69,22 @@ class Stepper():
         """Rotate count steps. direction = -1 means backwards"""
         for x in range(count):
             for bit in self.mode[::direction]:
-                self.pin1.value(bit[0]) 
-                self.pin2.value(bit[1]) 
-                self.pin3.value(bit[2]) 
-                self.pin4.value(bit[3]) 
-                time.sleep_ms(self.delay)
+                if self.stop:
+                  break
+                else:
+                  self.pin1.value(bit[0]) 
+                  self.pin2.value(bit[1]) 
+                  self.pin3.value(bit[2]) 
+                  self.pin4.value(bit[3]) 
+                  time.sleep_ms(self.delay)
         self.reset()
         
+    def irq(self):
+        self.stop = True
+
     def reset(self):
         # Reset to 0, no holding, these are geared, you can't move them
+        self.stop = False
         self.pin1.value(0) 
         self.pin2.value(0) 
         self.pin3.value(0) 
