@@ -1,3 +1,3 @@
-from uln2003 import Stepper, FULL_STEP
+from uln2003 import Stepper, HALF_STEP
 
-device = Stepper(FULL_STEP, 14, 12, 13, 15, delay=2000)
+device = Stepper(HALF_STEP, 14, 12, 13, 15)

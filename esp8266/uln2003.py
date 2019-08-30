@@ -72,7 +72,7 @@ class Stepper():
                 self.pin2.value(bit[1]) 
                 self.pin3.value(bit[2]) 
                 self.pin4.value(bit[3]) 
-                time.sleep_us(self.delay)
+                time.sleep_ms(self.delay)
         self.reset()
         
     def reset(self):
