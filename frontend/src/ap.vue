@@ -1,5 +1,5 @@
 <template>
-  <card header='Access Point'>
+  <card header='Wifi Config'>
     <v-text-field v-model='essid' label='ESSID' :rules='[required($v.essid)]' required />
     <v-text-field v-model='password' label='Password' type='password' :rules='[required($v.password), minLength($v.password)]' required />
     <v-text-field v-model='passwordAgain' label='Confirm password' type='password' :rules='[required($v.passwordAgain), minLength($v.passwordAgain), match($v.password, $v.passwordAgain)]' required />

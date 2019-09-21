@@ -1,5 +1,5 @@
 <template>
-  <card :header='"Station " + status'>
+  <card :header='"Internet " + status'>
     <v-select v-model='essid' label='ESSID' :items='list' filled :rules='[required($v.essid)]'/>
     <v-text-field v-model='password' label='Password' type='password' :rules='[required($v.password), minLength($v.password)]' required />
     <v-btn color="primary" @click='connect(essid, password)'>Connect</v-btn>

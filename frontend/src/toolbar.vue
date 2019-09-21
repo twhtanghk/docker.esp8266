@@ -1,7 +1,7 @@
 <template>
   <v-toolbar color='primary' dark>
     <v-toolbar-title class='white--text'>
-      ESP
+      PWM Fan
     </v-toolbar-title>
     <v-spacer></v-spacer>
     <v-menu bottom left>
@@ -23,13 +23,8 @@
 export default
   data: ->
     actions:
-      system: 'System'
       pwm: 'Pulse Width Modulation'
-      dht: 'Humidity and Temperature'
-      liquid: 'Liquid Level'
-      syslog: 'Syslog'
-      ddns: 'Dynamic DNS'
-      gpio: 'General Purpose IO'
+      system: 'System'
   methods:
     click: (action) ->
       window.location.hash = "#/#{action}"
