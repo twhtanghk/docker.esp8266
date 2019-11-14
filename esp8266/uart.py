@@ -2,10 +2,10 @@ import uos
 from uasyncio import StreamReader, StreamWriter
 from machine import UART
 
-uos.dupterm(None, 1)
+#uos.dupterm(None, 1)
 #uos.dupterm(machine.UART(0, 115200), 1)
 
-uart = UART(0, baudrate=4800, bits=8, parity=None, stop=1)
+uart = UART(2, baudrate=4800, bits=8, parity=None, stop=1)
 uartReader = StreamReader(uart)
 uartWriter = StreamWriter(uart, {})
 
@@ -33,8 +33,12 @@ class RS485:
       'writer': writer
     })
 
-  async def readline():
-    line = await self.upstream['reader'].readline()
-    for stream in self.downstream:
-      stream.writer.write(line)
-      await stream.writer.drain()
+  async def readline(self):
+    while True:
+      line = await self.upstream['reader'].readline()
+      print(line)
+      for stream in self.downstream:
+        try:
+          await stream['writer'].awrite(line)
+        except OSError:
+          self.downstream.remove(stream)
