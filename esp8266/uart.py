@@ -1,6 +1,6 @@
 import uos
-from uasyncio import StreamReader, StreamWriter
-from machine import UART
+from uasyncio import StreamReader, StreamWriter, sleep_ms
+from machine import UART, Pin
 
 #uos.dupterm(None, 1)
 #uos.dupterm(machine.UART(0, 115200), 1)
@@ -20,18 +20,35 @@ def config(req, res):
   yield from res.ok()
 
 class RS485:
-  def __init__(self):
+  def __init__(self, DE=15, RE=2):
+    self.DE = Pin(DE, Pin.OUT, Pin.PULL_DOWN)
+    self.RE = Pin(RE, Pin.OUT, Pin.PULL_DOWN)
     self.upstream = {
       'reader': uartReader,
       'writer': uartWriter
     }
     self.downstream = []
 
-  def handle(self, reader, writer):
+  async def handle(self, reader, writer):
     self.downstream.append({
       'reader': reader,
       'writer': writer
     })
+    while True:
+      line = await reader.readline()
+      if len(line) == 0:
+        return
+      print(line)
+      await self.writeln(line)
+
+  async def writeln(self, line, delay=30):
+    self.DE.on()
+    self.RE.on()
+    await sleep_ms(delay)
+    await self.upstream['writer'].awrite(line)
+    await sleep_ms(delay)
+    self.DE.off()
+    self.RE.off()
 
   async def readline(self):
     while True:
