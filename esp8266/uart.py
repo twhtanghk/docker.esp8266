@@ -41,7 +41,7 @@ class RS485:
       print(line)
       await self.writeln(line)
 
-  async def writeln(self, line, delay=30):
+  async def writeln(self, line, delay=500):
     self.DE.on()
     self.RE.on()
     await sleep_ms(delay)
