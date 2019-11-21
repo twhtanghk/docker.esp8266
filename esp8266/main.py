@@ -20,5 +20,5 @@ import uasyncio as asyncio
 loop = asyncio.get_event_loop()
 loop.create_task(asyncio.start_server(app.handle, '0.0.0.0', 80))
 loop.create_task(asyncio.start_server(rs485.handle, '0.0.0.0', 23))
-loop.create_task(rs485.readline())
+loop.create_task(rs485.readln())
 loop.run_forever()

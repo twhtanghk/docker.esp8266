@@ -5,7 +5,7 @@ from machine import UART, Pin
 #uos.dupterm(None, 1)
 #uos.dupterm(machine.UART(0, 115200), 1)
 
-uart = UART(2, baudrate=4800, bits=8, parity=None, stop=1)
+uart = UART(0, baudrate=4800, bits=8, parity=None, stop=1)
 uartReader = StreamReader(uart)
 uartWriter = StreamWriter(uart, {})
 
@@ -20,17 +20,17 @@ def config(req, res):
   yield from res.ok()
 
 class RS485:
-  def __init__(self, DE=15, RE=2):
-    self.DE = Pin(DE, Pin.OUT, Pin.PULL_DOWN)
-    self.RE = Pin(RE, Pin.OUT, Pin.PULL_DOWN)
-    self.upstream = {
+  def __init__(self, DE=13):
+    self.DE = Pin(DE, Pin.OUT)
+    self.DE.off()
+    self.uart = {
       'reader': uartReader,
       'writer': uartWriter
     }
-    self.downstream = []
+    self.net = []
 
   async def handle(self, reader, writer):
-    self.downstream.append({
+    self.net.append({
       'reader': reader,
       'writer': writer
     })
@@ -43,19 +43,17 @@ class RS485:
 
   async def writeln(self, line, delay=500):
     self.DE.on()
-    self.RE.on()
     await sleep_ms(delay)
-    await self.upstream['writer'].awrite(line)
+    await self.uart['writer'].awrite(line)
     await sleep_ms(delay)
     self.DE.off()
-    self.RE.off()
 
-  async def readline(self):
+  async def readln(self):
     while True:
-      line = await self.upstream['reader'].readline()
+      line = await self.uart['reader'].readline()
       print(line)
-      for stream in self.downstream:
+      for stream in self.net:
         try:
           await stream['writer'].awrite(line)
         except OSError:
-          self.downstream.remove(stream)
+          self.net.remove(stream)
