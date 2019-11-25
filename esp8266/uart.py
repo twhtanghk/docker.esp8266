@@ -20,9 +20,11 @@ def config(req, res):
   yield from res.ok()
 
 class RS485:
-  def __init__(self, DE=13):
+  def __init__(self, DE=13, activity=2):
     self.DE = Pin(DE, Pin.OUT)
     self.DE.off()
+    self.activity = Pin(activity, Pin.OUT)
+    self.activity.on()
     self.uart = {
       'reader': uartReader,
       'writer': uartWriter
@@ -38,22 +40,26 @@ class RS485:
       line = await reader.readline()
       if len(line) == 0:
         return
-      print(line)
       await self.writeln(line)
 
   async def writeln(self, line, delay=500):
     self.DE.on()
+    self.activity.off()
+    print(line)
     await sleep_ms(delay)
     await self.uart['writer'].awrite(line)
     await sleep_ms(delay)
     self.DE.off()
+    self.activity.on()
 
   async def readln(self):
     while True:
       line = await self.uart['reader'].readline()
+      self.activity.off()
       print(line)
       for stream in self.net:
         try:
           await stream['writer'].awrite(line)
         except OSError:
           self.net.remove(stream)
+      self.activity.on()
