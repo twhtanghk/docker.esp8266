@@ -27,10 +27,10 @@ def config():
   }
 
 filename = '/config.json'
-def load():
+def load(factory):
   if not exists(filename):
-    save(config())
-  f = open('/config.json')
+    save(factory)
+  f = open(filename)
   data = ujson.load(f)
   f.close()
   return data
@@ -51,6 +51,8 @@ def factorySTA():
 def factory(req, res):
   factoryAP()
   factorySTA()
+  import uart
+  uart.factory()
   save(config())
   yield from res.ok()
   

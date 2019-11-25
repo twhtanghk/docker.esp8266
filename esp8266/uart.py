@@ -1,23 +1,48 @@
-import uos
 from uasyncio import StreamReader, StreamWriter, sleep_ms
 from machine import UART, Pin
+from system import load, save
 
-#uos.dupterm(None, 1)
-#uos.dupterm(machine.UART(0, 115200), 1)
+config = {
+  'baudrate': 4800,
+  'bits': 8,
+  'parity': None,
+  'stop': 1
+}
 
-uart = UART(0, baudrate=4800, bits=8, parity=None, stop=1)
+uart = UART(0)
+uart.init(**load(config))
 uartReader = StreamReader(uart)
 uartWriter = StreamWriter(uart, {})
 
-def config(req, res):
-  baudrate = req.body['baudrate']
-  bits = req.body['bits']
-  parity = req.body['parity']
-  stop = req.body['stop']
-  uart = uart.init(baudrate=baudrate, bits=bits, parity=parity, stop=stop)
+def factory():
+  save(config)
+  uart.init(config)
   uartReader = StreamReader(uart)
   uartWriter = StreamWriter(uart, {})
-  yield from res.ok()
+
+def valid(data):
+  if data['baudrate'] not in [300, 600, 1200, 4800, 9600, 19200, 38400, 57600, 115200, 230400, 250000, 460800]:
+    raise ValueError('baudrate')
+  if data['bits'] not in [7, 8]:
+    raise ValueError('bits')
+  if data['parity'] not in [None, 0, 1]:
+    raise ValueError('parity')
+  if data['stop'] not in [1, 2]:
+    raise ValueError('stop')
+
+def set(req, res):
+  try:
+    valid(req.body)
+    save(req.body)
+    uart.init(**req.body)
+    uartReader = StreamReader(uart)
+    uartWriter = StreamWriter(uart, {})
+    yield from res.ok()
+  except ValueError as err:
+    yield from res.err(500, "Invalid {}".format(str(err)))
+
+def get(req, res):
+  yield from res.ok(load(config))
 
 class RS485:
   def __init__(self, DE=13, activity=2):
