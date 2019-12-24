@@ -1,6 +1,6 @@
 import http
 import system
-import uart
+import gpio
 
 app = http.App()
 app.options('.*', http.preflight)
@@ -11,15 +11,12 @@ app.put('/ap', system.configAP)
 app.get('/sta', system.getSTA)
 app.get('/sta/scan', system.hotspot)
 app.put('/sta', system.configSTA)
-app.get('/uart', uart.get)
-app.put('/uart', uart.set)
+app.get('/gpio/(\d+)$', gpio.get)
+app.put('/gpio/(\d+)$', gpio.set)
+app.put('/gpio/interval', gpio.interval)
 app.get('(.*)', http.static)
-
-rs485 = uart.RS485()
 
 import uasyncio as asyncio
 loop = asyncio.get_event_loop()
 loop.create_task(asyncio.start_server(app.handle, '0.0.0.0', 80))
-loop.create_task(asyncio.start_server(rs485.handle, '0.0.0.0', 23))
-loop.create_task(rs485.readln())
 loop.run_forever()

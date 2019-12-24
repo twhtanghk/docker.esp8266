@@ -51,8 +51,6 @@ def factorySTA():
 def factory(req, res):
   factoryAP()
   factorySTA()
-  import uart
-  uart.factory()
   save(config())
   yield from res.ok()
   
