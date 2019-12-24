@@ -1,41 +1,53 @@
 <template>
-  <v-layout row wrap>
-    <card header='Switch' :actions='["add_box"]'>
-      <v-switch v-for='item in gpio' :key='item.name' v-model='item.value' :label='labels(item)' @change='set(item)' />
+  <v-row wrap justify='center'>
+    <card :header="'Pin ' + id">
+      <v-row justify='space-around'>
+        <v-switch :label='val ? "on" : "off"' v-model="val" @change="set"/>
+        <v-col cols="12">
+          <v-text-field label="Interval" v-model="elapsed" @change="interval"/>
+        </v-col>
+      </v-row>
     </card>
-  </v-layout>
+  </v-row>
 </template>
 
 <script lang='coffee'>
 {gpio} = require('./model').default
+{required, integer, minValue, maxValue} = require 'vuelidate/lib/validators'
 
 export default
   components:
     card: require('./card').default
   data: ->
-    gpio: []
+    id: 13
+    val: 0
+    elapsed: 30 * 60 # default 30 min
+    opts:
+      val: [0, 1]
   methods:
-    labels: (item) ->
-      "#{item.name} #{if item.value then 'Off' else 'On'}"
-    set: (item) ->
-      gpio
-        .update
-          data:
-            id: item.name
-            value: if item.value then 1 else 0
-        .catch console.error
-    list: ->
-      gpio
-        .list()
-        .then (res) =>
-          @gpio = res
-        .catch console.error
+    set: ->
+      try
+        await gpio.update data: {@id, @val}
+      catch err
+        console.error err
+    get: ->
+      try
+        {@val, @elapsed} = await gpio.read data: {@id}
+      catch err
+        console.error err
+    interval: ->
+      try
+        await gpio.put
+          url: "#{gpio.baseUrl}/interval"
+          data: {@elapsed}
+      catch err
+        console.error err
   mounted: ->
-    @list()
+    await @get()
 </script>
 
-<style lang='scss' scoped>
-.toggle {
-  font-size: 14px !important;
+<style lang='scss'>
+label {
+  margin-bottom: 0;
 }
 </style>

@@ -26,5 +26,6 @@ export default
 <style scoped>
 .rounded-card {
   border-radius: 1em;
+  margin: .5em;
 }
 </style>

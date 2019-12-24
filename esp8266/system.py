@@ -27,7 +27,7 @@ def config():
   }
 
 filename = '/config.json'
-def load(factory):
+def load(factory=config()):
   if not exists(filename):
     save(factory)
   f = open(filename)

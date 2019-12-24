@@ -1,7 +1,7 @@
 <script lang='coffee'>
 Vue = require('vue').default
 Vue.use require('vue.model/src/plugin').default
-{eventBus} = require('./lib').default
+eventBus = require('./eventBus').default
 
 Vue.component 'rest',
   extends: Vue.component 'model'
@@ -56,9 +56,9 @@ export default
     props:
       baseUrl:
         default: "#{process.env.API_URL}/liquid"
-  uart: new Vue
+  gpio: new Vue
     extends: Vue.component 'rest'
     props:
       baseUrl:
-        default: "#{process.env.API_URL}/uart"
+        default: "#{process.env.API_URL}/gpio"
 </script>

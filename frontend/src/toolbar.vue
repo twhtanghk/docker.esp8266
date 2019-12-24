@@ -1,7 +1,7 @@
 <template>
-  <v-toolbar color='primary' dark>
+  <v-app-bar app color='primary'>
     <v-toolbar-title class='white--text'>
-      UART
+      GPIO
     </v-toolbar-title>
     <v-spacer></v-spacer>
     <v-menu bottom left>
@@ -16,14 +16,14 @@
         </v-list-item>
       </v-list>
     </v-menu>
-  </v-toolbar>
+  </v-app-bar>
 </template>
 
 <script lang='coffee'>
 export default
   data: ->
     actions:
-      uart: 'UART'
+      gpio: 'GPIO'
       system: 'System'
   methods:
     click: (action) ->

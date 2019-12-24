@@ -1,12 +1,12 @@
 <template>
-  <v-layout row wrap>
+  <v-row wrap justify='center'>
     <ap/>
     <sta/>
     <card header='Settings'>
       <v-btn color='primary' @click='factory'>Factory Default</v-btn>
       <v-btn color='secondary' @click='reboot'>Reboot</v-btn>
     </card>
-  </v-layout>
+  </v-row>
 </template>
 
 <script lang='coffee'>
