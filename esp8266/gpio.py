@@ -1,18 +1,24 @@
 import uasyncio as asyncio
 from machine import Pin
 
-pin = Pin(13, Pin.OUT, Pin.PULL_UP)
+pin13 = Pin(13, Pin.OUT, Pin.PULL_UP)
 elapsed = 30 * 60 # default 30 min
+
+def pin(req):
+  ret = int(req.url_match.group(1))
+  if ret not in [0, 2, 4, 5, 12, 13, 14, 15, 16]:
+    raise Exception('Invalid pin')
+  return Pin(ret, Pin.OUT)
+
+def val(req):
+  ret = req.body['val']
+  if ret not in [0, 1]:
+    raise Exception('Invalid pin value')
+  return ret
 
 def set(req, res):
   try:
-    pin = int(req.url_match.group(1))
-    if pin not in [0, 2, 4, 5, 12, 13, 14, 15, 16]:
-      raise Exception('Invalid pin')
-    val = req.body['val']
-    if val not in [0, 1]:
-      raise Exception('Invalid pin value')
-    Pin(pin, Pin.OUT).value(val)
+    pin(req).value(val(req))
     yield from res.ok()
   except ValueError:
     yield from res.err(500, 'Invalid pin')
@@ -20,26 +26,25 @@ def set(req, res):
     yield from res.err(500, str(e))
  
 def get(req, res):
-  pin = req.url_match[1]
-  yield from res.ok(Pin(pin, Pin.IN).value())
+  try:
+    global elapsed
+    yield from res.ok({"elapsed": elapsed, "val": pin(req).value()})
+  except Exception as e:
+    yield from res.err(500, str(e))
 
 def interval(req, res):
   try:
     global elapsed
-    elapsed = req.body['elapsed']
-    global task
-    asyncio.cancel(task)
-    task = switch()
-    loop.create_task(task)
+    elapsed = int(req.body['elapsed'])
     yield from res.ok()
   except Exception as e:
     yield from res.err(500, str(e))
 
 async def switch():
   while True:
-    global pin
+    global pin13
     global elapsed
-    pin.value(int(not pin.value()))
+    pin13.value(int(not pin13.value()))
     await asyncio.sleep(elapsed)
 
 loop = asyncio.get_event_loop()
