@@ -1,6 +1,7 @@
 import http
 import system
 import stepper
+import opto
 
 app = http.App()
 app.options('.*', http.preflight)
@@ -13,6 +14,7 @@ app.get('/sta/scan', system.hotspot)
 app.put('/sta', system.configSTA)
 app.put('/stepper/step(-?\d+)$', stepper.step)
 app.put('/stepper/(-?\d+)$', stepper.angle)
+app.get('/opto', opto.get)
 app.get('(.*)', http.static)
 
 import uasyncio as asyncio
