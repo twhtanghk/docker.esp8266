@@ -1,6 +1,6 @@
 import http
 import system
-import gpio
+import stepper
 
 app = http.App()
 app.options('.*', http.preflight)
@@ -11,9 +11,8 @@ app.put('/ap', system.configAP)
 app.get('/sta', system.getSTA)
 app.get('/sta/scan', system.hotspot)
 app.put('/sta', system.configSTA)
-app.get('/gpio/(\d+)$', gpio.get)
-app.put('/gpio/(\d+)$', gpio.set)
-app.put('/gpio/interval', gpio.interval)
+app.put('/stepper/step(-?\d+)$', stepper.step)
+app.put('/stepper/(-?\d+)$', stepper.angle)
 app.get('(.*)', http.static)
 
 import uasyncio as asyncio
