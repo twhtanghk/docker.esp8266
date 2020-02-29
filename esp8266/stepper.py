@@ -50,8 +50,6 @@ stepper = Stepper()
 
 def step(req, res):
   try:
-    print(req.url_match.group(0))
-    print(req.url_match.group(1))
     count = int(req.url_match.group(1))
     stepper.step(count)
     yield from res.ok()
