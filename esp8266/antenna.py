@@ -40,6 +40,6 @@ antenna = Antenna()
 
 def angle(req, res):
   try:
-    yield from res.ok(antenna.angle(int(req.url_match.group(1))))
+    yield from res.ok(antenna.angle(float(req.url_match.group(1))))
   except Exception as e:
     yield from res.err(500, str(e))

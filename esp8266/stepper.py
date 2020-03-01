@@ -51,6 +51,6 @@ stepper = Stepper()
 
 def angle(req, res):
   try:
-    yield from res.ok(stepper.angle(int(req.url_match.group(1))))
+    yield from res.ok(stepper.angle(float(req.url_match.group(1))))
   except Exception as e:
     yield from res.err(500, str(e))
