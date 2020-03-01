@@ -1,5 +1,6 @@
 import http
 import system
+import antenna
 import stepper
 import opto
 
@@ -12,7 +13,7 @@ app.put('/ap', system.configAP)
 app.get('/sta', system.getSTA)
 app.get('/sta/scan', system.hotspot)
 app.put('/sta', system.configSTA)
-app.put('/stepper/step(-?\d+)$', stepper.step)
+app.put('/antenna/(-?\d+)$', antenna.angle)
 app.put('/stepper/(-?\d+)$', stepper.angle)
 app.get('/opto', opto.get)
 app.get('(.*)', http.static)

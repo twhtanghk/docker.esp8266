@@ -1,12 +1,15 @@
-import time
 from machine import Pin
 
-class Opto():
-  def __init__(self, pin=2):
+class Opto:
+  def __init__(self, pin=4):
     self.pin = Pin(pin, Pin.IN)
         
   def value(self):
     return self.pin()
+
+  def on(self, event, cb):
+    self.pin.irq(trigger=event, handler=cb)
+    return self
         
 opto = Opto()
 
