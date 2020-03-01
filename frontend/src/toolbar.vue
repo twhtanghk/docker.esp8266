@@ -1,7 +1,7 @@
 <template>
   <v-app-bar app color='primary'>
     <v-toolbar-title class='white--text'>
-      GPIO
+      Antenna
     </v-toolbar-title>
     <v-spacer></v-spacer>
     <v-menu bottom left>
@@ -23,7 +23,7 @@
 export default
   data: ->
     actions:
-      gpio: 'GPIO'
+      antenna: 'Antenna'
       system: 'System'
   methods:
     click: (action) ->

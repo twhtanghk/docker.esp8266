@@ -14,6 +14,7 @@
     "c3": "^0.7.4",
     "global": "^4.4.0",
     "jsOAuth2": "https://github.com/twhtanghk/jsOAuth2",
+    "register-service-worker": "^1.6.2",
     "vue": "^2.6.11",
     "vue.oauth2": "https://github.com/twhtanghk/vue.oauth2",
     "vuelidate": "^0.7.4"
@@ -21,6 +22,7 @@
   "devDependencies": {
     "@vue/cli-plugin-babel": "^4.1.1",
     "@vue/cli-plugin-eslint": "^4.1.1",
+    "@vue/cli-plugin-pwa": "~4.2.0",
     "@vue/cli-service": "^4.1.1",
     "babel-eslint": "^10.0.2",
     "coffee-loader": "^0.9.0",

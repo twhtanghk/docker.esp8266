@@ -9,6 +9,9 @@ module.exports =
   productionSourceMap: false
   css:
     sourceMap: false
+  pwa:
+    name: 'Antenna'
+    workboxPluginMode: 'GenerateSW'
   devServer:
     host: '0.0.0.0'
     disableHostCheck: true
