@@ -17,6 +17,7 @@
         :max="359"
         :min="0"
         @change='updateAntenna()'/>
+      <v-btn color='primary' @click='stepback'>Stepback</v-btn>
     </card>
   </v-layout>
 </template>
@@ -44,6 +45,11 @@ export default
     updateAntenna: ->
       try
         await model.put url: "#{process.env.API_URL}/heading/antenna/#{@antenna}"
+      catch err
+        console.error err
+    stepback: ->
+      try
+        await model.put url: "#{process.env.API_URL}/antenna/stepback"
       catch err
         console.error err
 </script>
