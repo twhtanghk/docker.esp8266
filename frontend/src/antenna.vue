@@ -22,7 +22,7 @@
 </template>
 
 <script lang='coffee'>
-{Model} = require('./plugins/model.coffee').default
+{Model} = require('model').default
 {required, integer, minValue, maxValue} = require 'vuelidate/lib/validators'
 
 model = new Model baseUrl: "#{process.env.API_URL}"
