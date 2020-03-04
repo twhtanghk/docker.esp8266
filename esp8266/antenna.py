@@ -4,10 +4,9 @@ from opto import Opto
 from stepper import Stepper
 
 class Antenna(Stepper):
-  def __init__(self, reverse=-2):
+  def __init__(self):
     def cb(pin):
       self.irq = True
-    self.reverse = reverse
     self.irq = False
     self.opto = Opto()
     self.opto.on(Pin.IRQ_RISING, cb) 
@@ -27,8 +26,8 @@ class Antenna(Stepper):
         time.sleep_ms(self.delay)
         if self.irq:
           self.reset()
-          super(Antenna, self).step(self.reverse * direction)
-          return direction * (x + self.reverse)
+          super(Antenna, self).step(-1 * direction * (Stepper.FULL_ROTATION - count + x))
+          return direction * count
     self.reset()
     return direction * x
 
