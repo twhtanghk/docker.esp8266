@@ -9,6 +9,9 @@ module.exports =
   productionSourceMap: false
   css:
     sourceMap: false
+  pwa:
+    name: 'PWM Fan'
+    workboxPluginMode: 'GenerateSW'
   devServer:
     host: '0.0.0.0'
     disableHostCheck: true
@@ -32,5 +35,5 @@ module.exports =
     ]
     config.module.rules.push
         test: /\.coffee$/
-        use: ['babel-loader', 'coffee-loader']
+        use: ['coffee-loader']
     return

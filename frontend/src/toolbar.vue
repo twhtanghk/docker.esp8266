@@ -7,7 +7,7 @@
     <v-menu bottom left>
       <template v-slot:activator="{ on }">
         <v-btn dark icon v-on="on">
-          <v-icon>more_vert</v-icon>
+          <v-icon>{{more}}</v-icon>
         </v-btn>
       </template>
       <v-list>
@@ -20,8 +20,11 @@
 </template>
 
 <script lang='coffee'>
+import {mdiDotsVertical} from '@mdi/js'
+
 export default
   data: ->
+    more: mdiDotsVertical
     actions:
       pwm: 'Pulse Width Modulation'
       system: 'System'

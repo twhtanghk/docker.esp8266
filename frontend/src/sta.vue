@@ -8,9 +8,8 @@
 </template>
 
 <script lang='coffee'>
-{sta} = require('./model').default
-{required, minLength} = require 'vuelidate/lib/validators'
-rule = require('jsOAuth2/frontend/src/rule').default
+{Sta} = require('./plugins/model.coffee').default
+import {required, minLength} from 'vuelidate/lib/validators'
 
 export default
   components:
@@ -30,14 +29,18 @@ export default
     status: ->
       if @config.isconnected then JSON.stringify(@config.curr) else ''
   methods:
+    required: (attr) -> ->
+      attr.required || 'Required'
+    minLength: (attr, msg='At least #{attr.$params.minLength.min} characters') -> ->
+      attr.minLength || msg
     getStatus: ->
-      sta.get()
+      Sta.get()
         .then (res) =>
           @config = res
           @essid = res.essid
         .catch console.error
     connect: (essid, passwd) ->
-      sta
+      Sta
         .put 
           data:
             ssid: essid
@@ -46,8 +49,8 @@ export default
           @getStatus()
         .catch console.error
     getList: ->
-      sta
-        .get url: "#{sta.baseUrl}/scan"
+      Sta
+        .get url: "#{Sta.baseUrl}/scan"
         .then (res) =>
           @list = []
           for i in res.sort()
@@ -55,8 +58,6 @@ export default
               value: i
               text: i
       .catch console.error
-    required: rule.required
-    minLength: rule.minLength
   mounted: ->
     @getStatus()
     @getList()

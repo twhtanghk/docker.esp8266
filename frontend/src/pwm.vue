@@ -12,14 +12,14 @@
 </template>
 
 <script lang='coffee'>
-{pwm} = require('./model').default
-{required, integer, minValue, maxValue} = require 'vuelidate/lib/validators'
+{Pwm} = require('./plugins/model.coffee').default
+import {required, integer, minValue, maxValue} from 'vuelidate/lib/validators'
 
 export default
   components:
     card: require('./card').default
   data: ->
-    pin: 5
+    pin: 2
     value: 0
   validations:
     value: {required, minValue: minValue(0), maxValue: maxValue(1024)}
@@ -28,7 +28,7 @@ export default
       "Pin #{pin} (#{value})"
     duty: (pin, value) ->
       try
-        await pwm.update
+        await Pwm.update
           data:
             id: @pin
             duty: @value
@@ -36,7 +36,7 @@ export default
         console.error err
     getDuty: (val) ->
       try
-        @value = await pwm.read
+        @value = await Pwm.read
           data:
             id: @pin
       catch err

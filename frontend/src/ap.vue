@@ -8,8 +8,8 @@
 </template>
 
 <script lang='coffee'>
-{ap} = require('./model').default
-{required, minLength} = require 'vuelidate/lib/validators'
+{Ap} = require('./plugins/model.coffee').default
+import {required, minLength} from 'vuelidate/lib/validators'
 rule = require('jsOAuth2/frontend/src/rule').default
 
 export default
@@ -30,12 +30,12 @@ export default
       minLength: minLength(8)
   methods:
     getStatus: ->
-      ap.get()
+      Ap.get()
         .then (res) =>
           @essid = res.essid
         .catch console.error
     save: (essid, password) ->
-      ap
+      Ap
         .put
           data:
             essid: essid

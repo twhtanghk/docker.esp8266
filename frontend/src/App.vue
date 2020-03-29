@@ -10,7 +10,7 @@
 </template>
 
 <script lang='coffee'>
-Vue = require('vue').default
+import Vue from 'vue'
 Vue.use require('vuelidate').default
 
 export default
@@ -19,8 +19,6 @@ export default
 </script>
 
 <style lang='scss'>
-$material-icons-font-path: '~material-icons/iconfont/';
-@import '~material-icons/iconfont/material-icons.scss';
 @import '~vuetify/dist/vuetify.min.css';
 @import '~c3/c3.min.css';
 

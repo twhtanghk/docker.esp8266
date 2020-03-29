@@ -2,6 +2,7 @@ import Vue from 'vue'
 import VueRouter from 'vue-router'
 import App from './App.vue'
 import vuetify from './plugins/vuetify.coffee'
+import './registerServiceWorker'
 
 Vue.config.productionTip = false
 

@@ -2,7 +2,9 @@ import network
 import ujson
 
 ap_if = network.WLAN(network.AP_IF)
+ap_if.active(True)
 sta_if = network.WLAN(network.STA_IF)
+sta_if.active(True)
 
 def exists(filename):
   try:
@@ -25,10 +27,10 @@ def config():
   }
 
 filename = '/config.json'
-def load():
+def load(factory=config()):
   if not exists(filename):
-    save(config())
-  f = open('/config.json')
+    save(factory)
+  f = open(filename)
   data = ujson.load(f)
   f.close()
   return data
@@ -39,8 +41,8 @@ def save(data):
   f.close()
   
 def factoryAP():
-  ap_if.config(essid=config()['name'], password='password')
   ap_if.active(True)
+  ap_if.config(essid=config()['name'], password='password')
 
 def factorySTA():
   sta_if.active(True)

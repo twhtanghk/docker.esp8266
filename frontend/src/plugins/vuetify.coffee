@@ -1,4 +1,4 @@
-Vue = require('vue').default
+import Vue from 'vue'
 Vuetify = require 'vuetify'
 
 Vue.use Vuetify
