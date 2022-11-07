@@ -1,7 +1,5 @@
 import picoweb
 import ure as re
-import logging
-logger = logging.getLogger(__name__)
 
 def exists(filename):
   try:
@@ -20,7 +18,7 @@ def error(res, msg='bad request'):
 
 def handler(f):
   def ret(req, res):
-    logger.info('{} {}'.format(req.method, req.path))
+    logger.write('{__name__}: {req.method} {req.path}')
     try:
       yield from f(req, res)
       import gc

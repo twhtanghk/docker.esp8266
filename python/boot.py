@@ -1,13 +1,11 @@
 # This file is executed on every boot (including wake-boot from deepsleep)
 #import esp
 #esp.osdebug(None)
-import webrepl
-webrepl.start()
-from config import model as cfg
-cfg.boot()
-pkg = ['ap', 'gpio', 'ddns']
-for i in pkg:
-  lib = __import__(i)
-  lib.model.boot()
+#import uos
+#replStream = uos.dupterm(None, 1) # disable REPL on UART(0)
+# enable repl on UART(0) by uos.dupterm(replStream, 1)
+import gc
+#import webrepl
+#webrepl.start()
 import gc
 gc.collect()
