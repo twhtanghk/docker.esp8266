@@ -1,0 +1,16 @@
+{
+  "name": "test",
+  "version": "0.0.1",
+  "description": "rest api test script",
+  "main": "index.coffee",
+  "scripts": {
+    "test": "mocha *.coffee"
+  },
+  "author": "Tommy Tang",
+  "license": "MIT",
+  "dependencies": {
+    "coffeescript": "^2.7.0",
+    "mocha": "^10.1.0",
+    "supertest": "^6.3.1"
+  }
+}

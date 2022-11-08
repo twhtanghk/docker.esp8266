@@ -1,10 +1,6 @@
 from microdot import Microdot
 import ujson as json
 
-pkg = [
-  'ap',
-  'sta'
-]
 app = Microdot()
 filename = '/config.json'
 
@@ -16,11 +12,13 @@ def reset(req):
 
 @app.get('/factory')
 def factory(req):
+  from project import pkg
   ret = {}
   for i in pkg:
-    lib = __import__(i)
-    ret[i] = lib.factory()
-  return ret
+    if i != 'config':
+      lib = __import__(i)
+      ret[i] = lib.factory()
+  return ''
 
 def read():
   try:
@@ -40,7 +38,13 @@ def write(data):
 
 @app.get('/')
 def load(req):
-  return read()
+  ret = read()
+  try:
+    del ret['ap']['password']
+    del ret['sta']['passwd']
+  except KeyError:
+    pass
+  return ret
 
 @app.put('/')
 def save(req):
