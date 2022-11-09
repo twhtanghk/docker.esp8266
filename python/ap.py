@@ -16,14 +16,6 @@ authmode = {
 interface = network.WLAN(network.AP_IF)
 interface.active(True)
 
-def factory():
-  mac = interface.config('mac')
-  mac = ubinascii.hexlify(mac).decode('utf-8')[6:]
-  return {
-    'essid': 'nmea0183-{}'.format(mac),
-    'password': '12345678'
-  }
-
 cfg = config.read()['ap']
 essid, password = cfg['essid'], cfg['password']
 interface.config(essid=essid, password=password)

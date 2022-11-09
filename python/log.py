@@ -5,12 +5,6 @@ from microdot import Microdot
 
 app = Microdot()
 
-def factory():
-  return {
-    'ip': '192.168.43.2',
-    'port': 8888
-  }
-
 cfg = config.read()['log']
 ip, port = cfg['ip'], cfg['port']
 

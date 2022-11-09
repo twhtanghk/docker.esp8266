@@ -7,15 +7,6 @@ app = Microdot()
 interface = network.WLAN(network.STA_IF)
 interface.active(True)
 
-def factory():
-  mac = interface.config('mac')
-  mac = ubinascii.hexlify(mac).decode('utf-8')[6:]
-  return {
-    'dhcp_hostname': 'nmea0183-{}'.format(mac),
-    'ssid': None,
-    'passwd': None
-  }
-
 cfg = config.read()['sta']
 if 'dhcp_hostname' in cfg:
   interface.config(dhcp_hostname=cfg['dhcp_hostname'])
