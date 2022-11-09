@@ -4,6 +4,7 @@ import config
 from microdot import Microdot
 
 app = Microdot()
+logger = None
 
 cfg = config.read()['log']
 ip, port = cfg['ip'], cfg['port']
@@ -29,3 +30,6 @@ def set(req):
   syscfg['log'] = cfg
   config.write(syscfg)
   return cfg
+
+def info(module, msg):
+  logger.write('{}: {}\n'.format(module, msg))
