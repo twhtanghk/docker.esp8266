@@ -1,7 +1,7 @@
 <template>
   <card :header='"Internet " + status'>
-    <v-select v-model='essid' label='ESSID' :items='list' filled :rules='[required($v.essid)]'/>
-    <v-text-field v-model='password' label='Password' type='password' :rules='[required($v.password), minLength($v.password)]' required />
+    <v-select v-model='essid' label='ESSID' :items='list' filled />
+    <v-text-field v-model='password' label='Password' type='password' required />
     <v-btn color="primary" @click='connect(essid, password)'>Connect</v-btn>
     <v-btn color="secondary" @click='getList()'>Scan</v-btn>
   </card>
@@ -9,9 +9,12 @@
 
 <script lang='coffee'>
 {sta} = require('./model').default
-{required, minLength} = require '@vuelidate/validators'
+import {useVuelidate} from '@vuelidate/core'
+import {required, minLength} from '@vuelidate/validators'
 
 export default
+  setup: ->
+    v$: useVuelidate()
   components:
     card: require('./card').default
   data: ->
@@ -54,8 +57,6 @@ export default
               value: i
               text: i
       .catch console.error
-    required: rule.required
-    minLength: rule.minLength
   mounted: ->
     @getStatus()
     @getList()

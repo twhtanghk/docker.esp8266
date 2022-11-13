@@ -14,7 +14,6 @@ module.exports =
     workboxPluginMode: 'GenerateSW'
   devServer:
     host: '0.0.0.0'
-    disableHostCheck: true
   configureWebpack: (config) ->
     if process.env.NODE_ENV == 'production'
       config.plugins.push new CompressionWebpackPlugin

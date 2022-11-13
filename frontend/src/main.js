@@ -1,7 +1,7 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 import App from './App.vue'
-import vuetify from './plugins/vuetify.coffee'
+import Vuetify from 'vuetify'
 import './registerServiceWorker'
 
 Vue.config.productionTip = false
@@ -11,9 +11,12 @@ const router = new VueRouter({
   routes: [
     {path: '/antenna', component: require('./antenna').default},
     {path: '/system', component: require('./system').default},
-    {path: '*', redirect: '/antenna'}
+    {path: '/:pathMatch(.*)*', redirect: '/antenna'}
   ]
 })
+
+Vue.use(Vuetify)
+const vuetify = new Vuetify()
 
 new Vue({
   router,

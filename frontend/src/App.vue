@@ -10,8 +10,6 @@
 </template>
 
 <script lang='coffee'>
-Vue = require('vue').default
-
 export default
   components:
     toolbar: require('./toolbar').default
