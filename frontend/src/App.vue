@@ -11,7 +11,6 @@
 
 <script lang='coffee'>
 Vue = require('vue').default
-Vue.use require('vuelidate').default
 
 export default
   components:

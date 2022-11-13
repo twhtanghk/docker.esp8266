@@ -9,8 +9,7 @@
 
 <script lang='coffee'>
 {sta} = require('./model').default
-{required, minLength} = require 'vuelidate/lib/validators'
-rule = require('jsOAuth2/frontend/src/rule').default
+{required, minLength} = require '@vuelidate/validators'
 
 export default
   components:

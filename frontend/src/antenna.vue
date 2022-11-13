@@ -24,7 +24,7 @@
 
 <script lang='coffee'>
 {Model} = require('model').default
-{required, integer, minValue, maxValue} = require 'vuelidate/lib/validators'
+{required, integer, minValue, maxValue} = require '@vuelidate/validators'
 
 model = new Model baseUrl: "#{process.env.API_URL}"
 

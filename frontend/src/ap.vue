@@ -9,8 +9,7 @@
 
 <script lang='coffee'>
 {ap} = require('./model').default
-{required, minLength} = require 'vuelidate/lib/validators'
-rule = require('jsOAuth2/frontend/src/rule').default
+{required, minLength} = require '@vuelidate/validators'
 
 export default
   components:
@@ -24,10 +23,10 @@ export default
       required: required
     password:
       required: required
-      minLength: minLength(8)
+      minLength: minLength 8
     passwordAgain:
       required: required
-      minLength: minLength(8)
+      minLength: minLength 8
   methods:
     getStatus: ->
       ap.get()
