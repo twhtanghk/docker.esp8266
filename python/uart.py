@@ -1,6 +1,5 @@
 import config
 from machine import UART
-import ubinascii
 from microdot import Microdot
 
 app = Microdot()
@@ -30,5 +29,4 @@ def set(req):
   cfg = config.read()
   cfg['uart'] = opts
   config.write(cfg)
-  interface.init(**opts)
   return ''
