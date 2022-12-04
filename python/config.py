@@ -21,6 +21,12 @@ initCfg = {
     'dhcp_hostname': name,
     'ssid': None,
     'passwd': None
+  },
+  'uart': {
+    'baudrate': 115200,
+    'bits': 8,
+    'parity': None,
+    'stop': 1
   }
 }
 

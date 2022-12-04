@@ -2,5 +2,6 @@ pkg = [
   'config',
   'log',
   'ap',
-  'sta'
+  'sta',
+  'uart'
 ]
