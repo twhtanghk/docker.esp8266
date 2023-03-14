@@ -4,7 +4,7 @@ from microdot import Microdot
 
 app = Microdot()
 
-@app.get('/)
+@app.get('/')
 def get(req):
   return config.read()['gpio']
   
@@ -15,7 +15,7 @@ def name(req, pin, name):
   if pin == cfg['gpio']['pin']:
     cfg['gpio']['name'] = name
   else:
-    return f"pin {pin} not supported", 500
+    return "pin {} not supported".format(pin), 500
   config.write(cfg)
   return ''
 
@@ -28,7 +28,7 @@ def set(req, name, value):
     if i.name == name:
       Pin(i.pin).value(value)
       return {'state': value}
-  return f"pin {name} not found", 500
+  return "pin {} not found".format(name), 500
 
 @app.put('/<name>/on')
 def on(req, name):
@@ -42,13 +42,13 @@ def off(req, name):
 def state(req, name):
   cfg = config.read()['gpio']
   for i in cfg:
-    if i.name == name
+    if i.name == name:
       return {
         'name': i.name,
         'pin': i.pin,
         'state': Pin(i.pin).value()
       }
-  return f"pin {name} not found", 500
+  return "pin {} not found".format(name), 500
 
 @app.get('/')
 def list(req):

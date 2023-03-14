@@ -25,8 +25,8 @@ initCfg = {
   },
   'gpio': [
     {
-      'pin': 0
-      'name': 'switch'
+      'pin': 0,
+      'name': 'switch',
       'mode': Pin.OUT
     }
   ]
