@@ -3,5 +3,5 @@ pkg = [
   'log',
   'ap',
   'sta',
-  'uart'
+  'gpio'
 ]

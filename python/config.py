@@ -1,4 +1,5 @@
 from microdot import Microdot
+from machine import Pin
 import ujson as json
 
 app = Microdot()
@@ -22,12 +23,13 @@ initCfg = {
     'ssid': None,
     'passwd': None
   },
-  'uart': {
-    'baudrate': 115200,
-    'bits': 8,
-    'parity': None,
-    'stop': 1
-  }
+  'gpio': [
+    {
+      'pin': 0
+      'name': 'switch'
+      'mode': Pin.OUT
+    }
+  ]
 }
 
 def read():
