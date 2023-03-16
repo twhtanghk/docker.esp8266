@@ -15,15 +15,14 @@
     "c3": "^0.7.20",
     "model": "https://github.com/twhtanghk/model",
     "node-polyfill-webpack-plugin": "^2.0.1",
-    "node-sass": "^8.0.0",
     "register-service-worker": "^1.6.2",
+    "sass": "^1.59.3",
     "vue": "^3.2.47",
     "vue-cli-plugin-coffee": "^1.0.2"
   },
   "devDependencies": {
     "@vue/cli-plugin-babel": "^5.0.8",
     "@vue/cli-plugin-eslint": "^5.0.8",
-    "@vue/cli-plugin-pwa": "~5.0.8",
     "@vue/cli-service": "^5.0.8",
     "babel-eslint": "^10.0.2",
     "coffee-loader": "^4.0.0",

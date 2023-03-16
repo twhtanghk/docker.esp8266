@@ -7,9 +7,13 @@ module.exports = defineConfig
         target: 'http://192.168.43.26'
         changeOrigin: true
         logLevel: 'debug'
-  outputDir: './dist'
+  outputDir: '../python/dist'
   transpileDependencies: true
   lintOnSave: false
+  css:
+    loaderOptions:
+      sass:
+        implementation: require 'sass'
   chainWebpack: (config) ->
     config
       .plugin 'polyfills'
