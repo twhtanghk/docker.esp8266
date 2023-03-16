@@ -8,7 +8,7 @@
 </template>
 
 <script lang='coffee'>
-{sta} = require('./model').default
+{sta} = require('./plugins/api').default
 import {useVuelidate} from '@vuelidate/core'
 import {required, minLength} from '@vuelidate/validators'
 

@@ -12,14 +12,14 @@
 </template>
 
 <script lang='coffee'>
-{gpio} = require('./model').default
-{required, integer, minValue, maxValue} = require 'vuelidate/lib/validators'
+{gpio} = require('./plugins/api').default
+{required, integer, minValue, maxValue} = require '@vuelidate/validators'
 
 export default
   components:
     card: require('./card').default
   data: ->
-    id: 13
+    id: 'switch'
     val: 0
     elapsed: 30 * 60 # default 30 min
     opts:

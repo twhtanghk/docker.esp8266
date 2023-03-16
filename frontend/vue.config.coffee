@@ -1,38 +1,18 @@
-_ = require 'lodash'
-{EnvironmentPlugin} = require 'webpack'
-CompressionWebpackPlugin = require 'compression-webpack-plugin'
+{defineConfig} = require '@vue/cli-service'
 
-module.exports =
-  publicPath: './'
-  outputDir: './dist'
-  lintOnSave: false
-  productionSourceMap: false
-  css:
-    sourceMap: false
-  pwa:
-    name: 'Antenna'
-    workboxPluginMode: 'GenerateSW'
+module.exports = defineConfig
   devServer:
-    host: '0.0.0.0'
-  configureWebpack: (config) ->
-    if process.env.NODE_ENV == 'production'
-      config.plugins.push new CompressionWebpackPlugin
-        deleteOriginalAssets: true
-        include: [
-          /\.eot$/
-          /\.woff2$/
-          /\.woff$/
-          /\.ttf$/
-          /\.html$/
-          /\.js$/
-          /\.css$/
-          /\.map$/
-        ]
-      process.env.API_URL = '.'
-    config.plugins.push new EnvironmentPlugin [
-      'API_URL'
-    ]
-    config.module.rules.push
-        test: /\.coffee$/
-        use: ['coffee-loader']
-    return
+    proxy:
+      '^/':
+        target: 'http://192.168.43.26'
+        changeOrigin: true
+        logLevel: 'debug'
+  outputDir: './dist'
+  transpileDependencies: true
+  lintOnSave: false
+  chainWebpack: (config) ->
+    config
+      .plugin 'polyfills'
+      .use require 'node-polyfill-webpack-plugin'
+  configureWebpack:
+    devtool: 'eval-cheap-source-map'

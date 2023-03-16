@@ -10,7 +10,7 @@
 </template>
 
 <script lang='coffee'>
-{cfg} = require('./model').default
+{cfg} = require('./plugins/api').default
 
 export default
   components:

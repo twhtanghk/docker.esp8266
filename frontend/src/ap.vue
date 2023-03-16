@@ -10,7 +10,7 @@
 <script lang='coffee'>
 import {useVuelidate} from '@vuelidate/core'
 import {required, sameAs, minLength} from '@vuelidate/validators' 
-{ap} = require('./model').default
+{ap} = require('./plugins/api').default
 
 export default
   setup: ->

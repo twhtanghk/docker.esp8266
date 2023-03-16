@@ -1,25 +1,24 @@
-import Vue from 'vue'
-import VueRouter from 'vue-router'
+import { createApp }from 'vue'
 import App from './App.vue'
-import Vuetify from 'vuetify'
-import './registerServiceWorker'
+import {createVuetify} from 'vuetify'
+import * as components from 'vuetify/components'
+import * as directives from 'vuetify/directives'
+import {md2} from 'vuetify/blueprints'
+import * as VueRouter from 'vue-router'
 
-Vue.config.productionTip = false
-
-Vue.use(VueRouter)
-const router = new VueRouter({
-  routes: [
-    {path: '/antenna', component: require('./antenna').default},
-    {path: '/system', component: require('./system').default},
-    {path: '/:pathMatch(.*)*', redirect: '/antenna'}
-  ]
+const vuetify = createVuetify({components, directives, blueprint: md2})
+const routes = [
+  {path: '/', redirect: '/switch'},
+  {path: '/switch', component: require('./gpio').default},
+  {path: '/system', component: require('./system').default}
+]
+const router = VueRouter.createRouter({
+  history: VueRouter.createWebHashHistory(),
+  routes
 })
 
-Vue.use(Vuetify)
-const vuetify = new Vuetify()
-
-new Vue({
-  router,
-  render: h => h(App),
-  vuetify
-}).$mount('#app')
+const app = createApp(App)
+app
+  .use(vuetify)
+  .use(router)
+  .mount('#app')
