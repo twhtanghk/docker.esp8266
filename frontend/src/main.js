@@ -1,19 +1,19 @@
-import { createApp }from 'vue'
+import {createApp}from 'vue'
 import App from './App.vue'
 import {createVuetify} from 'vuetify'
-import * as components from 'vuetify/components'
-import * as directives from 'vuetify/directives'
 import {md2} from 'vuetify/blueprints'
-import * as VueRouter from 'vue-router'
+import {createRouter, createWebHashHistory} from 'vue-router'
+import gpio from './gpio'
+import system from './system'
 
-const vuetify = createVuetify({components, directives, blueprint: md2})
+const vuetify = createVuetify({blueprint: md2})
 const routes = [
-  {path: '/', redirect: '/switch'},
-  {path: '/switch', component: require('./gpio').default},
-  {path: '/system', component: require('./system').default}
+  {path: '/', redirect: '/gpio'},
+  {path: '/gpio', component: gpio},
+  {path: '/system', component: system}
 ]
-const router = VueRouter.createRouter({
-  history: VueRouter.createWebHashHistory(),
+const router = createRouter({
+  history: createWebHashHistory(),
   routes
 })
 

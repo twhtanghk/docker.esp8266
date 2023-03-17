@@ -10,7 +10,7 @@
 </template>
 
 <script lang='coffee'>
-{cfg} = require('./plugins/api').default
+import cfg from './plugins/api'
 
 export default
   components:

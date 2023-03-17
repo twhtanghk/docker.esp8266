@@ -10,7 +10,7 @@
 </template>
 
 <script lang='coffee'>
-_ = require 'lodash'
+{pick} = require 'lodash'
 {syslog} = require('./model').default
 {required, ipAddress, integer} = require 'vuelidate/lib/validators'
 
