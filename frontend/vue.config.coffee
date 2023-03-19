@@ -1,11 +1,14 @@
 {defineConfig} = require '@vue/cli-service'
+{VuetifyPlugin} = require 'webpack-plugin-vuetify'
 
 module.exports = defineConfig
   outputDir: '../python/dist'
   lintOnSave: false
-  pwa:
-    iconPaths:
-      favicon16: 'img/icons/favicon-16x16.png'
+  devServer:
+    proxy:
+      '^/':
+        target: 'http://192.168.43.26'
+        ws: false
   css:
     loaderOptions:
       sass:
@@ -18,3 +21,7 @@ module.exports = defineConfig
         include: /\.(js|css|html|svg|json)(\?.*)?$/i
         minRatio: 0.8
         deleteOriginalAssets: true
+  configureWebpack:
+    plugins: [
+      new VuetifyPlugin()
+    ]

@@ -20,7 +20,8 @@
     "sass": "^1.59.3",
     "vue": "^3.2.47",
     "vue-cli-plugin-coffee": "^1.0.2",
-    "webfontloader": "^1.0.0"
+    "webfontloader": "^1.0.0",
+    "webpack-plugin-vuetify": "^2.0.1"
   },
   "devDependencies": {
     "@vue/cli-service": "^5.0.8",

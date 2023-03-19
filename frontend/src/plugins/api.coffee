@@ -1,19 +1,29 @@
 _ = require 'lodash'
 {Model} = require('model').default
 
-class GPIO extends Model
+class API extends Model
+  constructor: (opts = {}) ->
+    super opts
+    @mw = [
+      ({req, res}) => @json {req, res}
+      ({req, res}) => @req {req, res}
+      ({req, res}) => @res {req, res}
+      ({req, res}) => @error {req, res}
+    ]
+    
+class GPIO extends API
   constructor: (opts = {}) ->
     super _.defaults opts, baseUrl: '/gpio'
 
-class STA extends Model
+class STA extends API
   constructor: (opts = {}) ->
     super _.defaults opts, baseUrl: '/sta'
 
-class AP extends Model
+class AP extends API
   constructor: (opts = {}) ->
     super _.defaults opts, baseUrl: '/ap'
 
-class CFG extends Model
+class CFG extends API
   constructor: (opts = {}) ->
     super _.defaults opts, baseUrl: '/cfg'
 
