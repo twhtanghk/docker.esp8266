@@ -20,6 +20,14 @@ def mime(path):
   elif path.endswith('.css'):
     return 'text/css'
 
+def exists(file):
+  try:
+    import os
+    os.stat(file)
+    return True
+  except OSError:
+    return False
+
 @app.get('/')
 def index(req):
   return static(req, '/index.html')
@@ -28,15 +36,18 @@ def index(req):
 def static(req, path):
   if '..' in path:
     return 'Not found', 404
-  try:
-    import os
-    file = 'dist/{}.gz'.format(path)
-    os.stat(file)
+  file = 'dist/{}'.format(path)
+  type = mime(path)
+  if exists(file):
     res = send_file(file)
-    res.headers["Content-Encoding"] = "gzip"
-    res.headers["Content-Type"] = mime(path)
+    res.headers["Content-Type"] = type
     return res
-  except OSError:
+  elif exists(file + '.gz'):
+    res = send_file(file + '.gz')
+    res.headers["Content-Type"] = type
+    res.headers["Content-Encoding"] = "gzip"
+    return res
+  else:
     return 'Not found', 404
 
 app.run(port=80)
