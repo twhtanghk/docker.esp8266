@@ -10,13 +10,13 @@
 <script lang='coffee'>
 import {useVuelidate} from '@vuelidate/core'
 import {required, sameAs, minLength} from '@vuelidate/validators' 
-{ap} = require('./plugins/api').default
+import ap from './plugins/api'
+import card from './card'
 
 export default
   setup: ->
     v$: useVuelidate()
-  components:
-    card: require('./card').default
+  components: {card}
   data: ->
     essid: ''
     password: ''

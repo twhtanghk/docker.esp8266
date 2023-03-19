@@ -8,15 +8,15 @@
 </template>
 
 <script lang='coffee'>
-{sta} = require('./plugins/api').default
+import sta from './plugins/api'
+import card from './card'
 import {useVuelidate} from '@vuelidate/core'
 import {required, minLength} from '@vuelidate/validators'
 
 export default
   setup: ->
     v$: useVuelidate()
-  components:
-    card: require('./card').default
+  components: {card}
   data: ->
     config: {}
     essid: ''

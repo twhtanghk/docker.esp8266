@@ -11,12 +11,12 @@
 
 <script lang='coffee'>
 import cfg from './plugins/api'
+import ap from './ap'
+import sta from './sta'
+import card from './card'
 
 export default
-  components:
-    ap: require('./ap').default
-    sta: require('./sta').default
-    card: require('./card').default
+  components: {ap, sta, card}
   methods:
     factory: ->
       cfg

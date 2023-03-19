@@ -10,9 +10,10 @@
 </template>
 
 <script lang='coffee'>
+import toolbar from './toolbar'
+
 export default
-  components:
-    toolbar: require('./toolbar').default
+  components: {toolbar}
 </script>
 
 <style lang='scss'>

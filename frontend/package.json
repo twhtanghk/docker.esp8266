@@ -15,60 +15,32 @@
     "@vuelidate/validators": "^2.0.0",
     "c3": "^0.7.20",
     "model": "https://github.com/twhtanghk/model",
-    "node-polyfill-webpack-plugin": "^2.0.1",
     "register-service-worker": "^1.6.2",
     "roboto-fontface": "*",
     "sass": "^1.59.3",
     "vue": "^3.2.47",
     "vue-cli-plugin-coffee": "^1.0.2",
-    "webfontloader": "^1.0.0",
-    "webpack-plugin-vuetify": "^2.0.1"
+    "webfontloader": "^1.0.0"
   },
   "devDependencies": {
-    "@vue/cli-plugin-babel": "^5.0.8",
-    "@vue/cli-plugin-eslint": "^5.0.8",
     "@vue/cli-service": "^5.0.8",
-    "babel-eslint": "^10.0.2",
     "coffee-loader": "^4.0.0",
     "coffeescript": "^2.3.2",
     "compression-webpack-plugin": "^10.0.0",
     "dotenv": "^16.0.3",
-    "eslint": "^8.27.0",
-    "eslint-plugin-vue": "^9.7.0",
     "material-icons": "^1.12.1",
     "mocha": "^10.1.0",
     "sass-loader": "^13.2.0",
     "supertest": "^6.3.1",
     "vue-cli-plugin-compression": "~2.0.0",
-    "vue-cli-plugin-vuetify": "~2.5.8",
     "vue-router": "^4.1.6",
     "vue-template-compiler": "^2.6.11",
     "vue.model": "https://github.com/twhtanghk/vue.model",
     "vuetify": "^3.1.10"
   },
-  "eslintConfig": {
-    "root": true,
-    "env": {
-      "node": true
-    },
-    "extends": [
-      "plugin:vue/essential",
-      "eslint:recommended"
-    ],
-    "rules": {},
-    "parserOptions": {
-      "parser": "babel-eslint"
-    }
-  },
   "postcss": {
     "plugins": {
       "autoprefixer": {}
     }
-  },
-  "browserslist": [
-    "> 1%",
-    "last 2 versions",
-    "not dead",
-    "not ie 11"
-  ]
+  }
 }
