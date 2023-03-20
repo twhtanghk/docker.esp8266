@@ -25,3 +25,4 @@ module.exports = defineConfig
     plugins: [
       new VuetifyPlugin()
     ]
+    devtool: 'eval-cheap-source-map'

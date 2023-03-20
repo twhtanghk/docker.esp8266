@@ -1,47 +1,28 @@
 <template>
-  <v-row wrap justify='center'>
-    <card :header="'Pin ' + id">
-      <v-row justify='space-around'>
-        <v-switch :label='val ? "on" : "off"' v-model="val" @change="set"/>
-        <v-col cols="12">
-          <v-text-field label="Interval" v-model="elapsed" @change="interval"/>
-        </v-col>
-      </v-row>
+  <v-row>
+    <card :header="id">
+      <v-btn @mousedown='on' @touchstart='on' @mouseup='off' @touchend='off'>
+        {{id}}
+      </v-btn>
     </card>
   </v-row>
 </template>
 
 <script lang='coffee'>
-{gpio} = require('./plugins/api').default
-{required, integer, minValue, maxValue} = require '@vuelidate/validators'
+import {gpio} from './plugins/api'
+import card from './card'
 
 export default
-  components:
-    card: require('./card').default
+  components: {card}
   data: ->
     id: 'switch'
-    val: 0
-    elapsed: 30 * 60 # default 30 min
-    opts:
-      val: [0, 1]
   methods:
-    set: ->
-      try
-        await gpio.update data: {@id, @val}
-      catch err
-        console.error err
+    on: ->
+      await gpio.put url: "/gpio/#{@id}/on"
+    off: ->
+      await gpio.put url: "/gpio/#{@id}/off"
     get: ->
-      try
-        {@val, @elapsed} = await gpio.read data: {@id}
-      catch err
-        console.error err
-    interval: ->
-      try
-        await gpio.put
-          url: "#{gpio.baseUrl}/interval"
-          data: {@elapsed}
-      catch err
-        console.error err
+      val = await gpio.read data: {@id}
   mounted: ->
     await @get()
 </script>

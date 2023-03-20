@@ -1,6 +1,6 @@
 <template>
   <card :header='"Internet " + status'>
-    <v-select v-model='essid' label='ESSID' :items='list' filled />
+    <v-select v-model='ssid' label='ESSID' :items='list' filled />
     <v-text-field v-model='password' label='Password' type='password' required />
     <v-btn color="primary" @click='connect(essid, password)'>Connect</v-btn>
     <v-btn color="secondary" @click='getList()'>Scan</v-btn>
@@ -8,7 +8,7 @@
 </template>
 
 <script lang='coffee'>
-import sta from './plugins/api'
+import {sta} from './plugins/api'
 import card from './card'
 import {useVuelidate} from '@vuelidate/core'
 import {required, minLength} from '@vuelidate/validators'
@@ -19,7 +19,7 @@ export default
   components: {card}
   data: ->
     config: {}
-    essid: ''
+    ssid: ''
     list: []
     password: ''
   validations:
@@ -33,30 +33,17 @@ export default
       if @config.isconnected then JSON.stringify(@config.curr) else ''
   methods:
     getStatus: ->
-      sta.get()
-        .then (res) =>
-          @config = res
-          @essid = res.essid
-        .catch console.error
+      {@config, @essid} = await sta.get()
     connect: (essid, passwd) ->
-      sta
-        .put 
-          data:
-            ssid: essid
-            password: passwd
-        .then =>
-          @getStatus()
-        .catch console.error
+      await sta.put data: {ssid, passwd}
+      await @getStatus()
     getList: ->
-      sta
-        .get url: "#{sta.baseUrl}/scan"
-        .then (res) =>
-          @list = []
-          for i in res.sort()
-            @list.push
-              value: i
-              text: i
-      .catch console.error
+      res = await sta.get url: "#{sta.baseUrl}/scan"
+      @list = []
+      for i in res.sort()
+        @list.push
+          value: i
+          text: i
   mounted: ->
     @getStatus()
     @getList()

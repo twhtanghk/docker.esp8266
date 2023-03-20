@@ -1,18 +1,19 @@
 <template>
-  <v-flex xs12>
-    <v-card class='rounded-card' flat color='grey lighten-3'>
-      <v-toolbar dense color='primary' class='white--text'>
-        <v-toolbar-title>{{header}}</v-toolbar-title>
-        <v-spacer/>
-        <v-btn v-for='cmd in actions' :key='cmd' dark icon>
-          <v-icon>{{cmd}}</v-icon>
-        </v-btn>
-      </v-toolbar>
-      <v-card-text>
-        <slot/>
-      </v-card-text>
-    </v-card>
-  </v-flex>
+  <v-row>
+    <v-col>
+      <v-card>
+        <v-toolbar>
+          <v-toolbar-title>{{header}}</v-toolbar-title>
+          <v-btn v-for='cmd in actions' :key='cmd' dark icon>
+            <v-icon>{{cmd}}</v-icon>
+          </v-btn>
+        </v-toolbar>
+        <v-card-text>
+          <slot/>
+        </v-card-text>
+      </v-card>
+    </v-col>
+  </v-row>
 </template>
 
 <script lang='coffee'>

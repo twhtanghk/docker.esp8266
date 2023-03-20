@@ -1,11 +1,13 @@
 <template>
   <v-app>
-    <toolbar />
-    <v-content>
-      <v-container grid-list-md>
-        <router-view />
-      </v-container>
-    </v-content>
+    <v-layout>
+      <toolbar />
+      <v-main>
+        <v-container>
+          <router-view />
+        </v-container>
+      </v-main>
+    </v-layout>
   </v-app>
 </template>
 

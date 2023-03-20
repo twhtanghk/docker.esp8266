@@ -1,21 +1,12 @@
 <template>
-  <v-app-bar app color='primary'>
+  <v-app-bar> 
     <v-toolbar-title class='white--text'>
-      Antenna
+      GPIO
     </v-toolbar-title>
     <v-spacer></v-spacer>
-    <v-menu bottom left>
-      <template v-slot:activator="{ on }">
-        <v-btn dark icon v-on="on">
-          <v-icon>more_vert</v-icon>
-        </v-btn>
-      </template>
-      <v-list>
-        <v-list-item v-for='(desc, action) in actions' :key='action' @click='click(action)'>
-          <v-list-item-title>{{desc}}</v-list-item-title>
-        </v-list-item>
-      </v-list>
-    </v-menu>
+    <v-btn v-for='(desc, action) in actions' :key='action' @click='click(action)'>
+      {{desc}}
+    </v-btn>
   </v-app-bar>
 </template>
 
@@ -23,7 +14,7 @@
 export default
   data: ->
     actions:
-      antenna: 'Antenna'
+      gpio: 'GPIO'
       system: 'System'
   methods:
     click: (action) ->

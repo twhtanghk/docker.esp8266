@@ -10,7 +10,7 @@
 <script lang='coffee'>
 import {useVuelidate} from '@vuelidate/core'
 import {required, sameAs, minLength} from '@vuelidate/validators' 
-import ap from './plugins/api'
+import {ap} from './plugins/api'
 import card from './card'
 
 export default
@@ -31,19 +31,9 @@ export default
       sameAs: sameAs @password
   methods:
     getStatus: ->
-      ap.get()
-        .then (res) =>
-          @essid = res.essid
-        .catch console.error
+      {@essid} = await ap.get()
     save: (essid, password) ->
-      ap
-        .put
-          data:
-            essid: essid
-            password: password
-        .then ->
-          console.info 'saved successfully'
-        .catch console.error
+      await ap.put data: {essid, password}
   mounted: ->
-    @getStatus()
+    await @getStatus()
 </script>
