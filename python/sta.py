@@ -28,12 +28,12 @@ def set(req):
   opts = req.json
   cfg = config.read()
   if 'name' in opts:
-    name = opts['name'][0]
+    name = opts['name']
     interface.config(dhcp_hostname=name)
     cfg['sta']['dhcp_hostname'] = name
   if 'ssid' in opts and 'passwd' in opts:
-    ssid = opts['ssid'][0]
-    passwd = opts['passwd'][0]
+    ssid = opts['ssid']
+    passwd = opts['passwd']
     interface.connect(ssid, passwd)
     cfg['sta']['ssid'] = ssid
     cfg['sta']['passwd'] = passwd

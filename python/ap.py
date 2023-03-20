@@ -27,15 +27,15 @@ def get(req):
     ret[prop] = interface.config(prop)
   ret['authmode'] = authmode[ret['authmode']]
   ret['mac'] = ubinascii.hexlify(ret['mac']).decode('utf-8')
-  ret['curr'] = self.interface.ifconfig()
+  ret['curr'] = interface.ifconfig()
   return ret
 
 @app.put('/')
 def set(req):
-  essid, password = req.json
+  essid, password = req.json['essid'], req.json['password']
   if not essid:
     raise Exception('empty essid')
-  if len(opts['password']) < 8:
+  if len(password) < 8:
     raise Exception('password min length 8')
   data = config.read()
   data['ap'] = {

@@ -1,10 +1,12 @@
 <template>
   <v-row>
-    <card :header="id">
-      <v-btn @mousedown='on' @touchstart='on' @mouseup='off' @touchend='off'>
-        {{id}}
-      </v-btn>
-    </card>
+    <v-col>
+      <card :header="id">
+        <v-btn color='primary' variant='outlined' @mousedown='on' @touchstart='on' @mouseup='off' @touchend='off'>
+          {{id}}
+        </v-btn>
+      </card>
+    </v-col>
   </v-row>
 </template>
 

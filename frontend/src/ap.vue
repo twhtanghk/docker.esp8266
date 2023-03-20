@@ -1,8 +1,21 @@
 <template>
-  <card header='Wifi Config'>
-    <v-text-field v-model='essid' label='ESSID' required />
-    <v-text-field v-model='password' label='Password' type='password' required />
-    <v-text-field v-model='passwordAgain' label='Confirm password' type='password' required />
+  <card header='Access Point'>
+    <v-text-field v-model='essid' label='ESSID' required
+      :error-messages='v$.essid.$errors.map(e => e.$message)'
+      @input='v$.essid.$touch'
+      @blur='v$.essid.$touch'
+    />
+    <v-text-field v-model='password' label='Password' type='password' required 
+      :error-messages='v$.password.$errors.map(e => e.$message)'
+      @input='v$.password.$touch'
+      @blur='v$.password.$touch'
+    />
+    <v-text-field v-model='passwordAgain' label='Confirm password' 
+      type='password' required
+      :error-messages='v$.passwordAgain.$errors.map(e => e.$message)'
+      @input='v$.passwordAgain.$touch'
+      @blur='v$.passwordAgain.$touch'
+    />
     <v-btn color='primary' @click='save(essid, password)' :disabled='v$.$invalid'>Save</v-btn>
   </card>
 </template>
@@ -31,9 +44,11 @@ export default
       sameAs: sameAs @password
   methods:
     getStatus: ->
-      {@essid} = await ap.get()
+      {@essid} = await ap.get url: '/ap/'
     save: (essid, password) ->
-      await ap.put data: {essid, password}
+      await ap.put 
+        url: '/ap/'
+        body: JSON.stringify {essid, password}
   mounted: ->
     await @getStatus()
 </script>

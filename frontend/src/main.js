@@ -6,7 +6,7 @@ import {createRouter, createWebHashHistory} from 'vue-router'
 import gpio from './gpio'
 import system from './system'
 
-const vuetify = createVuetify({blueprint: md2})
+const vuetify = createVuetify()
 const routes = [
   {path: '/', redirect: '/gpio'},
   {path: '/gpio', component: gpio},

@@ -19,7 +19,13 @@ export default
 </script>
 
 <style lang='scss'>
+@use "vuetify/styles";
+
 body {
   margin: 0;
+}
+
+button {
+  @extend .mx-lg-2;
 }
 </style>

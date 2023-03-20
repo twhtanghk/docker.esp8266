@@ -6,7 +6,7 @@ pins = {}
 def setup():
   cfg = config.read()['gpio']
   for i in cfg:
-    mode, pin, name = i.values()
+    mode, pin, name = i['mode'], i['pin'], i['name']
     pins[name] = Pin(pin, mode)
 
 setup()

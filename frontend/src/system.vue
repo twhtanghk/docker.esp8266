@@ -1,11 +1,17 @@
 <template>
-  <v-row wrap justify='center'>
-    <ap/>
-    <sta/>
-    <card header='Settings'>
-      <v-btn color='primary' @click='factory'>Factory Default</v-btn>
-      <v-btn color='secondary' @click='reboot'>Reboot</v-btn>
-    </card>
+  <v-row>
+    <v-col>
+      <ap/>
+    </v-col>
+    <v-col>
+      <sta/>
+    </v-col>
+    <v-col>
+      <card header='Settings'>
+        <v-btn color='primary' @click='factory'>Factory Default</v-btn>
+        <v-btn @click='reboot'>Reboot</v-btn>
+      </card>
+    </v-col>
   </v-row>
 </template>
 
