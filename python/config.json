@@ -1,0 +1,22 @@
+{
+  "factory": {
+    "ap": {
+      "essid": "switch",
+      "password": "12345678"
+    },
+    "sta": {
+      "dhcp_hostname": "switch"
+    },
+    "log": {
+      "ip": "192.168.43.2",
+      "port": 8888
+    },
+    "gpio": [
+      {
+        "pin": 0,
+        "name": "switch",
+        "mode": 1
+      }
+    ]
+  }
+}

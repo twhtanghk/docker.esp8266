@@ -1,13 +1,6 @@
 req = require 'supertest'
 
 describe 'config', ->
-  ###
-  it 'reset', ->
-    req process.env.SERVER
-      .get '/config/reset'
-      .expect 200
-  ###
-
   it 'factory', ->
     req process.env.SERVER
       .get '/config/factory' 
@@ -15,6 +8,11 @@ describe 'config', ->
       .then ({body}) ->
         console.log body
 
+  it 'reset', ->
+    req process.env.SERVER
+      .get '/config/reset'
+      .expect 200
+###
   it 'get', ->
     req process.env.SERVER
       .get '/config/'
@@ -34,3 +32,4 @@ describe 'config', ->
       .expect 200
       .then ({body}) ->
         console.log body
+###

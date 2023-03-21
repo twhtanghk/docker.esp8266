@@ -1,9 +1,7 @@
 #!/bin/sh
 
-rshell -a -b 115200 --buffer-size=100 -p /dev/ttyUSB0 <<EOF
+rshell -a -b 115200 --buffer-size=100 -p /dev/ttyS2 <<EOF
 rm -rf /pyboard/*
-mkdir /pyboard/static
-rsync -v $HOME/docker.esp8266/device/dist /pyboard/static
-rsync -v $HOME/docker.esp8266/python /pyboard
-rsync -v $HOME/.micropython /pyboard
+cp boot.py main.py config.json project.mpy config.mpy log.mpy sta.mpy ap.mpy gpio.mpy /pyboard
+cp $HOME/src/microdot/src/microdot.mpy /pyboard
 EOF

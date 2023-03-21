@@ -16,7 +16,7 @@ authmode = {
 interface = network.WLAN(network.AP_IF)
 interface.active(True)
 
-cfg = config.read()['ap']
+cfg = config.read()['current']['ap']
 essid, password = cfg['essid'], cfg['password']
 interface.config(essid=essid, password=password)
 

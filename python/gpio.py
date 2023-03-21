@@ -3,23 +3,20 @@ from machine import Pin
 from microdot import Microdot
 
 pins = {}
-def setup():
-  cfg = config.read()['gpio']
-  for i in cfg:
-    mode, pin, name = i['mode'], i['pin'], i['name']
-    pins[name] = Pin(pin, mode)
-
-setup()
+cfg = config.read()['current']['gpio']
+for i in cfg:
+  mode, pin, name = i['mode'], i['pin'], i['name']
+  pins[name] = Pin(pin, mode)
 
 app = Microdot()
 
 @app.get('/')
 def get(req):
-  return config.read()['gpio']
+  return config.read()['current']['gpio']
   
 @app.post('/<pin>/<name>/<mode>')
 def create(req, pin, name):
-  cfg = config.read()
+  cfg = config.read()['current']
   pin = int(pin)
   cfg['gpio'].append({
     'pin': pin,

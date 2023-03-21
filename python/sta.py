@@ -7,7 +7,7 @@ app = Microdot()
 interface = network.WLAN(network.STA_IF)
 interface.active(True)
 
-cfg = config.read()['sta']
+cfg = config.read()['current']['sta']
 if 'dhcp_hostname' in cfg:
   interface.config(dhcp_hostname=cfg['dhcp_hostname'])
 if 'ssid' in cfg and 'passwd' in cfg:

@@ -4,33 +4,6 @@ import ujson as json
 
 app = Microdot()
 filename = '/config.json'
-import network
-ap = network.WLAN(network.AP_IF)
-import ubinascii
-mac = ubinascii.hexlify(ap.config('mac')).decode('utf-8')[6:]
-name = 'nmea0183-{}'.format(mac)
-initCfg = {
-  'log': {
-    'ip': '192.168.43.2',
-    'port': 8888
-  },
-  'ap': {
-    'essid': name,
-    'password': '12345678'
-  },
-  'sta': {
-    'dhcp_hostname': name,
-    'ssid': None,
-    'passwd': None
-  },
-  'gpio': [
-    {
-      'pin': 0,
-      'name': 'switch',
-      'mode': Pin.OUT
-    }
-  ]
-}
 
 def read():
   f = open(filename)
@@ -43,11 +16,10 @@ def write(data):
   f.write(json.dumps(data))
   f.close()
 
-try:
-  import os
-  os.stat(filename)
-except OSError:
-  write(initCfg)
+cfg = read()
+if 'current' not in cfg:
+  cfg['current'] = cfg['factory']
+  write(cfg)
 
 @app.get('/reset')
 def reset(req):
@@ -57,22 +29,20 @@ def reset(req):
 
 @app.get('/factory')
 def factory(req):
-  write(initCfg)
+  cfg = read()
+  cfg.pop('current', None)
+  write(cfg)
   return ''
 
 @app.get('/')
 def load(req):
-  ret = read()
-  try:
-    del ret['ap']['password']
-    del ret['sta']['passwd']
-  except KeyError:
-    pass
-  return ret
+  cfg = read()
+  return cfg['current']
 
 @app.put('/')
 def save(req):
+  cfg = read()
   # validate json data before write back
-  data = req.json
-  write(data)
+  cfg['current'] = req.json
+  write(cfg)
   return ''

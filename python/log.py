@@ -6,8 +6,8 @@ from microdot import Microdot
 app = Microdot()
 logger = None
 
-cfg = config.read()['log']
-ip, port = cfg['ip'], cfg['port']
+cfg = config.read()['current']
+name, ip, port = cfg['ap']['essid'], cfg['log']['ip'], cfg['log']['port']
 
 try:
   # run "socat TCP4-LISTEN:8888,fork -" on server with IP specified below
@@ -27,9 +27,9 @@ def set(req):
     cfg['ip'] = req.json['ip']
     cfg['port'] = req.json['port']
   syscfg = config.read()
-  syscfg['log'] = cfg
+  syscfg['current']['log'] = cfg
   config.write(syscfg)
   return cfg
 
 def info(module, msg):
-  logger.write('{}: {}\n'.format(module, msg))
+  logger.write('{}/{}: {}\n'.format(name, module, msg))
