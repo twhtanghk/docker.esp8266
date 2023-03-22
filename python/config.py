@@ -5,12 +5,14 @@ import ujson as json
 app = Microdot()
 filename = '/config.json'
 
+# return {factory: ..., current: ...}
 def read():
   f = open(filename)
   ret = json.load(f)
   f.close()
   return ret
 
+# data: {factory: ..., current: ...}
 def write(data):
   f = open(filename, 'w')
   f.write(json.dumps(data))

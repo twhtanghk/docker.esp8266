@@ -38,7 +38,7 @@ def set(req):
   if len(password) < 8:
     raise Exception('password min length 8')
   data = config.read()
-  data['ap'] = {
+  data['current']['ap'] = {
     'essid': essid,
     'password': password
   }

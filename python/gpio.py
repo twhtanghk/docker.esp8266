@@ -16,9 +16,9 @@ def get(req):
   
 @app.post('/<pin>/<name>/<mode>')
 def create(req, pin, name):
-  cfg = config.read()['current']
+  cfg = config.read()
   pin = int(pin)
-  cfg['gpio'].append({
+  cfg['current']['gpio'].append({
     'pin': pin,
     'name': name,
     'mode': mode
@@ -47,14 +47,7 @@ def set(req, name, value):
   except:
     return "pin {} not found".format(name), 500
 
-@app.get('/<name>')
-def state(req, name):
-  try:
-    return str(pins[name].value())
-  except:
-    return "pin {} not found".format(name), 500
-
-@app.get('/')
+@app.get('/all')
 def list(req):
   ret = []
   for name in pins:
@@ -63,3 +56,11 @@ def list(req):
       'state': pins[name].value()
     })
   return ret
+
+@app.get('/<name>')
+def state(req, name):
+  try:
+      return {'state': str(pins[name].value())}
+  except:
+    return "pin {} not found".format(name), 500
+

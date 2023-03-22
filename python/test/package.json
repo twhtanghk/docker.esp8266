@@ -9,7 +9,9 @@
   "author": "Tommy Tang",
   "license": "MIT",
   "dependencies": {
+    "bluebird": "^3.7.2",
     "coffeescript": "^2.7.0",
+    "lodash": "^4.17.21",
     "mocha": "^10.1.0",
     "supertest": "^6.3.1"
   }

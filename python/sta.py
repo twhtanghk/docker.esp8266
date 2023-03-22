@@ -10,8 +10,6 @@ interface.active(True)
 cfg = config.read()['current']['sta']
 if 'dhcp_hostname' in cfg:
   interface.config(dhcp_hostname=cfg['dhcp_hostname'])
-if 'ssid' in cfg and 'passwd' in cfg:
-  interface.connect(cfg['ssid'], cfg['passwd'])
 
 @app.get('/')
 def get(req):
@@ -30,14 +28,11 @@ def set(req):
   if 'name' in opts:
     name = opts['name']
     interface.config(dhcp_hostname=name)
-    cfg['sta']['dhcp_hostname'] = name
+    cfg['current']['sta']['dhcp_hostname'] = name
+    config.write(cfg)
   if 'ssid' in opts and 'passwd' in opts:
-    ssid = opts['ssid']
-    passwd = opts['passwd']
+    ssid, passwd = opts['ssid'], opts['passwd']
     interface.connect(ssid, passwd)
-    cfg['sta']['ssid'] = ssid
-    cfg['sta']['passwd'] = passwd
-  config.write(cfg)
   return ''
 
 @app.get('/scan')
