@@ -32,5 +32,5 @@ describe 'sta', ->
       .set 'Content-Type', 'application/json'
       .send
         ssid: 'TomMobile'
-        passwd: process.env.PWD
+        passwd: process.env.PASSWD
       .expect 200

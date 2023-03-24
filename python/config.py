@@ -15,7 +15,7 @@ def read():
 # data: {factory: ..., current: ...}
 def write(data):
   f = open(filename, 'w')
-  f.write(json.dumps(data))
+  json.dump(data, f)
   f.close()
 
 cfg = read()
@@ -40,11 +40,3 @@ def factory(req):
 def load(req):
   cfg = read()
   return cfg['current']
-
-@app.put('/')
-def save(req):
-  cfg = read()
-  # validate json data before write back
-  cfg['current'] = req.json
-  write(cfg)
-  return ''

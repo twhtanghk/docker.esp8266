@@ -4,7 +4,7 @@
   "description": "rest api test script",
   "main": "index.coffee",
   "scripts": {
-    "test": "mocha *.coffee"
+    "test": "SERVER=http://192.168.43.26 mocha *.coffee"
   },
   "author": "Tommy Tang",
   "license": "MIT",

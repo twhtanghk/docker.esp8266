@@ -25,7 +25,7 @@ class AP extends API
 
 class CFG extends API
   constructor: (opts = {}) ->
-    super _.defaults opts, baseUrl: '/cfg'
+    super _.defaults opts, baseUrl: '/config'
 
 cfg = new CFG()
 ap = new AP()

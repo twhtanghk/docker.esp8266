@@ -16,7 +16,7 @@
 </template>
 
 <script lang='coffee'>
-import cfg from './plugins/api'
+import {cfg} from './plugins/api'
 import ap from './ap'
 import sta from './sta'
 import card from './card'
@@ -25,11 +25,7 @@ export default
   components: {ap, sta, card}
   methods:
     factory: ->
-      cfg
-        .get url: "#{cfg.baseUrl}/factory"
-        .catch console.error
+      await cfg.get url: "/config/factory"
     reboot: ->
-      cfg
-        .get url: "#{cfg.baseUrl}/reboot"
-        .catch console.error
+      await cfg.get url: "/config/reset"
 </script>
