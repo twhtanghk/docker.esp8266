@@ -18,9 +18,9 @@
 
 <script lang='coffee'>
 import card from './card'
-import {syslog} from './plugins/api'
+import {log} from './plugins/api'
 import {useVuelidate} from '@vuelidate/core'
-import {required, ipAddress, integer} from 'vuelidate/validators'
+import {required, ipAddress, integer} from '@vuelidate/validators'
 
 export default
   setup: ->
@@ -34,9 +34,9 @@ export default
     port: {integer}
   methods:
     get: ->
-      {@ip, @port} = await syslog.get url: '/log/'
+      {@ip, @port} = await log.get url: '/log/'
     save: ->
-      await syslog.put url: '/log/', data: {@ip, @port}
+      await log.put url: '/log/', body: JSON.stringify {@ip, @port}
   created: ->
     @get()
 </script>

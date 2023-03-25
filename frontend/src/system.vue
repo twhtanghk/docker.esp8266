@@ -7,7 +7,7 @@
       <sta/>
     </v-col>
     <v-col>
-      <syslog/>
+      <log/>
     </v-col>
     <v-col>
       <card header='Settings'>
@@ -26,7 +26,7 @@ import card from './card'
 import log from './log'
 
 export default
-  components: {ap, sta, syslog, card}
+  components: {ap, sta, log, card}
   methods:
     factory: ->
       await cfg.get url: "/config/factory"

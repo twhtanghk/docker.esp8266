@@ -24,12 +24,12 @@ def get(req):
 @app.put('/')
 def set(req):
   if 'ip' in req.json and 'port' in req.json:
-    cfg['ip'] = req.json['ip']
-    cfg['port'] = req.json['port']
-  syscfg = config.read()
-  syscfg['current']['log'] = cfg
-  config.write(syscfg)
-  return cfg
+    syscfg = config.read()
+    syscfg['current']['log']['ip'] = req.json['ip']
+    syscfg['current']['log']['port'] = req.json['port']
+    config.write(syscfg)
+    return syscfg['current']['log']
+  return {error: 'params ip and port not available'}, 500
 
 def info(module, msg):
   logger.write('{}/{}: {}\n'.format(name, module, msg))
