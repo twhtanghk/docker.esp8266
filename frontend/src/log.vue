@@ -27,8 +27,8 @@ export default
     v$: useVuelidate()
   components: {card}
   data: ->
-    ip: '192.168.4.2'
-    port: 8888
+    ip: null
+    port: null
   validations:
     ip: {required, ipAddress}
     port: {integer}
