@@ -19,7 +19,7 @@ except:
 
 @app.get('/')
 def get(req):
-  return cfg
+  return {'ip': ip, 'port': port}
 
 @app.put('/')
 def set(req):

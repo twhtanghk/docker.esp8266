@@ -7,6 +7,9 @@
       <sta/>
     </v-col>
     <v-col>
+      <syslog/>
+    </v-col>
+    <v-col>
       <card header='Settings'>
         <v-btn color='primary' @click='factory'>Factory Default</v-btn>
         <v-btn @click='reboot'>Reboot</v-btn>
@@ -20,9 +23,10 @@ import {cfg} from './plugins/api'
 import ap from './ap'
 import sta from './sta'
 import card from './card'
+import log from './log'
 
 export default
-  components: {ap, sta, card}
+  components: {ap, sta, syslog, card}
   methods:
     factory: ->
       await cfg.get url: "/config/factory"

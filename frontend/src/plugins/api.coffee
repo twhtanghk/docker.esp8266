@@ -27,10 +27,15 @@ class CFG extends API
   constructor: (opts = {}) ->
     super _.defaults opts, baseUrl: '/config'
 
+class LOG extends API
+  constructor: (opts = {}) ->
+    super _.defaults opts, baseUrl: '/log'
+
 cfg = new CFG()
 ap = new AP()
 sta = new STA()
 gpio = new GPIO()
+log = new LOG()
 
-export {cfg, ap, sta, gpio}
-export default {cfg, ap, sta, gpio}
+export {cfg, ap, sta, gpio, log}
+export default {cfg, ap, sta, gpio, log}
