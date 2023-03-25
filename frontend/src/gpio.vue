@@ -2,7 +2,7 @@
   <v-row>
     <v-col>
       <card :header="id">
-        <v-btn color='primary' variant='outlined' @mousedown='on' @touchstart='on' @mouseup='off' @touchend='off'>
+        <v-btn color='primary' variant='outlined' @mousedown='off' @touchstart='off' @mouseup='on' @touchend='on'>
           {{id}}
         </v-btn>
       </card>
