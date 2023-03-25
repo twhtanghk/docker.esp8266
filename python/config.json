@@ -15,7 +15,8 @@
       {
         "pin": 0,
         "name": "switch",
-        "mode": 1
+        "mode": 1,
+        "value": 1
       }
     ]
   }

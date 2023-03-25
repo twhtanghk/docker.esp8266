@@ -5,8 +5,8 @@ from microdot import Microdot
 pins = {}
 cfg = config.read()['current']['gpio']
 for i in cfg:
-  mode, pin, name = i['mode'], i['pin'], i['name']
-  pins[name] = Pin(pin, mode)
+  mode, pin, name, value = i['mode'], i['pin'], i['name'], i['value']
+  pins[name] = Pin(pin, mode, value=value)
 
 app = Microdot()
 
