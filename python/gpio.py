@@ -28,7 +28,7 @@ def create(req, pin, name):
 
 @app.put('/<name>/toggle')
 def toggle(req, name):
-  return set(req, 0 if pins[name].value() == '1' else 1)
+  return set(req, name, 0 if pins[name].value() == 1 else 1)
   
 @app.put('/<name>/on')
 def on(req, name):
@@ -64,7 +64,7 @@ def list(req):
 @app.get('/<name>')
 def state(req, name):
   try:
-      return {'state': str(pins[name].value())}
+      return {'state': pins[name].value()}
   except:
     return "pin {} not found".format(name), 500
 
