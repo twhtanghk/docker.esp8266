@@ -10,6 +10,16 @@ describe 'gpio', ->
       .then ({body}) ->
         console.log body
 
+  it 'toggle', ->
+    req url
+      .get '/gpio/toggle'
+      .expect 200
+      .then ({body}) ->
+        console.log body
+      .get '/gpio/toggle'
+      .then ({body}) ->
+        console.log body
+
   it 'switch on', ->
     req url
       .put '/gpio/switch/on'

@@ -26,6 +26,10 @@ def create(req, pin, name):
   config.write(cfg)
   return get(req)
 
+@app.put('/<name>/toggle')
+def toggle(req, name):
+  return set(req, 0 if pins[name].value() == '1' else 1)
+  
 @app.put('/<name>/on')
 def on(req, name):
   return set(req, name, 1)
